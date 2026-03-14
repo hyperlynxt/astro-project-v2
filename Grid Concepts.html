@@ -340,20 +340,9 @@
                         </svg>
                     </span>
                 </h2>
-                <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed mb-10" vid="39">
+                <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed" vid="39">
                     Concepts for making sense of thought, behavior, and the self.
                 </p>
-
-                <button onclick="openFilterModal()" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-white border border-parchment-dark/30 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                    <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-seal-red group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                        </svg>
-                        <span class="font-serif text-xl text-ink">Filter & Sort</span>
-                    </div>
-                    <div class="h-4 w-px bg-parchment-200"></div>
-                    <span class="font-hand text-2xl text-seal-red translate-y-0.5">Refine the collection</span>
-                </button>
             </div>
         </section>
 
@@ -719,7 +708,7 @@
             <input type="text" id="frame-search" placeholder="Search concepts" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-ink placeholder:text-parchment-400 w-32 transition-all focus:w-48" vid="198">
         </div>
         <div class="w-px h-6 bg-parchment-200 mx-1" vid="199"></div>
-        <button class="bg-ink hover:bg-ink/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm" vid="200">
+        <button onclick="openFilterModal()" class="bg-ink hover:bg-ink/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm" vid="200">
             Filter & Sort
         </button>
     </div>
