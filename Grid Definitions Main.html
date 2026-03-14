@@ -228,6 +228,19 @@
             background-color: rgba(42, 39, 36, 0.1);
             border-radius: 10px;
         }
+
+        .swoosh-path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+
+        @keyframes drawSwoosh {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .animate-draw-line {
+            animation: drawSwoosh 0.8s ease-out 0.4s forwards;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-parchment-50 antialiased selection:bg-seal selection:text-white flex flex-col" vid="11">
@@ -258,8 +271,11 @@
         <section class="w-full bg-gradient-to-b from-parchment-100 to-transparent pt-20 pb-16 px-6" vid="35">
             <div class="max-w-4xl mx-auto text-center" vid="36">
                 <span class="font-hand text-2xl text-parchment-500 mb-2 block" vid="37">Personal Dictionary</span>
-                <h2 class="font-serif text-5xl md:text-7xl leading-tight text-ink mb-8" vid="38">
-                    A Curated <span class="italic hand-underline-long inline-block" vid="39">Glossary</span>
+                <h2 class="font-serif text-5xl md:text-7xl leading-tight text-ink mb-8 relative inline-block">
+                    A Curated <span class="italic hand-underline-long inline-block">Glossary</span>
+                    <svg class="absolute w-[110%] h-[12px] -bottom-2 -left-[5%] text-seal opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M2 7C25 2 75 -1 98 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                    </svg>
                 </h2>
                 <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed" vid="40">
                     A collection of specific words that gives shape to abstract feelings, unseen boundaries, and complex systems.
