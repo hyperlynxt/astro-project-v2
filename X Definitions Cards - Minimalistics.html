@@ -1,0 +1,315 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Atlas Field Notes - My Lexicon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Inter:wght@400;500;600&amp;family=Reenie+Beanie&amp;display=swap" rel="stylesheet" vid="7">
+<style vid="8">
+    :root {
+        --parchment-base: #FDFCF9;
+        --parchment-100: rgba(42, 39, 36, 0.03); 
+        --parchment-200: rgba(42, 39, 36, 0.08); 
+        --parchment-300: rgba(42, 39, 36, 0.15); 
+        --ink: #2A2724;
+        --ink-muted: rgba(42, 39, 36, 0.65);
+        --ink-light: rgba(42, 39, 36, 0.4);
+        --gold: #B08D57;
+        --teal: #2A4747;
+        --font-serif: 'EB Garamond', serif;
+        --font-sans: 'Inter', sans-serif;
+        --font-hand: 'Reenie Beanie', cursive;
+        --radius-card: 24px;
+        --radius-pill: 999px;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #E8E5DF; 
+        background-image: radial-gradient(#d5d2cb 1px, transparent 1px);
+        background-size: 24px 24px;
+        min-height: 100vh;
+        font-family: var(--font-serif);
+        color: var(--ink);
+        padding: 60px 80px;
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 64px;
+        border-bottom: 1px solid var(--parchment-300);
+        padding-bottom: 32px;
+    }
+
+    .brand-group h1 {
+        font-size: 3.5rem;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+    }
+
+    .brand-group p {
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ink-muted);
+    }
+
+    .stats {
+        display: flex;
+        gap: 40px;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-family: var(--font-sans);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ink-light);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 32px;
+    }
+
+    .word-card {
+        background-color: var(--parchment-base);
+        border-radius: var(--radius-card);
+        padding: 40px;
+        box-shadow: 
+            0 12px 24px -8px rgba(42, 39, 36, 0.08),
+            0 0 0 1px rgba(42, 39, 36, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .word-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 
+            0 24px 48px -12px rgba(42, 39, 36, 0.12),
+            0 0 0 1px rgba(42, 39, 36, 0.08);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .card-title {
+        font-size: 2.25rem;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: -0.01em;
+    }
+
+    .card-pos {
+        font-family: var(--font-sans);
+        font-size: 0.65rem;
+        font-style: italic;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-muted);
+        margin-top: 4px;
+    }
+
+    .star-rating {
+        display: flex;
+        gap: 2px;
+        color: var(--gold);
+    }
+
+    .card-definition {
+        font-size: 1.125rem;
+        line-height: 1.4;
+        font-style: italic;
+        color: var(--ink-muted);
+        flex-grow: 1;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .tag {
+        font-family: var(--font-sans);
+        font-size: 0.7rem;
+        background: var(--parchment-100);
+        border: 1px solid var(--parchment-200);
+        padding: 4px 10px;
+        border-radius: var(--radius-pill);
+        color: var(--ink-light);
+    }
+
+    .view-arrow {
+        color: var(--ink-light);
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .word-card:hover .view-arrow {
+        transform: translateX(4px);
+        color: var(--teal);
+    }
+
+    .ink-splatter {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        opacity: 0.03;
+        pointer-events: none;
+        transform: rotate(15deg);
+    }
+
+</style>
+</head>
+<body vid="9">
+
+<div class="container" vid="10">
+    <header vid="11">
+        <div class="brand-group" vid="12">
+            <h1 vid="13">My Lexicon</h1>
+            <p vid="14">A personal compendium of curious vocabulary</p>
+        </div>
+        <div class="stats" vid="15">
+            <div class="stat-item" vid="16">
+                <span class="stat-value" vid="17">42</span>
+                <span class="stat-label" vid="18">Words Collected</span>
+            </div>
+            <div class="stat-item" vid="19">
+                <span class="stat-value" vid="20">12</span>
+                <span class="stat-label" vid="21">Mastered</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid" vid="22">
+        
+        <div class="word-card" vid="23">
+            <div class="card-header" vid="24">
+                <div vid="25">
+                    <h2 class="card-title" vid="26">Ephemeral</h2>
+                    <div class="card-pos" vid="27">Adjective</div>
+                </div>
+                <div class="star-rating" vid="28">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="29"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="30"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="31"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="32"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="33"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="34"></path></svg>
+                </div>
+            </div>
+            <p class="card-definition" vid="35">Lasting for a very short time; fleeting or transitory. Often used to describe artificer infusions.</p>
+            <div class="card-footer" vid="36">
+                <span class="tag" vid="37">Collected 2d ago</span>
+                <svg class="view-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="38">
+                    <line x1="5" y1="12" x2="19" y2="12" vid="39"></line>
+                    <polyline points="12 5 19 12 12 19" vid="40"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        
+        <div class="word-card" vid="41">
+            <div class="card-header" vid="42">
+                <div vid="43">
+                    <h2 class="card-title" vid="44">Evanescent</h2>
+                    <div class="card-pos" vid="45">Adjective</div>
+                </div>
+                <div class="star-rating" vid="46">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="47"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="48"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="49"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="50"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" vid="51"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="52"></path></svg>
+                </div>
+            </div>
+            <p class="card-definition" vid="53">Soon passing out of sight, memory, or existence; quickly fading or disappearing.</p>
+            <div class="card-footer" vid="54">
+                <span class="tag" vid="55">Collected 5d ago</span>
+                <svg class="view-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="56">
+                    <line x1="5" y1="12" x2="19" y2="12" vid="57"></line>
+                    <polyline points="12 5 19 12 12 19" vid="58"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        
+        <div class="word-card" vid="59">
+            <div class="card-header" vid="60">
+                <div vid="61">
+                    <h2 class="card-title" vid="62">Transitory</h2>
+                    <div class="card-pos" vid="63">Adjective</div>
+                </div>
+                <div class="star-rating" vid="64">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="65"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="66"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" vid="67"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="68"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" vid="69"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="70"></path></svg>
+                </div>
+            </div>
+            <p class="card-definition" vid="71">Not permanent; acting only briefly. Related to the temporal shifts in ley lines.</p>
+            <div class="card-footer" vid="72">
+                <span class="tag" vid="73">Collected 1w ago</span>
+                <svg class="view-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="74">
+                    <line x1="5" y1="12" x2="19" y2="12" vid="75"></line>
+                    <polyline points="12 5 19 12 12 19" vid="76"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        
+        <div class="word-card" vid="77">
+            <div class="card-header" vid="78">
+                <div vid="79">
+                    <h2 class="card-title" vid="80">Fugacious</h2>
+                    <div class="card-pos" vid="81">Adjective</div>
+                </div>
+                <div class="star-rating" vid="82">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="83"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="84"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="85"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="86"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="87"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="88"></path></svg>
+                </div>
+            </div>
+            <p class="card-definition" vid="89">Tending to disappear; fleeting. A classic descriptor for spell components that dissolve upon use.</p>
+            <div class="card-footer" vid="90">
+                <span class="tag" vid="91">Collected 2w ago</span>
+                <svg class="view-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="92">
+                    <line x1="5" y1="12" x2="19" y2="12" vid="93"></line>
+                    <polyline points="12 5 19 12 12 19" vid="94"></polyline>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body></html>
