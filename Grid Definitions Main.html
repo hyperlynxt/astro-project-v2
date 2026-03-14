@@ -65,19 +65,95 @@
             padding-bottom: 0.1em; 
         }
 
-        .concept-card:hover .concept-title {
-            color: #8B2626; 
+        .lexicon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+            padding-top: 48px;
         }
-        
-        .masonry-grid-4 {
-            column-count: 4;
-            column-gap: 1.5rem;
+
+        .lexicon-card {
+            background: white !important;
+            padding: 24px;
+            border: 1px solid #E8E2D2;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
         }
-        
-        .masonry-item {
-            break-inside: avoid;
-            margin-bottom: 1.5rem;
+
+        .lexicon-card:hover {
+            background: #F5F2EB !important;
+            border-color: #D5CCB6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42, 39, 36, 0.1);
+        }
+
+        .card-word {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 500;
+            color: #2A2724;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .card-pos {
+            font-family: Inter, sans-serif;
+            font-size: 0.65rem;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(42, 39, 36, 0.65);
+        }
+
+        .card-snippet {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            line-height: 1.4;
+            color: rgba(42, 39, 36, 0.65);
+        }
+
+        .card-note-container {
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #D5CCB6;
+        }
+
+        .card-note {
+            font-family: "Reenie Beanie", cursive;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #2A2724;
             display: block;
+            margin-bottom: 8px;
+            transform: rotate(-1deg);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 2px;
+            color: #B08D57;
+        }
+
+        .card-date {
+            font-family: Inter, sans-serif;
+            font-size: 0.65rem;
+            color: rgba(42, 39, 36, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .glass-nav {
@@ -123,177 +199,117 @@
             </div>
         </section>
 
-        <div class="max-w-7xl mx-auto px-6" vid="41">
-            <div class="masonry-grid-4" vid="42">
+        <div class="max-w-7xl mx-auto px-6 pb-40" vid="41">
+            <div class="lexicon-grid" vid="42">
                 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="43">
-                    <div class="flex justify-between items-center" vid="44">
-                        <span class="font-serif italic text-[11px] text-seal/70 tracking-wide uppercase" vid="45">NEOLOGISM</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="46">
-                            <span class="font-hand text-sm text-parchment-400" vid="47">May 12</span>
+                <div class="lexicon-card" vid="21">
+                    <div class="card-word" vid="22">
+                        Ephemeral
+                        <span class="card-pos" vid="23">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="24">Lasting for a very short time; fleeting or transitory.</p>
+                    <div class="card-note-container" vid="25">
+                        <span class="card-note" vid="26">Perfect for artificer infusions...</span>
+                        <div class="card-footer" vid="27">
+                            <div class="star-rating" vid="28">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="29"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="30"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="31"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="32"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="33"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="34"></path></svg>
+                            </div>
+                            <span class="card-date" vid="35">Oct 12</span>
                         </div>
                     </div>
-                    <div vid="48">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="49">Sonder</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="50">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="51">noun</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="52">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="53">Coined in 2012</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="54">The profound, abrupt realization that each random passerby has a life as vivid and complex as your own.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="55">
-                        <p class="font-hand text-xl text-seal/80" vid="56">"Sitting at the cafe, it struck me again."</p>
-                    </div>
-                </article>
+                </div>
 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="57">
-                    <div class="flex justify-between items-center" vid="58">
-                        <span class="font-serif italic text-[11px] text-teal/70 tracking-wide uppercase" vid="59">LATIN</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="60">
-                            <span class="font-hand text-sm text-parchment-400" vid="61">Jun 04</span>
+                <div class="lexicon-card" vid="36">
+                    <div class="card-word" vid="37">
+                        Evanescent
+                        <span class="card-pos" vid="38">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="39">Soon passing out of sight, memory, or existence.</p>
+                    <div class="card-note-container" vid="40">
+                        <span class="card-note" vid="41">Ghost-like quality. Used for the wraith encounter.</span>
+                        <div class="card-footer" vid="42">
+                            <div class="star-rating" vid="43">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="44"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="45"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="46"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="47"></path></svg>
+                            </div>
+                            <span class="card-date" vid="48">Oct 14</span>
                         </div>
                     </div>
-                    <div vid="62">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="63">Liminal</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="64">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="65">adjective</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="66">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="67">limen (threshold)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="68">Relating to a transitional or initial stage of a process; occupying a position at, or on both sides of, a boundary.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="69">
-                        <p class="font-hand text-xl text-seal/80" vid="70">"The empty airport at 3 AM felt intensely liminal."</p>
-                    </div>
-                </article>
+                </div>
 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="71">
-                    <div class="flex justify-between items-center" vid="72">
-                        <span class="font-serif italic text-[11px] text-gold/70 tracking-wide uppercase" vid="73">GREEK</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="74">
-                            <span class="font-hand text-sm text-parchment-400" vid="75">Feb 18</span>
+                <div class="lexicon-card" vid="49">
+                    <div class="card-word" vid="50">
+                        Fugacious
+                        <span class="card-pos" vid="51">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="52">Tending to disappear; fleeting.</p>
+                    <div class="card-note-container" vid="53">
+                        <span class="card-note" vid="54">Good for herbalist notes on rare blooms.</span>
+                        <div class="card-footer" vid="55">
+                            <div class="star-rating" vid="56">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="57"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="58"></path></svg>
+                            </div>
+                            <span class="card-date" vid="59">Oct 18</span>
                         </div>
                     </div>
-                    <div vid="76">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="77">Entropy</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="78">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="79">noun</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="80">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="81">entropia (a turning towards)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="82">The inevitable degree of disorder or randomness in a closed system; a gradual, unavoidable decline into chaos.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="83">
-                        <p class="font-hand text-xl text-seal/80" vid="84">"You have to fight entropy every single day."</p>
-                    </div>
-                </article>
+                </div>
 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="85">
-                    <div class="flex justify-between items-center" vid="86">
-                        <span class="font-serif italic text-[11px] text-parchment-500 tracking-wide uppercase" vid="87">GREEK</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="88">
-                            <span class="font-hand text-sm text-parchment-400" vid="89">Oct 21</span>
+                <div class="lexicon-card" vid="60">
+                    <div class="card-word" vid="61">
+                        Transitory
+                        <span class="card-pos" vid="62">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="63">Not permanent; acting or lasting only briefly.</p>
+                    <div class="card-note-container" vid="64">
+                        <span class="card-note" vid="65">The wizard's portal was quite transitory.</span>
+                        <div class="card-footer" vid="66">
+                            <div class="star-rating" vid="67">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="68"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="69"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="70"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="71"></path></svg>
+                            </div>
+                            <span class="card-date" vid="72">Nov 02</span>
                         </div>
                     </div>
-                    <div vid="90">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="91">Apophenia</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="92">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="93">noun</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="94">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="95">apophainein (to show)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="96">The human tendency to perceive meaningful patterns or connections between unrelated or random things.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="97">
-                        <p class="font-hand text-xl text-seal/80" vid="98">"My brain finding faces in the wood grain again."</p>
-                    </div>
-                </article>
+                </div>
 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="99">
-                    <div class="flex justify-between items-center" vid="100">
-                        <span class="font-serif italic text-[11px] text-seal/70 tracking-wide uppercase" vid="101">LATIN</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="102">
-                            <span class="font-hand text-sm text-parchment-400" vid="103">Mar 02</span>
+                <div class="lexicon-card" vid="73">
+                    <div class="card-word" vid="74">
+                        Labyrinthine
+                        <span class="card-pos" vid="75">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="76">Like a labyrinth; irregular and twisting.</p>
+                    <div class="card-note-container" vid="77">
+                        <span class="card-note" vid="78">Describing the Undercity tunnels.</span>
+                        <div class="card-footer" vid="79">
+                            <div class="star-rating" vid="80">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="81"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="82"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="83"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="84"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="85"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="86"></path></svg>
+                            </div>
+                            <span class="card-date" vid="87">Nov 15</span>
                         </div>
                     </div>
-                    <div vid="104">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="105">Numinous</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="106">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="107">adjective</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="108">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="109">numen (divine will)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="110">Having a strong religious or spiritual quality; indicating or suggesting the presence of a divinity or higher power.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="111">
-                        <p class="font-hand text-xl text-seal/80" vid="112">"The ancient forest possessed a deeply numinous quality."</p>
-                    </div>
-                </article>
+                </div>
 
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="113">
-                    <div class="flex justify-between items-center" vid="114">
-                        <span class="font-serif italic text-[11px] text-teal/70 tracking-wide uppercase" vid="115">LATIN</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="116">
-                            <span class="font-hand text-sm text-parchment-400" vid="117">Dec 09</span>
+                <div class="lexicon-card" vid="88">
+                    <div class="card-word" vid="89">
+                        Arcane
+                        <span class="card-pos" vid="90">adj.</span>
+                    </div>
+                    <p class="card-snippet" vid="91">Understood by few; mysterious or secret.</p>
+                    <div class="card-note-container" vid="92">
+                        <span class="card-note" vid="93">Use sparingly for actual spellwork.</span>
+                        <div class="card-footer" vid="94">
+                            <div class="star-rating" vid="95">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="96"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="97"></path></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" vid="98"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="99"></path></svg>
+                            </div>
+                            <span class="card-date" vid="100">Nov 20</span>
                         </div>
                     </div>
-                    <div vid="118">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="119">Ineffable</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="120">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="121">adjective</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="122">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="123">ineffabilis (unutterable)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="124">Too great, beautiful, or extreme to be accurately expressed, communicated, or described in words.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="125">
-                        <p class="font-hand text-xl text-seal/80" vid="126">"The scale of the nebula was simply ineffable."</p>
-                    </div>
-                </article>
-
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="127">
-                    <div class="flex justify-between items-center" vid="128">
-                        <span class="font-serif italic text-[11px] text-gold/70 tracking-wide uppercase" vid="129">LATIN</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="130">
-                            <span class="font-hand text-sm text-parchment-400" vid="131">Jan 14</span>
-                        </div>
-                    </div>
-                    <div vid="132">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="133">Solipsism</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="134">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="135">noun</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="136">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="137">solus (alone) + ipse (self)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="138">The philosophical view or theory that the self is the only thing that can be strictly known to exist.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="139">
-                        <p class="font-hand text-xl text-seal/80" vid="140">"A dangerous philosophical trap for a lonely mind."</p>
-                    </div>
-                </article>
-
-                <article class="masonry-item concept-card group bg-white rounded-3xl border border-parchment-200 p-6 flex flex-col gap-4 transition-all duration-500 hover:shadow-[0_15px_30px_-10px_rgba(213,204,182,0.4)] relative" vid="141">
-                    <div class="flex justify-between items-center" vid="142">
-                        <span class="font-serif italic text-[11px] text-parchment-500 tracking-wide uppercase" vid="143">LATIN</span>
-                        <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity" vid="144">
-                            <span class="font-hand text-sm text-parchment-400" vid="145">Nov 03</span>
-                        </div>
-                    </div>
-                    <div vid="146">
-                        <h3 class="concept-title font-serif text-2xl font-medium text-ink transition-colors leading-tight mb-1" vid="147">Lacuna</h3>
-                        <div class="flex items-center gap-2 mb-2" vid="148">
-                            <span class="font-serif italic text-[13px] text-parchment-400" vid="149">noun</span>
-                            <span class="font-sans text-[10px] text-parchment-300" vid="150">|</span>
-                            <span class="font-sans text-[10px] font-medium tracking-wide uppercase text-parchment-400" vid="151">lacus (lake, pool)</span>
-                        </div>
-                        <p class="font-sans text-[12px] text-ink/80 mt-2 leading-relaxed" vid="152">An unfilled space or interval; a missing portion in a book, manuscript, or personal memory.</p>
-                    </div>
-                    <div class="mt-2 border-t border-parchment-100 pt-3" vid="153">
-                        <p class="font-hand text-xl text-seal/80" vid="154">"There is a strange lacuna in my memory of that year."</p>
-                    </div>
-                </article>
-
+                </div>
             </div>
         </div>
     </main>
