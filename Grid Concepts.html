@@ -889,7 +889,7 @@
             <!-- Content -->
             <div class="px-7 py-6 overflow-y-auto modal-scrollbar relative z-0 flex-grow space-y-8 h-[500px]">
                 <!-- Sort Order -->
-                <div class="animate-sidebar-item stagger-1">
+                <div class="animate-sidebar-item stagger-1" id="filter-sort-section">
                     <div class="flex items-center gap-2 mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>
@@ -897,16 +897,16 @@
                         <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Sort Order</h3>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button class="px-4 py-2 bg-seal-red text-white font-inter text-sm font-medium rounded-full shadow-lg border border-seal-red transition-all">Most Used</button>
-                        <button class="px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Alphabetical</button>
-                        <button class="px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Recently Added</button>
+                        <button data-sort="most-used" class="sort-btn px-4 py-2 bg-seal-red text-white font-inter text-sm font-medium rounded-full shadow-lg border border-seal-red transition-all">Most Used</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="recently-added" class="sort-btn px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Recently Added</button>
                     </div>
                 </div>
 
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-2"></div>
 
                 <!-- Disciplines -->
-                <div class="animate-sidebar-item stagger-2">
+                <div class="animate-sidebar-item stagger-2" id="filter-disciplines-section">
                     <div class="flex items-center gap-2 mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
@@ -915,7 +915,7 @@
                     </div>
                     <div class="grid grid-cols-1 gap-3">
                         <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" checked>
+                            <input type="checkbox" class="hidden" value="Systems Thinking" checked>
                             <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
                                 <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -927,7 +927,7 @@
                             </div>
                         </label>
                         <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden">
+                            <input type="checkbox" class="hidden" value="Philosophy" checked>
                             <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
                                 <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -936,6 +936,30 @@
                             <div class="flex flex-col">
                                 <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Philosophy</span>
                                 <span class="font-inter text-xs text-ink/40">Epistemology & Ethics</span>
+                            </div>
+                        </label>
+                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
+                            <input type="checkbox" class="hidden" value="Economics" checked>
+                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
+                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Economics</span>
+                                <span class="font-inter text-xs text-ink/40">Value & Incentives</span>
+                            </div>
+                        </label>
+                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
+                            <input type="checkbox" class="hidden" value="Statistics" checked>
+                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
+                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Statistics</span>
+                                <span class="font-inter text-xs text-ink/40">Probability & Data</span>
                             </div>
                         </label>
                     </div>
@@ -954,54 +978,224 @@
                         </div>
                         <span class="font-hand text-lg text-seal-red">3+ stars</span>
                     </div>
-                    <div class="flex gap-2 p-3 bg-white border border-parchment-dark/10 rounded-xl shadow-inner-subtle w-fit">
-                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button class="text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button class="text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <div class="flex gap-2 p-3 bg-white border border-parchment-dark/10 rounded-xl shadow-inner-subtle w-fit" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="2" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="3" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="4" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="5" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                     </div>
                 </div>
             </div>
 
             <!-- Footer -->
             <div class="p-6 border-t border-parchment-dark/15 bg-parchment-50 relative z-10 flex items-center justify-between flex-shrink-0 animate-sidebar-item stagger-4">
-                <button onclick="closeFilterModal()" class="font-inter text-sm font-medium text-ink/50 hover:text-ink transition-colors underline underline-offset-4 decoration-parchment-300">Clear Filters</button>
-                <button onclick="closeFilterModal()" class="bg-ink hover:bg-black text-white px-6 py-3 rounded-xl font-inter text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                <button onclick="clearAllFilters()" class="font-inter text-sm font-medium text-ink/50 hover:text-ink transition-colors underline underline-offset-4 decoration-parchment-300">Clear Filters</button>
+                <button onclick="applyFilterSystem()" class="bg-ink hover:bg-black text-white px-6 py-3 rounded-xl font-inter text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
                     <span>Apply Filters</span>
-                    <span class="font-hand text-lg text-white/80 pt-0.5">14 concepts</span>
+                    <span id="filter-result-count" class="font-hand text-lg text-white/80 pt-0.5">-- concepts</span>
                 </button>
             </div>
         </div>
     </div>
 
     <script vid="78">
+        const filterResultCount = document.getElementById('filter-result-count');
+        const filterSortButtons = document.querySelectorAll('.sort-btn');
+        const filterDisciplineChecks = document.querySelectorAll('#filter-disciplines-section input[type="checkbox"]');
+        const filterStarButtons = document.querySelectorAll('.star-filter');
+        const masonryGrid = document.querySelector('.masonry-grid');
+
+        let currentFilterState = {
+            query: '',
+            sort: 'most-used',
+            disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
+            minUtility: 3
+        };
+
         function openFilterModal() {
-            const modal = document.getElementById('filter-modal');
-            modal.classList.remove('hidden');
+            filterModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             
-            // Re-trigger heading animation inside modal
-            const path = modal.querySelector('.swoosh-path');
+            // Re-trigger heading animation
+            const path = filterModal.querySelector('.swoosh-path');
             path.style.animation = 'none';
-            path.offsetHeight; // trigger reflow
+            path.offsetHeight;
             path.style.animation = null;
+            
+            updateFilterPreview();
         }
 
         function closeFilterModal() {
-            const modal = document.getElementById('filter-modal');
-            modal.classList.add('hidden');
+            filterModal.classList.add('hidden');
             document.body.style.overflow = '';
         }
 
-        // Close on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeFilterModal();
-            if (e.key === 'Escape') hideModal(); // Keep existing modal close on escape
+        // Sort Logic
+        filterSortButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sortType = btn.getAttribute('data-sort');
+                currentFilterState.sort = sortType;
+                
+                // Update UI classes
+                filterSortButtons.forEach(b => {
+                    b.classList.remove('bg-seal-red', 'text-white', 'shadow-lg', 'border-seal-red');
+                    b.classList.add('bg-white', 'text-ink/70', 'border-parchment-dark/30');
+                });
+                btn.classList.add('bg-seal-red', 'text-white', 'shadow-lg', 'border-seal-red');
+                btn.classList.remove('bg-white', 'text-ink/70', 'border-parchment-dark/30');
+                
+                updateFilterPreview();
+            });
         });
 
-        // Close on backdrop click
-        document.getElementById('filter-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'filter-modal') closeFilterModal();
+        // Discipline Filtering
+        filterDisciplineChecks.forEach(check => {
+            check.addEventListener('change', () => {
+                currentFilterState.disciplines = Array.from(filterDisciplineChecks)
+                    .filter(i => i.checked)
+                    .map(i => i.value);
+                
+                // Update checkbox UI
+                const checkDiv = check.nextElementSibling;
+                const checkSvg = checkDiv.querySelector('svg');
+                if(check.checked) {
+                    checkDiv.classList.add('bg-seal-red', 'border-seal-red');
+                    checkDiv.classList.remove('bg-white', 'border-parchment-400');
+                    checkSvg.classList.remove('hidden');
+                } else {
+                    checkDiv.classList.remove('bg-seal-red', 'border-seal-red');
+                    checkDiv.classList.add('bg-white', 'border-parchment-400');
+                    checkSvg.classList.add('hidden');
+                }
+                
+                updateFilterPreview();
+            });
         });
+
+        // Utility Star Filtering
+        filterStarButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const rating = parseInt(btn.getAttribute('data-rating'));
+                currentFilterState.minUtility = rating;
+                
+                // Update star UI
+                filterStarButtons.forEach((star, index) => {
+                    if(index < rating) {
+                        star.classList.remove('text-parchment-200');
+                        star.classList.add('text-gold');
+                    } else {
+                        star.classList.add('text-parchment-200');
+                        star.classList.remove('text-gold');
+                    }
+                });
+                
+                // Update preview text
+                const labelSpan = btn.closest('#filter-utility-stars').previousElementSibling.querySelector('span');
+                labelSpan.textContent = `${rating}+ stars`;
+                
+                updateFilterPreview();
+            });
+        });
+
+        function updateFilterPreview() {
+            const count = calculateFilteredCount();
+            filterResultCount.textContent = `${count} concepts`;
+        }
+
+        function calculateFilteredCount() {
+            let visibleCount = 0;
+            cards.forEach(card => {
+                if (shouldShowCard(card)) visibleCount++;
+            });
+            return visibleCount;
+        }
+
+        function shouldShowCard(card) {
+            const disc = card.getAttribute('data-discipline') || '';
+            const stars = parseInt(card.getAttribute('data-stars')) || 0;
+            const title = card.querySelector('.model-title').textContent.toLowerCase();
+            const desc = card.querySelector('p').textContent.toLowerCase();
+            
+            // Search query match
+            const queryMatch = !currentFilterState.query || 
+                               title.includes(currentFilterState.query) || 
+                               desc.includes(currentFilterState.query);
+            
+            // Discipline match (any part of the discipline string)
+            const disciplineMatch = currentFilterState.disciplines.some(d => disc.includes(d));
+            
+            // Star match
+            const starMatch = stars >= currentFilterState.minUtility;
+            
+            return queryMatch && disciplineMatch && starMatch;
+        }
+
+        function applyFilterSystem() {
+            cards.forEach(card => {
+                if(shouldShowCard(card)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            sortCards();
+            closeFilterModal();
+            // Trigger masonry layout update if any
+        }
+
+        function sortCards() {
+            const cardsArray = Array.from(cards);
+            
+            cardsArray.sort((a, b) => {
+                if (currentFilterState.sort === 'alphabetical') {
+                    return a.querySelector('.model-title').textContent.localeCompare(b.querySelector('.model-title').textContent);
+                } else if (currentFilterState.sort === 'most-used') {
+                    return parseInt(b.getAttribute('data-usage')) - parseInt(a.getAttribute('data-usage'));
+                } else {
+                    // Recently added - stay in original DOM order (mocking by original index)
+                    return 0; 
+                }
+            });
+            
+            // Re-append in new order
+            cardsArray.forEach(card => masonryGrid.appendChild(card));
+        }
+
+        function clearAllFilters() {
+            currentFilterState = {
+                query: '',
+                sort: 'most-used',
+                disciplines: Array.from(filterDisciplineChecks).map(i => i.value),
+                minUtility: 1
+            };
+            
+            // Reset UI
+            filterDisciplineChecks.forEach(i => i.checked = true);
+            filterStarButtons[0].click(); // Reset to 1 star (simulated)
+            filterSortButtons[0].click(); // Reset to most used
+            
+            applyFilterSystem();
+        }
+
+        // Integration with existing search
+        searchInput.addEventListener('input', (e) => {
+            currentFilterState.query = e.target.value.toLowerCase().trim();
+            applyFilterSystem();
+        });
+
+        // Close handlers
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFilterModal();
+            if (e.key === 'Escape') hideModal();
+        });
+
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) closeFilterModal();
+        });
+
+        // Initialize counts
+        updateFilterPreview();
     </script>
+ipt>
