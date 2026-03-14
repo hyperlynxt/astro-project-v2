@@ -1021,7 +1021,7 @@
             sort: 'most-used',
             sortOrder: 'desc', // 'asc' or 'desc'
             disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
-            minUtility: 3
+            minUtility: 1
         };
 
         function openFilterModal() {
@@ -1156,9 +1156,9 @@
                                title.includes(currentFilterState.query) || 
                                desc.includes(currentFilterState.query);
             
-            // Discipline match
+            // Discipline match: Show if 'All' is selected OR if card matches any selected discipline
             const disciplineMatch = currentFilterState.disciplines.includes('All') || 
-                                     currentFilterState.disciplines.some(d => disc.includes(d));
+                                     (disc && currentFilterState.disciplines.some(d => disc.includes(d)));
             
             // Star match
             const starMatch = stars >= currentFilterState.minUtility;
