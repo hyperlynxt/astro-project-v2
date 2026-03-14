@@ -19,6 +19,8 @@
 
         body {
             background-color: var(--bg-void);
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-size: 400px; /* Coarser grain */
             color: var(--text-primary);
             font-family: var(--font-serif);
             margin: 0;
@@ -30,21 +32,6 @@
             justify-content: center;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-        }
-
-        #texture-overlay {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-size: 400px; /* Scaled up for coarser grain */
-            background-repeat: repeat;
-            opacity: 0.25; /* Significantly boosted for visibility */
-            pointer-events: none;
-            z-index: 100; /* Above everything to ensure visibility */
         }
 
         #mycelium-layer {
@@ -211,7 +198,6 @@
 </head>
 
 <body vid="7">
-    <div id="texture-overlay"></div>
 
     <canvas id="mycelium-layer"
         style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
