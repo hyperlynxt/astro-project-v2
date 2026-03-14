@@ -1,0 +1,444 @@
+<html lang="en" vid="0">
+
+<head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Interlinked &amp; Intertwined - Selection</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+        :root {
+            --bg-void: #f8f7f2;
+            --text-primary: #1a1a1a;
+            --accent-gold: #e6b97e;
+            --accent-glow: rgba(230, 185, 126, 0.4);
+            --font-serif: 'Shippori Mincho', serif;
+            --font-display: 'Cormorant Garamond', serif;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-serif);
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #mycelium-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ampersand-hub {
+            font-size: 6rem;
+            color: #1a1a1a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            cursor: default;
+            user-select: none;
+        }
+
+        #hub-node {
+            font-family: var(--font-display);
+            font-style: italic;
+            color: #1a1a1a;
+            font-size: clamp(6rem, 15vw, 12rem);
+            opacity: 0;
+            animation: nodeEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .aura {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(230, 185, 126, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: breathe 6s ease-in-out infinite;
+        }
+
+        .chapter-node {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: scale(0.8);
+            z-index: 25;
+            padding: 1rem;
+        }
+
+        .node-circle {
+            width: 12px;
+            height: 12px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .chapter-label {
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0.6;
+            transition: all 0.4s ease;
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-top: 0.25rem;
+            white-space: nowrap;
+            transition: all 0.4s ease;
+        }
+
+        .chapter-node:hover {
+            transform: scale(1.1);
+        }
+
+        .chapter-node:hover .node-circle {
+            box-shadow: 0 0 25px var(--accent-gold), 0 0 50px rgba(0, 0, 0, 0.2);
+            transform: scale(1.5);
+        }
+
+        .chapter-node:hover .chapter-label,
+        .chapter-node:hover .chapter-title {
+            color: #1a1a1a;
+            opacity: 1;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0.5;
+            }
+        }
+
+        .fade-in-node {
+            animation: nodeEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes nodeEntrance {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body vid="7">
+
+    <canvas id="mycelium-layer"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none;"></canvas>
+
+    <header style="position: absolute; top: 3rem; right: 3rem; z-index: 50;">
+        <div
+            style="font-family: var(--font-serif); font-weight: 600; font-size: 1.5rem; letter-spacing: -0.02em; color: #1a1a1a;">
+            hyperlynxt | teo
+        </div>
+    </header>
+
+    <div
+        style="position: absolute; left: 2%; top: 35%; transform: translateY(-50%); z-index: 40; pointer-events: none;">
+        <h1
+            style="font-family: var(--font-display); font-size: clamp(4rem, 10vw, 8rem); line-height: 0.9; font-weight: 300; letter-spacing: -0.05em; color: #1a1a1a;">
+            <div style="opacity: 0; animation: fadeIn 1s ease-out forwards;">Interlinked</div>
+            <div
+                style="position: relative; z-index: 50; margin: -2vw 0; opacity: 0; animation: scaleIn 1s ease 0.3s forwards;">
+                <span
+                    style="font-style: italic; color: #1b3022; padding: 0 0.5rem; font-size: clamp(5rem, 12vw, 10rem);">&amp;</span>
+            </div>
+            <div style="opacity: 0; animation: fadeIn 1s ease-out 0.5s forwards;">Intertwined</div>
+        </h1>
+        <div style="margin-top: 2rem; margin-left: 2rem; opacity: 0; animation: fadeIn 1.5s ease-out 1s forwards;">
+            <p
+                style="font-family: var(--font-serif); font-size: 1.1rem; color: #4a4a4a; white-space: nowrap; line-height: 1.6; letter-spacing: 0.05em;">
+                A mosaic of a life made of wonder.<br>The texture of my self, gathered in one place.
+            </p>
+        </div>
+    </div>
+
+    <main class="content-layer" vid="15">
+        <div class="ampersand-hub" style="left: 20%; top: -3%;" vid="16">
+            <span id="hub-node" vid="18">&amp;</span>
+        </div>
+
+
+        <a href="#" class="chapter-node fade-in-node"
+            style="top: 12%; left: 70%; translate: -50% 0; animation-delay: 0.4s;" vid="19">
+            <div class="node-circle" vid="20"></div>
+            <span class="chapter-label" vid="21">Part I</span>
+            <span class="chapter-title" vid="22">Notes</span>
+        </a>
+
+        <a href="quotes/Quotes Landing Page.html" class="chapter-node fade-in-node"
+            style="top: 29%; left: 83%; animation-delay: 0.6s;" vid="23">
+            <div class="node-circle" vid="24"></div>
+            <span class="chapter-label" vid="25">Part II</span>
+            <span class="chapter-title" vid="26">Quotes Felt</span>
+        </a>
+
+        <a href="concepts/Concept Cards Page.html" class="chapter-node fade-in-node"
+            style="top: 70%; left: 78%; animation-delay: 0.8s;" vid="27">
+            <div class="node-circle" vid="28"></div>
+            <span class="chapter-label" vid="29">Part III</span>
+            <span class="chapter-title" vid="30">Concepts Toolkit</span>
+        </a>
+
+        <a href="#" class="chapter-node fade-in-node"
+            style="top: 77%; left: 70%; translate: -50% 0; animation-delay: 1.0s;" vid="31">
+            <div class="node-circle" vid="32"></div>
+            <span class="chapter-label" vid="33">Part IV</span>
+            <span class="chapter-title" vid="34">Linguistic Treats</span>
+        </a>
+
+        <a href="#" class="chapter-node fade-in-node" style="top: 70%; left: 47%; animation-delay: 1.2s;" vid="35">
+            <div class="node-circle" vid="36"></div>
+            <span class="chapter-label" vid="37">Part V</span>
+            <span class="chapter-title" vid="38">Cinema Annotations</span>
+        </a>
+
+        <a href="#" class="chapter-node fade-in-node" style="top: 29%; left: 42%; animation-delay: 1.4s;" vid="39">
+            <div class="node-circle" vid="40"></div>
+            <span class="chapter-label" vid="41">Part VI</span>
+            <span class="chapter-title" vid="42">Reading Annotations</span>
+        </a>
+    </main>
+
+    <script vid="44">
+        const canvas = document.getElementById('mycelium-layer');
+        const ctx = canvas.getContext('2d');
+        const hubNode = document.getElementById('hub-node');
+        const chapterNodes = document.querySelectorAll('.node-circle');
+
+        const CONFIG = {
+            maxPaths: 45,
+            color: 'rgba(42, 42, 42, {opacity})',
+            strokeWidth: { min: 0.5, max: 1.5 },
+            opacity: { min: 0.4, max: 0.8 },
+            growthSpeed: 0.006,
+            lifeSpan: { min: 300, max: 700 }
+        };
+
+        let activePaths = [];
+        let dpr = window.devicePixelRatio || 1;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+            activePaths = [];
+        }
+
+        const random = (min, max) => Math.random() * (max - min) + min;
+
+        function getCenter(element) {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+        }
+
+        function getBezierPoint(t, p0, p1, p2, p3) {
+            const cX = 3 * (p1.x - p0.x);
+            const bX = 3 * (p2.x - p1.x) - cX;
+            const aX = p3.x - p0.x - cX - bX;
+
+            const cY = 3 * (p1.y - p0.y);
+            const bY = 3 * (p2.y - p1.y) - cY;
+            const aY = p3.y - p0.y - cY - bY;
+
+            const x = (aX * Math.pow(t, 3)) + (bX * Math.pow(t, 2)) + (cX * t) + p0.x;
+            const y = (aY * Math.pow(t, 3)) + (bY * Math.pow(t, 2)) + (cY * t) + p0.y;
+            return { x, y };
+        }
+
+        class MyceliumPath {
+            constructor() {
+                this.phase = 'growing';
+                this.progress = 0;
+                this.life = random(CONFIG.lifeSpan.min, CONFIG.lifeSpan.max);
+                this.width = random(CONFIG.strokeWidth.min, CONFIG.strokeWidth.max);
+                this.opacity = random(CONFIG.opacity.min, CONFIG.opacity.max);
+                this.initPoints();
+            }
+
+            initPoints() {
+                const targetNodes = Array.from(chapterNodes);
+                const randomNode = targetNodes[Math.floor(Math.random() * targetNodes.length)];
+
+                this.start = getCenter(hubNode);
+                this.end = getCenter(randomNode);
+
+                this.start.x += random(-5, 5);
+                this.start.y += random(-5, 5);
+                this.end.x += random(-8, 8);
+                this.end.y += random(-8, 8);
+
+                this.cpOffsets = {
+                    cp1x: random(-20, 20),
+                    cp1y: random(-20, 20),
+                    cp2x: random(-20, 20),
+                    cp2y: random(-20, 20),
+                    freq: random(0.0005, 0.002),
+                    amp: random(10, 50)
+                };
+            }
+
+            update(time) {
+                if (this.phase === 'growing') {
+                    this.progress += CONFIG.growthSpeed;
+                    if (this.progress >= 1) { this.progress = 1; this.phase = 'sustained'; }
+                } else if (this.phase === 'sustained') {
+                    this.life--;
+                    if (this.life <= 0) this.phase = 'dying';
+                } else if (this.phase === 'dying') {
+                    this.progress -= CONFIG.growthSpeed * 1.2;
+                    if (this.progress <= 0) { this.progress = 0; this.dead = true; }
+                }
+
+                const dx = this.end.x - this.start.x;
+                const dy = this.end.y - this.start.y;
+
+                const noise1 = Math.sin(time * this.cpOffsets.freq) * this.cpOffsets.amp;
+                const noise2 = Math.cos(time * this.cpOffsets.freq) * this.cpOffsets.amp;
+
+                this.cp1 = {
+                    x: this.start.x + dx * 0.4 + this.cpOffsets.cp1x + noise1,
+                    y: this.start.y + dy * 0.4 + this.cpOffsets.cp1y + noise2
+                };
+
+                this.cp2 = {
+                    x: this.start.x + dx * 0.7 + this.cpOffsets.cp2x - noise1,
+                    y: this.start.y + dy * 0.7 + this.cpOffsets.cp2y - noise2
+                };
+            }
+
+            draw() {
+                if (this.progress <= 0) return;
+
+                ctx.beginPath();
+                ctx.moveTo(this.start.x, this.start.y);
+
+                const segments = 20;
+                for (let i = 1; i <= segments; i++) {
+                    let t = i / segments;
+                    if (t > this.progress) t = this.progress;
+
+                    const p = getBezierPoint(t, this.start, this.cp1, this.cp2, this.end);
+                    ctx.lineTo(p.x, p.y);
+
+                    if (t === this.progress) break;
+                }
+
+                ctx.strokeStyle = CONFIG.color.replace('{opacity}', this.opacity);
+                ctx.lineWidth = this.width;
+                ctx.lineCap = 'round';
+
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.shadowBlur = 4;
+
+                ctx.stroke();
+            }
+        }
+
+        function animate() {
+            const time = Date.now();
+            ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+            for (let i = activePaths.length - 1; i >= 0; i--) {
+                if (activePaths[i].dead) {
+                    activePaths.splice(i, 1);
+                }
+            }
+            if (activePaths.length < CONFIG.maxPaths && Math.random() < 0.15) {
+                activePaths.push(new MyceliumPath());
+            }
+
+            activePaths.forEach(path => {
+                path.update(time);
+                path.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        setTimeout(() => {
+            animate();
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

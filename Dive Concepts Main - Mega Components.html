@@ -1,0 +1,642 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Latticework - Reading View</title>
+    <script src="https://cdn.tailwindcss.com" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Inter:wght@400;500;600&amp;family=Reenie+Beanie&amp;display=swap" rel="stylesheet" vid="8">
+    
+    <script vid="9">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            50: '#FFFFFF',
+                            100: '#FDFCF9',
+                            200: '#F5F2EB',
+                            300: '#EAE5D8',
+                            400: '#D4CCBA',
+                            500: '#B8AE96',
+                            600: '#8C8070',
+                        },
+                        ink: '#2A2724',
+                        seal: '#8B2626',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"EB Garamond"', 'serif'],
+                        script: ['"Reenie Beanie"', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'paper': 'url("https://www.transparenttextures.com/patterns/natural-paper.png")',
+                    }
+                }
+            }
+        }
+    </script>
+    <style vid="10">
+        body {
+            background-color: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            color: #2A2724;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        
+        ::selection {
+            background-color: rgba(234, 229, 216, 0.4); 
+            color: inherit;
+        }
+
+        
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4CCBA;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B8AE96;
+        }
+
+        
+        .hairline-b {
+            border-bottom: 1px solid rgba(212, 204, 186, 0.5); 
+        }
+        .hairline-r {
+            border-right: 1px solid rgba(212, 204, 186, 0.5);
+        }
+
+        
+        .group-hover\:opacity-100 {
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="font-serif min-h-screen selection:bg-parchment-300/40" vid="11">
+
+    
+    <nav class="fixed top-0 w-full z-50 bg-parchment-50/80 backdrop-blur-md hairline-b h-16 flex items-center justify-between px-6 lg:px-12" vid="12">
+        
+        <div class="flex items-center space-x-6" vid="13">
+            <div class="flex items-baseline space-x-2 cursor-pointer" vid="14">
+                <span class="font-sans font-bold text-[10px] tracking-wider uppercase text-seal" vid="15">Latticework</span>
+                <span class="font-serif italic text-lg text-ink" vid="16">Mental Models</span>
+            </div>
+            <div class="h-4 w-px bg-parchment-300" vid="17"></div>
+            <div class="flex items-center space-x-6" vid="18">
+                <a href="#" class="font-sans text-[11px] font-medium tracking-wider uppercase text-ink border-b border-seal pb-1" vid="19">Library</a>
+                <a href="#" class="font-sans text-[11px] font-medium tracking-wider uppercase text-parchment-500 hover:text-ink transition-colors pb-1" vid="20">Frameworks</a>
+                <a href="#" class="font-sans text-[11px] font-medium tracking-wider uppercase text-parchment-500 hover:text-ink transition-colors pb-1" vid="21">My Notes</a>
+            </div>
+        </div>
+
+        
+        <div class="flex items-center space-x-4" vid="22">
+            <div class="flex items-center space-x-2" vid="23">
+                <span class="font-sans text-[10px] uppercase tracking-wide text-parchment-500" vid="24">Current Progress</span>
+                <span class="font-script text-2xl text-seal -mt-1 leading-none" vid="25">35% complete</span>
+            </div>
+            <button class="w-8 h-8 rounded-full border border-parchment-300 flex items-center justify-center hover:bg-parchment-200 transition-colors cursor-pointer group" vid="26">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ink group-hover:text-seal transition-colors" vid="27"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" vid="28"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    
+    <main class="max-w-[84rem] mx-auto px-6 lg:px-12 pt-32 pb-24 flex flex-col lg:flex-row gap-16 relative" vid="29">
+        
+        
+        <article class="lg:w-2/3 flex flex-col space-y-12" vid="30">
+            
+            
+            <a href="#" class="group flex items-center space-x-2 w-fit" vid="31">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-500 group-hover:text-ink transition-all duration-300 group-hover:-translate-x-1" vid="32"><path d="m15 18-6-6 6-6" vid="33"></path></svg>
+                <span class="font-sans text-[10px] tracking-wider uppercase text-parchment-500 group-hover:text-ink transition-colors" vid="34">Return to Library</span>
+            </a>
+
+            
+            <header class="space-y-6" vid="35">
+                <div class="flex items-center space-x-4" vid="36">
+                    <span class="font-script text-2xl text-parchment-500 tracking-wide" vid="37">The Inversion Method</span>
+                    <div class="w-16 h-px bg-parchment-400/50" vid="38"></div>
+                </div>
+                <h1 class="text-6xl font-serif text-ink leading-[1.1] tracking-tight" vid="39">The Art of <em class="italic" vid="40">Thinking Backward</em></h1>
+                <p class="text-2xl font-serif italic text-parchment-500 border-l-2 border-parchment-200 pl-6 mt-6" vid="41">
+                    "Invert, always invert." — Carl Jacobi
+                </p>
+            </header>
+
+            
+            <div class="prose prose-lg text-ink font-serif text-[1.15rem] leading-[1.8] space-y-6" vid="42">
+                <p vid="43">
+                    It is in the nature of things that many hard problems are best solved when they are addressed backward. The way to help India is not to think "How can I help India?" Instead, you ask "How can I hurt India?" You find what will do the worst damage, and then try to avoid it.
+                </p>
+                <p vid="44">
+                    This is the essence of the inversion heuristic. We naturally tend to think about what we want to achieve. We look forward. But often, it is far more illuminating to look at what we want to avoid and work backward from there. By explicitly identifying the failure states, we naturally illuminate the path to success.
+                </p>
+            </div>
+
+            
+            <div class="relative pl-8 my-8 group" vid="45">
+                
+                <div class="absolute left-[-24px] top-0 bottom-0 w-[2px] bg-parchment-400 opacity-50" vid="46"></div>
+                
+                
+                <blockquote class="font-serif italic text-xl text-ink leading-relaxed" vid="47">
+                    Avoiding stupidity is easier than seeking brilliance. If you can simply consistently avoid making terrible decisions, you will outperform the vast majority of people who are trying to be brilliant.
+                </blockquote>
+
+                
+                <div class="absolute -right-24 xl:-right-32 top-2 w-28 md:w-32 rotate-[2deg] pointer-events-none transition-transform duration-300 group-hover:rotate-[4deg] hidden md:block" vid="48">
+                    <span class="font-script text-2xl text-seal leading-none block" vid="49">Crucial distinction here!</span>
+                </div>
+            </div>
+
+            <div class="prose prose-lg text-ink font-serif text-[1.15rem] leading-[1.8] space-y-6" vid="50">
+                <h2 class="text-3xl font-serif text-ink mt-8 mb-4" vid="51">The Mechanics of Failure</h2>
+                <p vid="52">
+                    Consider personal finance. Instead of asking "How do I become wealthy?", ask "How do I ensure I remain poor?" The answers come rapidly: spend more than you earn, carry high-interest debt, invest in things you don't understand, and ignore compounding. The prescription for wealth, then, becomes the systematic avoidance of these identified actions.
+                </p>
+            </div>
+
+            <!-- Practice Callout -->
+            <div class="bg-parchment-200/50 border-l-[4px] border-seal rounded-r-xl p-6 my-8" vid="53">
+                <span class="font-sans text-[10px] tracking-widest uppercase font-semibold text-seal mb-2 block" vid="54">The Practice</span>
+                <p class="font-serif text-lg text-ink leading-relaxed m-0" vid="55">
+                    Before starting any new project, conduct a "pre-mortem." Assume the project has completely failed a year from now. Write down all the reasons why that happened. Then, design your project plan specifically to prevent those reasons.
+                </p>
+            </div>
+
+            <!-- Origins Section -->
+            <div class="space-y-5" vid="56">
+                <div class="flex items-center space-x-4" vid="57">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="58">Origins &amp; History</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="59"></div>
+                </div>
+                <p class="font-serif text-[1.15rem] leading-[1.8] text-ink" vid="60">
+                    The principle is most often attributed to the 19th-century Prussian mathematician Carl Gustav Jacob Jacobi, who made it his habit to routinely invert problems as a standard mathematical technique. The phrase <em vid="61">"man muss immer umkehren"</em> — one must always invert — became his signature counsel.
+                </p>
+                <p class="font-serif text-[1.15rem] leading-[1.8] text-ink" vid="62">
+                    The idea was later popularized in the investing world by Charlie Munger, who adopted it as one of his core mental tools, applying it to business analysis, personal decision-making, and even the study of human happiness.
+                </p>
+            </div>
+
+            <!-- Step-by-step process -->
+            <div class="space-y-5" vid="63">
+                <div class="flex items-center space-x-4" vid="64">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="65">How to Apply It</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="66"></div>
+                </div>
+                <ol class="space-y-4 mt-2" vid="67">
+                    <li class="flex items-start space-x-5" vid="68">
+                        <span class="font-serif italic text-4xl text-seal/20 leading-none mt-[-4px] select-none" vid="69">1</span>
+                        <div vid="70">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="71">Define the goal</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="72">State clearly what you are trying to achieve. Be specific — vague goals produce vague inversions.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-5" vid="73">
+                        <span class="font-serif italic text-4xl text-seal/20 leading-none mt-[-4px] select-none" vid="74">2</span>
+                        <div vid="75">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="76">Invert the question</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="77">Ask the opposite: <em vid="78">"What would guarantee failure?"</em> or <em vid="79">"What would make this catastrophic?"</em></p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-5" vid="80">
+                        <span class="font-serif italic text-4xl text-seal/20 leading-none mt-[-4px] select-none" vid="81">3</span>
+                        <div vid="82">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="83">List failure conditions</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="84">Write down every path to the worst outcome freely and without judgment — quantity matters here.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-5" vid="85">
+                        <span class="font-serif italic text-4xl text-seal/20 leading-none mt-[-4px] select-none" vid="86">4</span>
+                        <div vid="87">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="88">Design around avoidance</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="89">Build your plan, system, or decision specifically to make each identified failure path impossible or unlikely.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Common Misapplications -->
+            <div class="space-y-5" vid="90">
+                <div class="flex items-center space-x-4" vid="91">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="92">Common Misapplications</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="93"></div>
+                </div>
+                <div class="grid grid-cols-1 gap-4" vid="94">
+                    <div class="flex items-start space-x-4 p-4 rounded-lg bg-parchment-200/30 border border-parchment-300/50" vid="95">
+                        <span class="font-script text-3xl text-seal/40 leading-none mt-1 select-none" vid="96">✗</span>
+                        <div vid="97">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="98">Paralysis by negation</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="99">Spending so much energy cataloguing failures that you never take action. Inversion is a diagnostic tool, not a final answer.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 p-4 rounded-lg bg-parchment-200/30 border border-parchment-300/50" vid="100">
+                        <span class="font-script text-3xl text-seal/40 leading-none mt-1 select-none" vid="101">✗</span>
+                        <div vid="102">
+                            <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500 mb-1" vid="103">Applying it in isolation</p>
+                            <p class="font-serif text-[1.05rem] leading-relaxed text-ink/80" vid="104">Inversion works best when combined with forward analysis. It supplements, it does not replace, positive vision and strategy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Thinkers -->
+            <div class="space-y-5" vid="105">
+                <div class="flex items-center space-x-4" vid="106">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="107">Key Thinkers</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="108"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-5 mt-1" vid="109">
+                    <div class="p-5 border border-parchment-300/70 rounded-xl bg-white/30 space-y-3" vid="110">
+                        <div class="flex items-start justify-between" vid="111">
+                            <div vid="112">
+                                <p class="font-serif text-[1.1rem] font-medium text-ink" vid="113">Carl Gustav Jacobi</p>
+                                <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-0.5" vid="114">1804 – 1851 · Mathematics</p>
+                            </div>
+                            <span class="font-script text-3xl text-seal/20 leading-none select-none" vid="115">J</span>
+                        </div>
+                        <p class="font-serif italic text-[0.95rem] text-ink/70 leading-snug border-t border-parchment-300/50 pt-3" vid="116">Prussian mathematician who formalized the habit of problem inversion as a standard technique in calculus and number theory.</p>
+                    </div>
+                    <div class="p-5 border border-parchment-300/70 rounded-xl bg-white/30 space-y-3" vid="117">
+                        <div class="flex items-start justify-between" vid="118">
+                            <div vid="119">
+                                <p class="font-serif text-[1.1rem] font-medium text-ink" vid="120">Charlie Munger</p>
+                                <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-0.5" vid="121">1924 – 2023 · Investing</p>
+                            </div>
+                            <span class="font-script text-3xl text-seal/20 leading-none select-none" vid="122">M</span>
+                        </div>
+                        <p class="font-serif italic text-[0.95rem] text-ink/70 leading-snug border-t border-parchment-300/50 pt-3" vid="123">Vice Chairman of Berkshire Hathaway, who brought inversion into mainstream business thinking through his "latticework of mental models."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contrast with Forward Thinking -->
+            <div class="space-y-5" vid="124">
+                <div class="flex items-center space-x-4" vid="125">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="126">Inversion vs. Forward Thinking</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="127"></div>
+                </div>
+                <div class="overflow-hidden rounded-xl border border-parchment-300/70" vid="128">
+                    <div class="grid grid-cols-2" vid="129">
+                        <div class="p-5 bg-white/40 border-r border-parchment-300/70" vid="130">
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mb-4" vid="131">Forward Thinking</p>
+                            <ul class="space-y-3" vid="132">
+                                <li class="flex items-start space-x-2.5" vid="133"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="134"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="135">Asks: "How do I succeed?"</span></li>
+                                <li class="flex items-start space-x-2.5" vid="136"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="137"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="138">Optimistic, generative, vision-led</span></li>
+                                <li class="flex items-start space-x-2.5" vid="139"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="140"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="141">Can miss blind spots and risks</span></li>
+                                <li class="flex items-start space-x-2.5" vid="142"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="143"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="144">Strong for innovation and direction</span></li>
+                            </ul>
+                        </div>
+                        <div class="p-5 bg-seal/[0.02]" vid="145">
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-seal/70 mb-4" vid="146">Inversion</p>
+                            <ul class="space-y-3" vid="147">
+                                <li class="flex items-start space-x-2.5" vid="148"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="149"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="150">Asks: "How do I guarantee failure?"</span></li>
+                                <li class="flex items-start space-x-2.5" vid="151"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="152"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="153">Diagnostic, protective, risk-aware</span></li>
+                                <li class="flex items-start space-x-2.5" vid="154"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="155"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="156">Surfaces hidden failure modes</span></li>
+                                <li class="flex items-start space-x-2.5" vid="157"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="158"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="159">Strong for decisions and risk design</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="px-5 py-3 bg-parchment-200/40 border-t border-parchment-300/70" vid="160">
+                        <p class="font-serif italic text-[0.95rem] text-ink/60 text-center" vid="161">Neither approach is sufficient alone — the most rigorous thinking alternates between both.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Thinkers -->
+            <div class="space-y-5" vid="162">
+                <div class="flex items-center space-x-4" vid="163">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="164">Key Thinkers</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="165"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-5 mt-1" vid="166">
+                    <div class="p-5 border border-parchment-300/70 rounded-xl bg-white/30 space-y-3" vid="167">
+                        <div class="flex items-start justify-between" vid="168">
+                            <div vid="169">
+                                <p class="font-serif text-[1.1rem] font-medium text-ink" vid="170">Carl Gustav Jacobi</p>
+                                <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-0.5" vid="171">1804 – 1851 · Mathematics</p>
+                            </div>
+                            <span class="font-script text-3xl text-seal/20 leading-none select-none" vid="172">J</span>
+                        </div>
+                        <p class="font-serif italic text-[0.95rem] text-ink/70 leading-snug border-t border-parchment-300/50 pt-3" vid="173">Prussian mathematician who formalized the habit of problem inversion as a standard technique in calculus and number theory.</p>
+                    </div>
+                    <div class="p-5 border border-parchment-300/70 rounded-xl bg-white/30 space-y-3" vid="174">
+                        <div class="flex items-start justify-between" vid="175">
+                            <div vid="176">
+                                <p class="font-serif text-[1.1rem] font-medium text-ink" vid="177">Charlie Munger</p>
+                                <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-0.5" vid="178">1924 – 2023 · Investing</p>
+                            </div>
+                            <span class="font-script text-3xl text-seal/20 leading-none select-none" vid="179">M</span>
+                        </div>
+                        <p class="font-serif italic text-[0.95rem] text-ink/70 leading-snug border-t border-parchment-300/50 pt-3" vid="180">Vice Chairman of Berkshire Hathaway, who brought inversion into mainstream business thinking through his "latticework of mental models."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contrast with Forward Thinking -->
+            <div class="space-y-5" vid="181">
+                <div class="flex items-center space-x-4" vid="182">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="183">Inversion vs. Forward Thinking</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="184"></div>
+                </div>
+                <div class="overflow-hidden rounded-xl border border-parchment-300/70" vid="185">
+                    <div class="grid grid-cols-2" vid="186">
+                        <div class="p-5 bg-white/40 border-r border-parchment-300/70" vid="187">
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mb-4" vid="188">Forward Thinking</p>
+                            <ul class="space-y-3" vid="189">
+                                <li class="flex items-start space-x-2.5" vid="190"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="191"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="192">Asks: "How do I succeed?"</span></li>
+                                <li class="flex items-start space-x-2.5" vid="193"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="194"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="195">Optimistic, generative, vision-led</span></li>
+                                <li class="flex items-start space-x-2.5" vid="196"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="197"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="198">Can miss blind spots and risks</span></li>
+                                <li class="flex items-start space-x-2.5" vid="199"><span class="w-1 h-1 rounded-full bg-parchment-400 mt-2 shrink-0" vid="200"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="201">Strong for innovation and direction</span></li>
+                            </ul>
+                        </div>
+                        <div class="p-5 bg-seal/[0.02]" vid="202">
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-seal/70 mb-4" vid="203">Inversion</p>
+                            <ul class="space-y-3" vid="204">
+                                <li class="flex items-start space-x-2.5" vid="205"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="206"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="207">Asks: "How do I guarantee failure?"</span></li>
+                                <li class="flex items-start space-x-2.5" vid="208"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="209"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="210">Diagnostic, protective, risk-aware</span></li>
+                                <li class="flex items-start space-x-2.5" vid="211"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="212"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="213">Surfaces hidden failure modes</span></li>
+                                <li class="flex items-start space-x-2.5" vid="214"><span class="w-1 h-1 rounded-full bg-seal/40 mt-2 shrink-0" vid="215"></span><span class="font-serif text-[1rem] text-ink/80 leading-snug" vid="216">Strong for decisions and risk design</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="px-5 py-3 bg-parchment-200/40 border-t border-parchment-300/70" vid="217">
+                        <p class="font-serif italic text-[0.95rem] text-ink/60 text-center" vid="218">Neither approach is sufficient alone — the most rigorous thinking alternates between both.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real World Examples -->
+            <div class="space-y-5" vid="219">
+                <div class="flex items-center space-x-4" vid="220">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="221">In the Wild</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="222"></div>
+                </div>
+                <p class="font-sans text-[10px] tracking-widest uppercase text-parchment-500" vid="223">Observed applications across disciplines</p>
+                <div class="grid grid-cols-3 gap-4 mt-1" vid="224">
+                    <div class="p-4 border border-parchment-300/70 rounded-xl bg-white/40 space-y-2" vid="225">
+                        <p class="font-sans text-[9px] uppercase tracking-widest text-seal/70" vid="226">Investing</p>
+                        <p class="font-serif italic text-[1rem] text-ink leading-snug" vid="227">Munger: "Tell me where I'm going to die, so I'll never go there."</p>
+                    </div>
+                    <div class="p-4 border border-parchment-300/70 rounded-xl bg-white/40 space-y-2" vid="228">
+                        <p class="font-sans text-[9px] uppercase tracking-widest text-seal/70" vid="229">Engineering</p>
+                        <p class="font-serif italic text-[1rem] text-ink leading-snug" vid="230">Failure Mode Analysis systematically asks what can go wrong before deployment.</p>
+                    </div>
+                    <div class="p-4 border border-parchment-300/70 rounded-xl bg-white/40 space-y-2" vid="231">
+                        <p class="font-sans text-[9px] uppercase tracking-widest text-seal/70" vid="232">Medicine</p>
+                        <p class="font-serif italic text-[1rem] text-ink leading-snug" vid="233">"First, do no harm" — Hippocrates anchors practice in avoiding harm before seeking cure.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Readings -->
+            <div class="space-y-5" vid="234">
+                <div class="flex items-center space-x-4" vid="235">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="236">Related Readings</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="237"></div>
+                </div>
+                <div class="space-y-3" vid="238">
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="239">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="240">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="241">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="242">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="243">Poor Charlie's Almanack</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="244">Charles T. Munger · Primary Source</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="245"><path d="m9 18 6-6-6-6" vid="246"></path></svg>
+                    </a>
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="247">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="248">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="249">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="250">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="251">The Art of Thinking Clearly</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="252">Rolf Dobelli · Supplemental</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="253"><path d="m9 18 6-6-6-6" vid="254"></path></svg>
+                    </a>
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="255">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="256">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="257">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="258">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="259">Seeking Wisdom: From Darwin to Munger</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="260">Peter Bevelin · Deep Dive</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="261"><path d="m9 18 6-6-6-6" vid="262"></path></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Closing Reflection -->
+            <div class="relative mt-4 mb-8" vid="263">
+                <div class="bg-parchment-200/30 border border-parchment-300/60 rounded-2xl p-8 text-center space-y-4" vid="264">
+                    <span class="font-script text-4xl text-seal/30 block leading-none select-none" vid="265">∴</span>
+                    <p class="font-serif italic text-xl text-ink leading-relaxed max-w-xl mx-auto" vid="266">
+                        The test of a great mental model is not how clever it sounds, but how often you actually reach for it. Inversion should become as natural as breathing — a reflex that fires before every important decision.
+                    </p>
+                    <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-400" vid="267">Editorial Note · Latticework Editors</p>
+                </div>
+            </div>
+
+            <!-- Related Readings -->
+            <div class="space-y-5" vid="268">
+                <div class="flex items-center space-x-4" vid="269">
+                    <h2 class="text-3xl font-serif text-ink whitespace-nowrap" vid="270">Related Readings</h2>
+                    <div class="w-full h-px bg-parchment-300/60" vid="271"></div>
+                </div>
+                <div class="space-y-3" vid="272">
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="273">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="274">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="275">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="276">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="277">Poor Charlie's Almanack</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="278">Charles T. Munger · Primary Source</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="279"><path d="m9 18 6-6-6-6" vid="280"></path></svg>
+                    </a>
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="281">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="282">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="283">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="284">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="285">The Art of Thinking Clearly</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="286">Rolf Dobelli · Supplemental</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="287"><path d="m9 18 6-6-6-6" vid="288"></path></svg>
+                    </a>
+                    <a href="#" class="flex items-start space-x-5 p-4 rounded-xl border border-parchment-300/60 bg-white/30 hover:bg-parchment-200/40 hover:border-seal/20 transition-all group" vid="289">
+                        <div class="shrink-0 w-8 h-10 bg-parchment-300/60 rounded-sm flex items-center justify-center border border-parchment-300 group-hover:border-seal/30 transition-colors" vid="290">
+                            <span class="font-script text-lg text-seal/50 leading-none" vid="291">B</span>
+                        </div>
+                        <div class="flex-1 min-w-0" vid="292">
+                            <p class="font-serif text-[1.05rem] text-ink leading-snug" vid="293">Seeking Wisdom: From Darwin to Munger</p>
+                            <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-500 mt-1" vid="294">Peter Bevelin · Deep Dive</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal mt-1.5 shrink-0 transition-colors" vid="295"><path d="m9 18 6-6-6-6" vid="296"></path></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Closing Reflection -->
+            <div class="relative mt-4 mb-8" vid="297">
+                <div class="bg-parchment-200/30 border border-parchment-300/60 rounded-2xl p-8 text-center space-y-4" vid="298">
+                    <span class="font-script text-4xl text-seal/30 block leading-none select-none" vid="299">∴</span>
+                    <p class="font-serif italic text-xl text-ink leading-relaxed max-w-xl mx-auto" vid="300">
+                        The test of a great mental model is not how clever it sounds, but how often you actually reach for it. Inversion should become as natural as breathing — a reflex that fires before every important decision.
+                    </p>
+                    <p class="font-sans text-[9px] uppercase tracking-widest text-parchment-400" vid="301">Editorial Note · Latticework Editors</p>
+                </div>
+            </div>
+
+        </article>
+
+        
+        <aside class="lg:w-1/3 relative hidden lg:block" vid="302">
+            <div class="sticky top-28 space-y-12" vid="303">
+                
+                
+                <section vid="304">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="305">Key Takeaways</h3>
+                    <ul class="space-y-4" vid="306">
+                        <li class="flex items-start space-x-3" vid="307">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="308"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="309">Problems are often easier to solve when analyzed in reverse.</span>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="310">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="311"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="312">Focusing on avoiding stupidity is a more reliable strategy than seeking brilliance.</span>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="313">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="314"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="315">Pre-mortems are the practical application of inversion in project planning.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                
+                <section vid="316">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="317">Linked Concepts</h3>
+                    <ul class="space-y-4" vid="318">
+                        <li class="flex items-start space-x-3" vid="319">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="320"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="321">Second-Order Thinking</a>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="322">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="323"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="324">Margin of Safety</a>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="325">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="326"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="327">Via Negativa</a>
+                        </li>
+                    </ul>
+                </section>
+
+                <section vid="328">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="329">Cited in Notes</h3>
+                    <ul class="space-y-4" vid="330">
+                        <li class="flex items-start space-x-3" vid="331">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="332"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="333"><em vid="334">Q3 Reading Log</em> — p. 14</span>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="335">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="336"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="337"><em vid="338">Decision Journal, Oct</em> — entry 7</span>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="339">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="340"></span>
+                            <span class="font-serif text-[15px] text-ink/80 leading-snug" vid="341"><em vid="342">Munger Study Notes</em> — §3</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section vid="343">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="344">Usage Frequency</h3>
+                    <div class="flex items-end space-x-1.5 h-10" vid="345">
+                        <div class="w-2 bg-parchment-200 h-[20%] rounded-t-sm" vid="346"></div>
+                        <div class="w-2 bg-parchment-300 h-[35%] rounded-t-sm" vid="347"></div>
+                        <div class="w-2 bg-seal/40 h-[50%] rounded-t-sm" vid="348"></div>
+                        <div class="w-2 bg-seal/60 h-[70%] rounded-t-sm" vid="349"></div>
+                        <div class="w-2 bg-seal/80 h-[85%] rounded-t-sm" vid="350"></div>
+                        <div class="w-2 bg-seal h-[100%] rounded-t-sm" vid="351"></div>
+                        <div class="w-2 bg-seal h-[90%] rounded-t-sm" vid="352"></div>
+                    </div>
+                    <p class="font-sans text-[9px] uppercase tracking-wider text-parchment-400 mt-2" vid="353">Applied 6× in the last 30 days</p>
+                </section>
+
+                
+                <section vid="354">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="355">Category &amp; Tags</h3>
+                    <div class="mb-3 flex items-center space-x-2" vid="356">
+                        <span class="font-sans text-[9px] uppercase tracking-wider text-parchment-500 shrink-0" vid="357">Category</span>
+                        <span class="font-serif text-[14px] italic text-ink/80" vid="358">Problem Solving</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5" vid="359">
+                        <span class="font-sans text-[10px] uppercase tracking-wide text-seal/80 border border-seal/20 rounded-full px-2.5 py-0.5 bg-seal/[0.03]" vid="360">Decision-Making</span>
+                        <span class="font-sans text-[10px] uppercase tracking-wide text-seal/80 border border-seal/20 rounded-full px-2.5 py-0.5 bg-seal/[0.03]" vid="361">Logic</span>
+                        <span class="font-sans text-[10px] uppercase tracking-wide text-seal/80 border border-seal/20 rounded-full px-2.5 py-0.5 bg-seal/[0.03]" vid="362">Mathematics</span>
+                        <span class="font-sans text-[10px] uppercase tracking-wide text-seal/80 border border-seal/20 rounded-full px-2.5 py-0.5 bg-seal/[0.03]" vid="363">Risk</span>
+                        <span class="font-sans text-[10px] uppercase tracking-wide text-seal/80 border border-seal/20 rounded-full px-2.5 py-0.5 bg-seal/[0.03]" vid="364">19th Century</span>
+                    </div>
+                </section>
+
+                <section vid="365">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-4 border-b border-seal/10 pb-2" vid="366">Frameworks</h3>
+                    <ul class="space-y-4" vid="367">
+                        <li class="flex items-start space-x-3" vid="368">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="369"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="370">First Principles Thinking</a>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="371">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="372"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="373">The Munger Lattice</a>
+                        </li>
+                        <li class="flex items-start space-x-3" vid="374">
+                            <span class="w-1.5 h-1.5 rounded-full bg-seal mt-2 shrink-0" vid="375"></span>
+                            <a href="#" class="font-serif text-[15px] italic text-ink/80 leading-snug underline decoration-parchment-300 underline-offset-4 hover:text-seal hover:decoration-seal/30 transition-colors" vid="376">Avoiding Stupidity</a>
+                        </li>
+                    </ul>
+                </section>
+
+                
+                <section vid="377">
+                    <h3 class="font-sans text-[10px] tracking-widest uppercase text-parchment-600 mb-3" vid="378">Your Annotations</h3>
+                    <button class="w-full h-24 rounded-lg border-2 border-dashed border-parchment-300 bg-white/50 flex flex-col items-center justify-center space-y-2 group hover:border-seal/40 transition-colors cursor-pointer" vid="379">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-400 group-hover:text-seal transition-colors" vid="380"><circle cx="12" cy="12" r="10" vid="381"></circle><path d="M8 12h8" vid="382"></path><path d="M12 8v8" vid="383"></path></svg>
+                        <span class="font-sans text-[10px] uppercase tracking-wider text-parchment-500 group-hover:text-ink transition-colors" vid="384">Add Note</span>
+                    </button>
+                </section>
+
+            </div>
+        </aside>
+
+    </main>
+
+    
+    <div class="fixed bottom-8 right-8 z-50 group flex items-center" vid="385">
+        
+        <div class="mr-4 px-3 py-1.5 bg-ink text-white font-sans text-[10px] uppercase tracking-wider rounded-full opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg" vid="386">
+            New Reflection
+        </div>
+        
+        <button class="w-14 h-14 bg-ink rounded-full flex items-center justify-center shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer border border-ink/10" vid="387">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-parchment-100" vid="388"><path d="m12 19 7-7 3 3-7 7-3-3z" vid="389"></path><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" vid="390"></path><path d="m2 2 7.586 7.586" vid="391"></path><circle cx="11" cy="11" r="2" vid="392"></circle></svg>
+        </button>
+    </div>
+
+
+</body></html>
