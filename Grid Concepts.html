@@ -136,6 +136,23 @@
             column-count: 3;
             column-gap: 2rem;
         }
+
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(42, 39, 36, 0.12);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(42, 39, 36, 0.25);
+        }
         
         .masonry-item {
             break-inside: avoid;
