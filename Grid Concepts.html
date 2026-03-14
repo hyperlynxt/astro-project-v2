@@ -468,6 +468,8 @@
                     data-stars="4" 
                     data-usage="24" 
                     data-description="The point at which the level of profits or benefits gained is less than the amount of money or energy invested. Eventually, continuing to increase input leads to negative returns—where the overall output actually decreases."
+                    data-notes-of-used="Software Engineering Economics,The 80/20 Optimization Trap,Creative Burnout Cycles"
+                    data-related-concepts="Law of Marginal Utility,Opportunity Cost,S-Curve Growth Models"
                     vid="187">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <div class="flex flex-col gap-2" vid="188">
@@ -585,8 +587,34 @@
                         <p id="modal-origin" class="font-serif text-[16px] leading-relaxed text-ink-muted italic">---</p>
                     </div>
 
+                    <!-- Notes of Used -->
+                    <div id="modal-notes-section" class="bg-white rounded-2xl border border-parchment-dark/50 p-6 shadow-[0_2px_8px_rgba(42,39,36,0.02)] animate-sidebar-item stagger-4 hidden">
+                        <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-seal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            Notes of Used
+                        </h3>
+                        <div id="modal-notes-items" class="space-y-2">
+                            <!-- Items populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Related Concepts -->
+                    <div id="modal-related-section" class="bg-white rounded-2xl border border-parchment-dark/50 p-6 shadow-[0_2px_8px_rgba(42,39,36,0.02)] animate-sidebar-item stagger-5 hidden">
+                        <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-seal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                            Related Concepts
+                        </h3>
+                        <div id="modal-related-items" class="space-y-2">
+                            <!-- Items populated via JS -->
+                        </div>
+                    </div>
+
                     <!-- Usage -->
-                    <div class="bg-white rounded-2xl border border-parchment-dark/50 p-6 animate-sidebar-item stagger-4 shadow-sm">
+                    <div class="bg-white rounded-2xl border border-parchment-dark/50 p-6 animate-sidebar-item stagger-6 shadow-sm">
                         <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-4 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-seal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
@@ -601,7 +629,7 @@
                 </div>
 
                 <!-- Footer / Score -->
-                <div class="p-8 bg-[#F6F4EF] border-t border-parchment-dark/40 z-30 animate-sidebar-item stagger-5">
+                <div class="p-8 bg-[#F6F4EF] border-t border-parchment-dark/40 z-30 animate-sidebar-item stagger-7">
                      <div class="flex items-center justify-between">
                          <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light">Utility Score</h3>
                          <div id="modal-stars" class="flex gap-1.5 items-center text-gold">
@@ -640,6 +668,10 @@
         const modalUsage = document.getElementById('modal-usage-count');
         const modalStars = document.getElementById('modal-stars');
         const modalBgLetter = document.getElementById('modal-bg-letter');
+        const modalNotesSection = document.getElementById('modal-notes-section');
+        const modalNotesItems = document.getElementById('modal-notes-items');
+        const modalRelatedSection = document.getElementById('modal-related-section');
+        const modalRelatedItems = document.getElementById('modal-related-items');
 
         // Search Logic
         searchInput.addEventListener('input', (e) => {
@@ -664,6 +696,18 @@
             return html;
         };
 
+        const createRelationshipItem = (name, type) => {
+            const colorClass = type === 'note' ? 'teal' : 'gold';
+            return `
+                <div class="group p-3.5 bg-parchment/50 border border-parchment-dark/40 rounded-xl hover:bg-[#FDFCF9] hover:border-${colorClass}/40 hover:shadow-sm transition-all cursor-pointer flex items-center justify-between">
+                    <p class="font-serif text-[17px] text-ink group-hover:text-${colorClass} transition-colors font-medium">${name}</p>
+                    <svg class="w-4 h-4 text-ink-light group-hover:text-${colorClass}/80 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            `;
+        };
+
         const showModal = (data) => {
             modalTitle.textContent = data.title;
             modalSummary.textContent = data.description.split('.')[0] + '.';
@@ -673,6 +717,24 @@
             modalUsage.textContent = data.usage;
             modalStars.innerHTML = createStars(parseInt(data.stars));
             modalBgLetter.textContent = data.title.charAt(0);
+
+            // Populate Notes of Used
+            if (data.notesOfUsed) {
+                const notes = data.notesOfUsed.split(',');
+                modalNotesItems.innerHTML = notes.map(name => createRelationshipItem(name.trim(), 'note')).join('');
+                modalNotesSection.classList.remove('hidden');
+            } else {
+                modalNotesSection.classList.add('hidden');
+            }
+
+            // Populate Related Concepts
+            if (data.relatedConcepts) {
+                const related = data.relatedConcepts.split(',');
+                modalRelatedItems.innerHTML = related.map(name => createRelationshipItem(name.trim(), 'related')).join('');
+                modalRelatedSection.classList.remove('hidden');
+            } else {
+                modalRelatedSection.classList.add('hidden');
+            }
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -694,7 +756,9 @@
                     discipline: card.getAttribute('data-discipline'),
                     origin: card.getAttribute('data-origin'),
                     stars: card.getAttribute('data-stars'),
-                    usage: card.getAttribute('data-usage')
+                    usage: card.getAttribute('data-usage'),
+                    notesOfUsed: card.getAttribute('data-notes-of-used'),
+                    relatedConcepts: card.getAttribute('data-related-concepts')
                 };
                 showModal(data);
             });
