@@ -1,0 +1,218 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Phonetic Treasures - Detailed View</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Inter:wght@400;500;600&amp;family=Reenie+Beanie&amp;display=swap" rel="stylesheet" vid="7">
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="8"></script>
+    <script vid="9">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            DEFAULT: '#FDFCF9',
+                            100: 'rgba(42, 39, 36, 0.03)',
+                            200: 'rgba(42, 39, 36, 0.08)',
+                            300: 'rgba(42, 39, 36, 0.15)',
+                        },
+                        hero: '#F5F2EB',
+                        ink: {
+                            DEFAULT: '#2A2724',
+                            muted: 'rgba(42, 39, 36, 0.65)',
+                            light: 'rgba(42, 39, 36, 0.4)',
+                        },
+                        seal: '#8B2E2E',
+                        gold: '#B08D57',
+                        teal: '#2D6A6A',
+                    },
+                    fontFamily: {
+                        serif: ['"EB Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        hand: ['"Reenie Beanie"', 'cursive'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', backdropFilter: 'blur(0px)' },
+                            '100%': { opacity: '1', backdropFilter: 'blur(8px)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px) scale(0.96)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style vid="10">
+        body {
+            background-color: #FDFCF9;
+            color: #2A2724;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; 
+        }
+        
+        
+        .underline-svg {
+            position: absolute;
+            bottom: -8px;
+            left: -5%;
+            width: 110%;
+            height: 20px;
+            pointer-events: none;
+        }
+        .underline-path {
+            fill: none;
+            stroke: #B08D57;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+        }
+
+        
+        .modal-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(42, 39, 36, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="w-full h-screen font-sans relative" vid="11">
+
+    
+    <div class="w-full h-full relative" aria-hidden="true" vid="12">
+        <nav class="fixed top-0 left-0 w-full h-[80px] bg-[#F5F2EB]/95 backdrop-blur-md border-b border-ink/10 flex items-center justify-center z-50" vid="13">
+            <div class="w-full max-w-[1440px] px-10 flex items-center justify-between" vid="14">
+                <div class="font-serif text-xl font-medium text-ink tracking-tight" vid="15">Atlas.</div>
+                <ul class="flex list-none gap-10" vid="16">
+                    <li vid="17"><a href="#" class="font-serif text-base text-ink/60 no-underline transition-colors relative" vid="18">Index</a></li>
+                    <li vid="19">
+                        <a href="#" class="font-serif text-base text-ink no-underline transition-colors relative after:content-[''] after:absolute after:-bottom-1.5 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-seal after:rounded-full" vid="20">Quotes</a>
+                    </li>
+                    <li vid="21"><a href="#" class="font-serif text-base text-ink/60 no-underline transition-colors relative" vid="22">Authors</a></li>
+                    <li vid="23"><a href="#" class="font-serif text-base text-ink/60 no-underline transition-colors relative" vid="24">Themes</a></li>
+                    <li vid="25"><a href="#" class="font-serif text-base text-ink/60 no-underline transition-colors relative" vid="26">Saved</a></li>
+                    <li vid="27"><a href="#" class="font-serif text-base text-ink/60 no-underline transition-colors relative" vid="28">About</a></li>
+                </ul>
+                <div class="flex items-center gap-5 text-sm" vid="29">
+                    <span class="px-3 py-1 rounded-full cursor-pointer transition-all border border-ink/15 hover:bg-parchment-100" vid="30">Voice</span>
+                    <span class="px-3 py-1 rounded-full cursor-pointer transition-all border border-ink/15 hover:bg-parchment-100" vid="31">Theme</span>
+                    <div class="w-7 h-7 rounded-full bg-seal flex items-center justify-center text-white font-serif text-sm" vid="32">C</div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="pt-[140px] pb-[80px] bg-gradient-to-b from-hero to-transparent flex flex-col items-center text-center px-5" vid="33">
+            <p class="font-hand text-3xl text-ink/50 -rotate-1 mb-4" vid="34">collected for what they mean</p>
+            <h1 class="font-serif text-[clamp(3rem,6vw,4.5rem)] font-normal text-ink leading-tight mb-6" vid="35">
+                Linguistic 
+                <span class="italic relative inline-block" vid="36">
+                    Basket
+                    <svg class="underline-svg" viewBox="0 0 100 20" vid="37">
+                        <path class="underline-path" d="M0 6 Q 30 9 70 4 T 100 7" vid="38"></path>
+                    </svg>
+                </span>
+            </h1>
+        </header>
+
+        <main class="max-w-[1440px] mx-auto px-10 pb-20" vid="39">
+            <div class="columns-3 gap-6" vid="40">
+                <div class="bg-white rounded-3xl p-6 mb-6 border border-parchment-200" vid="41">
+                    <div class="inline-block text-[9px] font-medium uppercase tracking-[0.12em] text-teal bg-teal/10 rounded-full px-2.5 py-1 mb-3.5" vid="42">coined</div>
+                    <div class="font-serif text-3xl mb-3" vid="43">Sonder</div>
+                    <p class="font-serif italic text-lg text-ink-muted leading-relaxed" vid="44">The sudden realization that every stranger passing by is living a life as vivid and complex as your own...</p>
+                </div>
+                <div class="bg-white rounded-3xl p-6 mb-6 border border-parchment-200" vid="45">
+                    <div class="inline-block text-[9px] font-medium uppercase tracking-[0.12em] text-teal bg-teal/10 rounded-full px-2.5 py-1 mb-3.5" vid="46">internet vernacular</div>
+                    <div class="font-serif text-3xl mb-3" vid="47">Main character energy</div>
+                    <p class="font-serif italic text-lg text-ink-muted leading-relaxed" vid="48">The feeling of moving through the world as if you are the protagonist...</p>
+                </div>
+                <div class="bg-white rounded-3xl p-6 mb-6 border border-parchment-200" vid="49">
+                    <div class="inline-block text-[9px] font-medium uppercase tracking-[0.12em] text-teal bg-teal/10 rounded-full px-2.5 py-1 mb-3.5" vid="50">urban slang</div>
+                    <div class="font-serif text-3xl mb-3" vid="51">Vibe check</div>
+                    <p class="font-serif italic text-lg text-ink-muted leading-relaxed" vid="52">An impromptu reading of the emotional temperature in a room...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    
+    <div class="fixed inset-0 bg-ink/40 flex items-center justify-center z-[100] animate-fade-in p-6" vid="53">
+        
+        
+        <div class="bg-[#F9F7F2] w-full max-w-[580px] max-h-[90vh] rounded-[28px] p-10 relative shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-ink/5 animate-slide-up flex flex-col modal-scroll overflow-y-auto" vid="54">
+            
+            <button class="absolute top-6 right-6 w-11 h-11 rounded-full bg-parchment-200 flex items-center justify-center text-ink hover:bg-parchment-300 transition-colors text-lg focus:outline-none focus:ring-2 focus:ring-ink/20 shrink-0 z-10" aria-label="Close modal" vid="55">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vid="56"><line x1="18" y1="6" x2="6" y2="18" vid="57"></line><line x1="6" y1="6" x2="18" y2="18" vid="58"></line></svg>
+            </button>
+            
+            
+            <header class="mb-7 pr-12 shrink-0" vid="59">
+                <div class="flex items-center gap-3 mb-2" vid="60">
+                    <span class="font-serif text-[1.35rem] text-gold italic" vid="61">/ˈsɔn.dər/</span>
+                    <span class="font-sans text-[10px] uppercase tracking-[0.1em] text-ink-light border border-parchment-300 px-2 py-0.5 rounded" vid="62">noun</span>
+                </div>
+                
+                <h2 class="font-serif text-[4.25rem] font-normal leading-[0.9] text-ink mb-5 tracking-tight" vid="63">Sonder</h2>
+                
+                
+                <div class="flex flex-wrap items-center gap-2" vid="64">
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-[0.15em] text-teal bg-teal/10" vid="65">
+                        Coined
+                    </span>
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-[0.15em] text-ink-muted bg-parchment-200" vid="66">
+                        Philosophy
+                    </span>
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-[0.15em] text-ink-muted bg-parchment-200" vid="67">
+                        Emotion
+                    </span>
+                </div>
+            </header>
+
+            
+            <div class="font-serif text-xl leading-[1.65] text-ink mb-8 pl-6 border-l-[3px] border-gold/40 shrink-0" vid="68">
+                The sudden realization that every stranger passing by is living a life as vivid and complex as your own — full of their own ambitions, friends, routines, worries and inherited craziness — an epic story that continues invisibly around you like an anthill sprawling deep underground, with elaborate passageways to thousands of other lives that you’ll never know existed, in which you might appear only once, as an extra sipping coffee in the background.
+            </div>
+
+            
+            <div class="flex flex-col gap-6 border-t border-parchment-200 pt-7 mt-auto shrink-0" vid="69">
+                
+                
+                <div class="flex justify-between items-start gap-6" vid="70">
+                    <div class="flex-1" vid="71">
+                        <span class="font-sans text-[10px] uppercase tracking-[0.12em] text-ink-light mb-2 block font-medium" vid="72">Etymology Source</span>
+                        <p class="font-serif italic text-ink-muted text-[0.95rem] leading-snug" vid="73">John Koenig, The Dictionary of Obscure Sorrows (2012). From German ‘sonder’ (special) and French ‘sonder’ (to fathom).</p>
+                    </div>
+                    
+                    <div class="flex gap-0.5 mt-0.5 shrink-0" vid="74">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-gold" vid="75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" vid="76"></polygon></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-gold" vid="77"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" vid="78"></polygon></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-gold" vid="79"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" vid="80"></polygon></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-gold opacity-20" vid="81"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" vid="82"></polygon></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-gold opacity-20" vid="83"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" vid="84"></polygon></svg>
+                    </div>
+                </div>
+
+                
+                <div class="bg-parchment-100 rounded-xl p-5 border border-dashed border-parchment-300 relative" vid="85">
+                    <span class="font-sans text-[10px] uppercase tracking-[0.12em] text-ink-light mb-3 block font-medium absolute top-4 right-5 bg-parchment-100 px-1" vid="86">Personal Note</span>
+                    <span class="font-hand text-[1.85rem] text-ink leading-tight -rotate-1 block mt-2" vid="87">Hits different when you're alone in a crowded station. Everyone is the hero of their own film.</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+</body></html>
