@@ -985,12 +985,12 @@
                             </svg>
                             <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Minimum Utility</h3>
                         </div>
-                        <span class="font-hand text-lg text-seal-red">3+ stars</span>
+                        <span class="font-hand text-lg text-seal-red">1+ stars</span>
                     </div>
                     <div class="flex gap-2 p-3 bg-white border border-parchment-dark/10 rounded-xl shadow-inner-subtle w-fit" id="filter-utility-stars">
                         <button data-rating="1" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="2" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="3" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="2" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="3" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                         <button data-rating="4" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                         <button data-rating="5" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                     </div>
@@ -1237,6 +1237,7 @@
             currentFilterState = {
                 query: '',
                 sort: 'most-used',
+                sortOrder: 'desc',
                 disciplines: Array.from(filterDisciplineChecks).map(i => i.value),
                 minUtility: 1
             };
