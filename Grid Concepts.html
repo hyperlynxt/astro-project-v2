@@ -99,6 +99,7 @@
             background: white !important;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .catalog-card:hover {
@@ -110,6 +111,19 @@
 
         .catalog-card:hover .model-title {
             color: #8B2626; 
+        }
+
+        .bookmark-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            color: var(--parchment-400);
+            transition: color 0.2s ease;
+            z-index: 10;
+        }
+
+        .catalog-card:hover .bookmark-icon {
+            color: var(--seal);
         }
         
         .masonry-grid {
@@ -171,6 +185,7 @@
                 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="42">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="53">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="54">Razors</h3>
@@ -189,6 +204,7 @@
 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="65">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="77">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="78">Bayesian Thinking</h3>
@@ -207,6 +223,7 @@
 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="89">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="103">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="104">Systems Thinking</h3>
@@ -225,6 +242,7 @@
 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="115">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="131">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="132">Game Theory</h3>
@@ -243,6 +261,7 @@
 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="143">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="158">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="159">Stoicism</h3>
@@ -261,6 +280,7 @@
 
                 
                 <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="170">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count moved to footer -->
                     <div class="flex flex-col gap-2" vid="182">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="183">Cognitive Biases</h3>
