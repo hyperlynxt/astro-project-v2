@@ -1,0 +1,313 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Atlas Field Notes - Framework Families</title>
+    
+    <script src="https://cdn.tailwindcss.com" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Inter:wght@400;500;600;700&amp;family=Reenie+Beanie&amp;display=swap" rel="stylesheet" vid="8">
+
+    <script vid="9">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            50: '#FDFCF9',
+                            100: '#F5F2EB',
+                            200: '#E8E2D2',
+                            300: '#D5CCB6',
+                            400: '#A39985',
+                            500: '#8C8070',
+                        },
+                        ink: {
+                            DEFAULT: '#2A2724',
+                            hairline: 'rgba(42, 39, 35, 0.12)',
+                        },
+                        seal: '#8B2626',
+                        teal: '#2A4747',
+                        gold: '#B08D57',
+                    },
+                    fontFamily: {
+                        serif: ['"EB Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        hand: ['"Reenie Beanie"', 'cursive'],
+                    },
+                    borderRadius: {
+                        '3xl': '24px',
+                    },
+                    boxShadow: {
+                        'inset-subtle': 'inset 0 2px 4px 0 rgba(42, 39, 35, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style vid="10">
+        body {
+            background-color: #FDFCF9;
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+            color: #2A2724;
+        }
+
+        .hand-underline-sm {
+            background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,8 C25,12 75,4 100,8' stroke='%238B2626' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-size: 100% 12px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            padding-bottom: 0.2em; 
+        }
+
+        .blade-motif {
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.4), 
+                0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .scribble-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scribble-icon svg {
+            overflow: visible;
+        }
+
+        .scribble-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scribble-icon svg {
+            overflow: visible;
+        }
+
+        .catalog-card {
+            background: white !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .catalog-card:hover {
+            background: #F5F2EB !important;
+            border-color: #D5CCB6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42, 39, 36, 0.1);
+        }
+
+        .catalog-card:hover .model-title {
+            color: #8B2626; 
+        }
+        
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 2rem;
+        }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-parchment-50 antialiased selection:bg-seal selection:text-white flex flex-col" vid="11">
+
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-parchment-100/95 glass-nav border-b-[0.5px] border-ink-hairline flex items-center justify-between px-10 shadow-sm" vid="12">
+        <div class="flex items-center gap-10" vid="13">
+            <a href="index.html" class="font-serif text-xl text-parchment-400 transition-all duration-300 ease-in-out hover:text-ink hover:-translate-y-[1px] hover:opacity-80" vid="main-link">Main Page</a>
+            <div class="h-8 w-px bg-parchment-200" vid="main-sep"></div>
+            <div class="w-auto min-w-fit" vid="14">
+                <span class="font-hand text-[2rem] leading-none text-ink tracking-tight whitespace-nowrap translate-y-1 block" vid="15">Knowledge Playground</span>
+            </div>
+            <div class="h-8 w-px bg-parchment-200" vid="16"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]" vid="17">
+                <a href="#" class="font-serif text-xl text-parchment-400 transition-all duration-300 ease-in-out hover:text-ink hover:-translate-y-[1px] hover:opacity-80" vid="18">Concepts</a>
+                <a href="Grid Definitions Main.html" class="font-serif text-xl text-parchment-400 transition-all duration-300 ease-in-out hover:text-ink hover:-translate-y-[1px] hover:opacity-80" vid="19">Definitions</a>
+                <a href="#" class="group flex items-center gap-2 transition-all duration-300 ease-in-out hover:-translate-y-[1px]" vid="20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-seal shadow-[0_0_8px_rgba(139,38,38,0.4)]" vid="21"></span>
+                    <span class="font-serif text-xl text-ink" vid="22">Frameworks</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-hand text-[1.75rem] leading-none text-ink tracking-tight translate-y-1" vid="23">
+            hyperlynxt | teo
+        </div>
+    </header>
+
+    <main class="flex-1 pb-32" vid="33">
+        <section class="w-full bg-gradient-to-b from-parchment-100 to-transparent pt-20 pb-16 px-6" vid="34">
+            <div class="max-w-4xl mx-auto text-center" vid="35">
+                <span class="font-hand text-2xl text-parchment-500 mb-2 block" vid="36">Pattern of Concepts</span>
+                <h2 class="font-serif text-5xl md:text-7xl leading-tight text-ink mb-8" vid="37">
+                    Models & <span class="italic hand-underline-sm inline-block" vid="38">Frameworks</span>
+                </h2>
+                <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed" vid="39">
+                    Collected ways of thinking, distilled into reusable structures of thought
+                </p>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto px-6" vid="40">
+            <div class="masonry-grid" vid="41">
+                
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="42">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="53">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="54">Razors</h3>
+                        <div class="flex" vid="55">
+                            <span class="font-serif text-xs text-seal/80 border border-seal/20 bg-seal/5 px-2.5 py-0.5 rounded-full" vid="56">Logic</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="57">
+                            Heuristic shortcuts for stripping away unlikely explanations. From Occam to Hanlon, these tools prioritize simplicity and charity in problem-solving.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="58">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="59">Logic</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">7 Concepts</span>
+                    </div>
+                </article>
+
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="65">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="77">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="78">Bayesian Thinking</h3>
+                        <div class="flex" vid="79">
+                            <span class="font-serif text-xs text-teal border border-teal/20 bg-teal/5 px-2.5 py-0.5 rounded-full" vid="80">Statistics</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="81">
+                            A mathematical and philosophical approach to updating beliefs based on new evidence. Move from certainty to probability in an uncertain world.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="82">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="83">Statistics</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">12 Concepts</span>
+                    </div>
+                </article>
+
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="89">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="103">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="104">Systems Thinking</h3>
+                        <div class="flex" vid="105">
+                            <span class="font-serif text-xs text-gold border border-gold/20 bg-gold/5 px-2.5 py-0.5 rounded-full" vid="106">Engineering</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="107">
+                            The study of interconnected parts and feedback loops. Understanding that the behavior of the whole is different than the sum of its parts.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="108">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="109">Engineering</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">24 Concepts</span>
+                    </div>
+                </article>
+
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="115">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="131">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="132">Game Theory</h3>
+                        <div class="flex" vid="133">
+                            <span class="font-serif text-xs text-seal/80 border border-seal/20 bg-seal/5 px-2.5 py-0.5 rounded-full" vid="134">Economics</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="135">
+                            A framework for understanding strategic interaction among rational decision-makers. Nash Equilibrium, zero-sum games, and cooperative strategies.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="136">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="137">Economics</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">15 Concepts</span>
+                    </div>
+                </article>
+
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="143">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="158">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="159">Stoicism</h3>
+                        <div class="flex" vid="160">
+                            <span class="font-serif text-xs text-parchment-500 border border-parchment-300 bg-parchment-100 px-2.5 py-0.5 rounded-full" vid="161">Philosophy</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="162">
+                            Ancient wisdom on emotional regulation and resilience. Focusing on what is within our control and accepting what is not.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="163">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="164">Philosophy</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">9 Concepts</span>
+                    </div>
+                </article>
+
+                
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="170">
+                    <!-- Concept count moved to footer -->
+                    <div class="flex flex-col gap-2" vid="182">
+                        <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="183">Cognitive Biases</h3>
+                        <div class="flex" vid="184">
+                            <span class="font-serif text-xs text-seal/80 border border-seal/20 bg-seal/5 px-2.5 py-0.5 rounded-full" vid="185">Psychology</span>
+                        </div>
+                        <p class="font-serif text-parchment-500 text-[16px] leading-relaxed mt-2" vid="186">
+                            The catalog of mental blindspots. Systematic deviations from rationality that cloud our judgment and lead to predictable errors.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-parchment-100 flex justify-between items-center" vid="187">
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-wider text-parchment-400" vid="188">Psychology</span>
+                        <span class="font-hand text-3xl text-seal translate-y-1" vid="concepts-count">18 Concepts</span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-parchment-200 rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50" vid="194">
+        <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" vid="195" onclick="document.getElementById('frame-search').focus()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-parchment-400 group-hover:text-ink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" vid="196">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" vid="197"></path>
+            </svg>
+            <input type="text" id="frame-search" placeholder="Search frameworks..." class="bg-transparent border-none outline-none font-sans text-xs font-bold text-ink placeholder:text-parchment-400 w-32 transition-all focus:w-48" vid="198">
+        </div>
+        <div class="w-px h-6 bg-parchment-200 mx-1" vid="199"></div>
+        <button class="bg-ink hover:bg-ink/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm" vid="200">
+            Filter & Sort
+        </button>
+    </div>
+
+    <script vid="search-logic">
+        const searchInput = document.getElementById('frame-search');
+        const cards = document.querySelectorAll('.catalog-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.model-title').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                const isMatch = title.includes(query) || description.includes(query);
+                
+                card.style.display = isMatch ? 'block' : 'none';
+            });
+        });
+    </script>
+</body></html>
