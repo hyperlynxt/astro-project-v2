@@ -177,6 +177,72 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
+        /* Modal Specific Styles */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUpScale {
+            from { opacity: 0; transform: translateY(40px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideUpStagger {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-modal-enter {
+            opacity: 0;
+            animation: slideUpScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+        }
+
+        .animate-content-enter {
+            opacity: 0;
+            animation: slideInRight 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards;
+        }
+
+        .animate-sidebar-item {
+            opacity: 0;
+            animation: slideUpStagger 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .stagger-1 { animation-delay: 0.4s; }
+        .stagger-2 { animation-delay: 0.5s; }
+        .stagger-3 { animation-delay: 0.6s; }
+        .stagger-4 { animation-delay: 0.7s; }
+        .stagger-5 { animation-delay: 0.8s; }
+        .stagger-6 { animation-delay: 0.9s; }
+
+        .ink-stain {
+            background: radial-gradient(circle at 10% 90%, rgba(42,39,36,0.03) 0%, rgba(253,252,249,0) 60%);
+        }
+
+        .hatched-pattern {
+            background-image: repeating-linear-gradient(45deg, #2A2724 0, #2A2724 1px, transparent 0, transparent 8px);
+        }
+
+        .custom-scrollbar-modal::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar-modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar-modal::-webkit-scrollbar-thumb {
+            background-color: rgba(42, 39, 36, 0.15);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-parchment-50 antialiased selection:bg-seal selection:text-white flex flex-col" vid="11">
@@ -220,7 +286,13 @@
             <div class="masonry-grid" vid="41">
                 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="42">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Stoicism / Philosophy" 
+                    data-origin="Seneca & Marcus Aurelius (Ancient Rome)" 
+                    data-stars="3" 
+                    data-usage="14" 
+                    data-description="The practice of imagining the loss of things we value to gain perspective and gratitude for the present. It turns the mind into a tool for emotional regulation, preparing it for misfortune before it strikes while doubling our appreciation for the current state."
+                    vid="42">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="53">
@@ -246,7 +318,13 @@
                 </article>
 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="65">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Game Theory / Economics" 
+                    data-origin="John Forbes Nash Jr., 'Non-Cooperative Games' (1950)" 
+                    data-stars="2" 
+                    data-usage="26" 
+                    data-description="A stable state in game theory where no player can gain by changing their strategy if others remain constant. This configuration leads to societal stalemates or optimal balances depending on the incentives, explaining why systems often resist change even when flawed."
+                    vid="65">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="77">
@@ -269,7 +347,13 @@
                 </article>
 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="89">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Complex Systems / Biology" 
+                    data-origin="G.H. Lewes, 'Problems of Life and Mind' (1875)" 
+                    data-stars="1" 
+                    data-usage="5" 
+                    data-description="The phenomenon where complex patterns and behaviors arise from simple interactions between individual parts. The whole becomes greater than the sum of its parts, creating properties that cannot be predicted by looking at the components in isolation."
+                    vid="89">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="103">
@@ -289,7 +373,13 @@
                 </article>
 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="115">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Bayesian Statistics" 
+                    data-origin="Thomas Bayes & Pierre-Simon Laplace (18th C)" 
+                    data-stars="2" 
+                    data-usage="31" 
+                    data-description="The likelihood of an event occurring before new evidence is taken into account. It serves as the starting anchor for Bayesian reasoning, where our degree of belief is updated as fresh data emerges, bridging the gap between existing knowledge and new discovery."
+                    vid="115">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="131">
@@ -312,7 +402,13 @@
                 </article>
 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="143">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Toxicology / Physiology" 
+                    data-origin="Southam & Ehrlich (1943)" 
+                    data-stars="3" 
+                    data-usage="9" 
+                    data-description="A biphasic dose-response where low exposure to a stressor triggers a beneficial compensatory effect. It suggests that growth and resilience often require meaningful resistance, provided the dose does not exceed the system's ability to recover."
+                    vid="143">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="158">
@@ -338,7 +434,13 @@
                 </article>
 
                 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="170">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Microeconomics" 
+                    data-origin="Friedrich von Wieser (1914)" 
+                    data-stars="2" 
+                    data-usage="18" 
+                    data-description="The value of the next-best alternative foregone when a choice is made. Decisions are not made in isolation, but against options. Acknowledging opportunity cost forces the realization that choosing one path inherently means sacrificing another."
+                    vid="170">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <!-- Concept count removed -->
                     <div class="flex flex-col gap-2" vid="182">
@@ -360,7 +462,13 @@
                     </div>
                 </article>
 
-                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" vid="187">
+                <article class="masonry-item catalog-card group bg-white rounded-3xl border border-parchment-200 p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]" 
+                    data-discipline="Microeconomics" 
+                    data-origin="Anne Robert Jacques Turgot (1767)" 
+                    data-stars="4" 
+                    data-usage="24" 
+                    data-description="The point at which the level of profits or benefits gained is less than the amount of money or energy invested. Eventually, continuing to increase input leads to negative returns—where the overall output actually decreases."
+                    vid="187">
                     <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <div class="flex flex-col gap-2" vid="188">
                         <h3 class="model-title font-serif text-3xl font-medium text-ink transition-colors leading-tight" vid="189">Diminishing Returns</h3>
@@ -391,6 +499,111 @@
         </div>
     </main>
 
+    <!-- Concept Modal -->
+    <div id="concept-modal" class="fixed inset-0 z-[100] bg-ink/25 backdrop-blur-[5px] hidden items-center justify-center p-6 md:p-10 animate-fade-in">
+        <div class="w-full max-w-[1440px] h-[92vh] bg-white rounded-[32px] shadow-[0_40px_100px_rgba(42,39,36,0.15),0_10px_30px_rgba(42,39,36,0.1)] flex flex-col md:flex-row overflow-hidden border border-white/60 animate-modal-enter relative ring-1 ring-parchment-dark/30">
+            
+            <!-- Content Area -->
+            <div class="flex-1 flex flex-col relative bg-parchment-50 ink-stain custom-scrollbar-modal overflow-y-auto z-10">
+                <div class="px-10 md:px-20 lg:px-32 pb-24 pt-12 relative animate-content-enter">
+                    
+                    <!-- Decorative Background Letter -->
+                    <div id="modal-bg-letter" class="absolute top-10 right-16 text-[32rem] font-serif font-bold text-ink/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3">D</div>
+
+                    <div class="mb-12">
+                        <h1 id="modal-title" class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-ink leading-[1.02] mb-12 tracking-tight">Diminishing Returns</h1>
+                        
+                        <div class="bg-[#FCFBF8] border border-gold/15 rounded-2xl p-6 md:p-8 relative max-w-4xl shadow-sm">
+                            <div class="absolute left-0 top-6 bottom-6 w-[3px] bg-gradient-to-b from-gold/40 via-gold to-gold/40 rounded-r-md"></div>
+                            <p id="modal-summary" class="font-sans text-[1.05rem] text-ink font-medium leading-relaxed pl-3">
+                                Summary placeholder...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.4rem] leading-[1.85] text-ink/85 space-y-8 max-w-[850px] z-10 relative">
+                        <!-- Full description goes here -->
+                    </div>
+
+                    <div class="mt-16 max-w-[850px] relative rounded-[2rem] overflow-hidden border border-parchment-dark/60 shadow-sm bg-parchment-alt/50 p-8 md:p-10">
+                        <div class="absolute inset-0 hatched-pattern opacity-[0.02] z-0"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-3 text-ink-light mb-6 border-b border-parchment-dark/40 pb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                </svg>
+                                <span class="font-sans text-[10px] font-bold uppercase tracking-[0.2em]">Field Notes & Observations</span>
+                            </div>
+                            <p id="modal-field-note" class="font-hand text-3xl md:text-[2.75rem] leading-[1.3] text-ink/90 -rotate-[1deg] pl-2 md:pl-4 py-1">
+                                Every system has a limit. Pushing past it doesn't just stall progress—it actively destroys previous gains.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="w-full md:w-[420px] bg-[#F6F4EF] border-l border-parchment-dark flex flex-col z-20 shadow-[-10px_0_30px_rgba(42,39,36,0.03)] relative">
+                <div class="px-8 py-6 flex items-center justify-between border-b border-parchment-dark/30 z-30 bg-[#F6F4EF]/90 backdrop-blur-md animate-sidebar-item stagger-1">
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-ink/20"></div>
+                        <div class="w-2 h-2 rounded-full bg-ink/20"></div>
+                        <div class="w-2 h-2 rounded-full bg-ink/20"></div>
+                    </div>
+                    <button id="close-modal-btn" class="w-10 h-10 rounded-full bg-white border border-parchment-dark shadow-sm hover:bg-parchment hover:border-ink/20 flex items-center justify-center text-ink transition-all group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex-grow flex flex-col gap-5 p-8 overflow-y-auto custom-scrollbar-modal">
+                    <!-- Ontology -->
+                    <div class="bg-white rounded-2xl border border-parchment-dark/50 p-6 animate-sidebar-item stagger-2 shadow-sm">
+                        <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-5 flex items-center gap-2">
+                             <span class="w-1.5 h-1.5 rounded-full bg-teal/40"></span> Ontology
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-[10px] text-ink-muted mb-1 font-bold tracking-widest uppercase">Discipline</p>
+                                <p id="modal-discipline" class="font-serif text-[1.15rem] text-ink leading-tight">---</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Origin -->
+                    <div class="bg-white rounded-2xl border border-parchment-dark/50 p-6 animate-sidebar-item stagger-3 shadow-sm">
+                        <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-3 flex items-center gap-2">
+                             <span class="w-1.5 h-1.5 rounded-full bg-teal/40"></span> Origin
+                        </h3>
+                        <p id="modal-origin" class="font-serif text-[16px] leading-relaxed text-ink-muted italic">---</p>
+                    </div>
+
+                    <!-- Usage -->
+                    <div class="bg-white rounded-2xl border border-parchment-dark/50 p-6 animate-sidebar-item stagger-4 shadow-sm">
+                        <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light mb-4 flex items-center gap-2">
+                             <span class="w-1.5 h-1.5 rounded-full bg-teal/40"></span> Linked Notes
+                        </h3>
+                        <div class="flex items-baseline gap-3">
+                            <div id="modal-usage-count" class="text-5xl font-serif text-ink tracking-tight">--</div>
+                            <div class="text-[11px] font-sans text-ink-muted uppercase tracking-wider font-semibold leading-tight">Linked<br>Insights</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer / Score -->
+                <div class="p-8 bg-[#F6F4EF] border-t border-parchment-dark/40 z-30 animate-sidebar-item stagger-5">
+                     <div class="flex items-center justify-between">
+                         <h3 class="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-ink-light">Utility Score</h3>
+                         <div id="modal-stars" class="flex gap-1.5 items-center text-gold">
+                            <!-- Star SVGs here -->
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-parchment-200 rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50" vid="194">
         <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" vid="195" onclick="document.getElementById('frame-search').focus()">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-parchment-400 group-hover:text-ink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" vid="196">
@@ -403,11 +616,23 @@
             Filter & Sort
         </button>
     </div>
-
     <script vid="search-logic">
         const searchInput = document.getElementById('frame-search');
         const cards = document.querySelectorAll('.catalog-card');
+        const modal = document.getElementById('concept-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
 
+        // Modal Elements
+        const modalTitle = document.getElementById('modal-title');
+        const modalSummary = document.getElementById('modal-summary');
+        const modalDesc = document.getElementById('modal-detailed-desc');
+        const modalDiscipline = document.getElementById('modal-discipline');
+        const modalOrigin = document.getElementById('modal-origin');
+        const modalUsage = document.getElementById('modal-usage-count');
+        const modalStars = document.getElementById('modal-stars');
+        const modalBgLetter = document.getElementById('modal-bg-letter');
+
+        // Search Logic
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             
@@ -416,8 +641,63 @@
                 const description = card.querySelector('p').textContent.toLowerCase();
                 const isMatch = title.includes(query) || description.includes(query);
                 
-                card.style.display = isMatch ? 'block' : 'none';
+                card.style.display = isMatch ? 'flex' : 'none';
             });
+        });
+
+        // Modal Helper Functions
+        const createStars = (count) => {
+            let html = '';
+            const starSvg = (opacity) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" fill-opacity="${opacity}" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="drop-shadow-sm"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`;
+            for(let i=1; i<=5; i++) {
+                html += starSvg(i <= count ? '1' : '0.2');
+            }
+            return html;
+        };
+
+        const showModal = (data) => {
+            modalTitle.textContent = data.title;
+            modalSummary.textContent = data.description.split('.')[0] + '.';
+            modalDesc.innerHTML = `<p>${data.description}</p>`;
+            modalDiscipline.textContent = data.discipline;
+            modalOrigin.textContent = data.origin;
+            modalUsage.textContent = data.usage;
+            modalStars.innerHTML = createStars(parseInt(data.stars));
+            modalBgLetter.textContent = data.title.charAt(0);
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const hideModal = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        };
+
+        // Event Listeners
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const data = {
+                    title: card.querySelector('.model-title').textContent,
+                    description: card.getAttribute('data-description'),
+                    discipline: card.getAttribute('data-discipline'),
+                    origin: card.getAttribute('data-origin'),
+                    stars: card.getAttribute('data-stars'),
+                    usage: card.getAttribute('data-usage')
+                };
+                showModal(data);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) hideModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') hideModal();
         });
     </script>
 </body></html>
+```
