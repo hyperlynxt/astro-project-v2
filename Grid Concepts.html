@@ -744,18 +744,7 @@
         const modalRelatedSection = document.getElementById('modal-related-section');
         const modalRelatedItems = document.getElementById('modal-related-items');
 
-        // Search Logic
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            
-            cards.forEach(card => {
-                const title = card.querySelector('.model-title').textContent.toLowerCase();
-                const description = card.querySelector('p').textContent.toLowerCase();
-                const isMatch = title.includes(query) || description.includes(query);
-                
-                card.style.display = isMatch ? 'flex' : 'none';
-            });
-        });
+        // Search Logic removed (consolidated below)
 
         // Modal Helper Functions
         const createStars = (count) => {
@@ -1000,6 +989,7 @@
     </div>
 
     <script vid="78">
+        const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
         const filterDisciplineChecks = document.querySelectorAll('#filter-disciplines-section input[type="checkbox"]');
@@ -1198,4 +1188,4 @@
         // Initialize counts
         updateFilterPreview();
     </script>
-ipt>
+</script>
