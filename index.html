@@ -19,8 +19,15 @@
 
         body {
             background-color: var(--bg-void);
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-size: 400px; /* Coarser grain */
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 
+                0px 0px, 
+                40px 60px, 
+                80px 20px;
+            background-repeat: repeat;
             color: var(--text-primary);
             font-family: var(--font-serif);
             margin: 0;
