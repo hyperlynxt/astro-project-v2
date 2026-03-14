@@ -481,6 +481,53 @@
 
 
     <!-- Definition Modal Container (Hidden by default) -->
+    <div id="definition-modal" class="fixed inset-0 bg-ink/40 hidden items-center justify-center z-[100] animate-fade-in p-6">
+        <div class="bg-[#F9F7F2] w-full max-w-[580px] max-h-[90vh] rounded-[28px] p-10 relative shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-ink/5 animate-slide-up flex flex-col modal-scroll overflow-y-auto">
+            
+            <button id="close-modal" class="absolute top-6 right-6 w-11 h-11 rounded-full bg-parchment-200 flex items-center justify-center text-ink hover:bg-parchment-300 transition-colors text-lg focus:outline-none focus:ring-2 focus:ring-ink/20 shrink-0 z-10" aria-label="Close modal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            
+            <header class="mb-7 pr-12 shrink-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <span id="modal-pronunciation" class="font-serif text-[1.35rem] text-gold italic">/ˈsɔn.dər/</span>
+                    <span id="modal-pos" class="font-sans text-[10px] uppercase tracking-[0.1em] text-ink-light border border-parchment-300 px-2 py-0.5 rounded">noun</span>
+                </div>
+                
+                <h2 id="modal-word" class="font-serif text-[4.25rem] font-normal leading-[0.9] text-ink mb-5 tracking-tight">Sonder</h2>
+                
+                <div id="modal-tags" class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest text-teal bg-teal/10">Coined</span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest text-gold bg-gold/10">Philosophy</span>
+                </div>
+            </header>
+
+            <div id="modal-definition" class="font-serif text-xl leading-[1.65] text-ink mb-8 pl-6 border-l-[3px] border-gold/40 shrink-0">
+                <!-- Dynamic Definition -->
+            </div>
+
+            <div class="flex flex-col gap-6 border-t border-parchment-200 pt-7 mt-auto shrink-0">
+                <div class="flex justify-between items-start gap-6">
+                    <div class="flex-1">
+                        <span class="font-sans text-[10px] uppercase tracking-[0.12em] text-ink-light mb-2 block font-medium">Etymology Source</span>
+                        <p id="modal-etymology" class="font-serif italic text-ink-muted text-[0.95rem] leading-snug">
+                            John Koenig, The Dictionary of Obscure Sorrows (2012). From German ‘sonder’ (special) and French ‘sonder’ (to fathom).
+                        </p>
+                    </div>
+                    
+                    <div id="modal-stars" class="flex gap-1 mt-0.5 shrink-0" style="color: #B08D57;">
+                        <!-- Dynamic Stars -->
+                    </div>
+                </div>
+
+                <div class="bg-parchment-100 rounded-xl p-5 border border-dashed border-parchment-300 relative">
+                    <span class="font-sans text-[10px] uppercase tracking-[0.12em] text-ink-light mb-3 block font-medium absolute top-4 right-5 bg-parchment-100 px-1">Personal Note</span>
+                    <span id="modal-note" class="font-hand text-[1.85rem] text-ink leading-tight -rotate-1 block mt-2">
+                        <!-- Dynamic Note -->
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Knowledge Filter Modal -->
