@@ -879,11 +879,19 @@
             <div class="px-7 py-6 overflow-y-auto modal-scrollbar relative z-0 flex-grow space-y-8 h-[500px]">
                 <!-- Sort Order -->
                 <div class="animate-sidebar-item stagger-1" id="filter-sort-section">
-                    <div class="flex items-center gap-2 mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>
-                        </svg>
-                        <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Sort Order</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                            <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Sort Order</h3>
+                        </div>
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-parchment-50 border border-parchment-dark/20 text-[10px] font-bold uppercase tracking-wider text-ink/60 hover:text-seal-red hover:border-seal-red/30 transition-all group">
+                            <span id="sort-direction-label">Descending</span>
+                            <svg id="sort-direction-icon" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button data-sort="most-used" class="sort-btn px-4 py-2 bg-seal-red text-white font-inter text-sm font-medium rounded-full shadow-lg border border-seal-red transition-all">Most Used</button>
@@ -903,6 +911,18 @@
                         <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
                     </div>
                     <div class="grid grid-cols-1 gap-3">
+                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
+                            <input type="checkbox" class="hidden" value="All" id="filter-all-disciplines" checked>
+                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border-seal-red bg-seal-red flex items-center justify-center transition-colors shadow-sm">
+                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors font-bold">All Disciplines</span>
+                                <span class="font-inter text-xs text-ink/40">Show everything in the collection</span>
+                            </div>
+                        </label>
                         <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
                             <input type="checkbox" class="hidden" value="Systems Thinking" checked>
                             <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
@@ -999,6 +1019,7 @@
         let currentFilterState = {
             query: '',
             sort: 'most-used',
+            sortOrder: 'desc', // 'asc' or 'desc'
             disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
             minUtility: 3
         };
@@ -1042,26 +1063,49 @@
         // Discipline Filtering
         filterDisciplineChecks.forEach(check => {
             check.addEventListener('change', () => {
+                const isAll = check.value === 'All';
+                
+                if (isAll) {
+                    // Toggle all others to match "All"
+                    filterDisciplineChecks.forEach(c => {
+                        if (c.value !== 'All') {
+                            c.checked = check.checked;
+                            updateCheckboxUI(c);
+                        }
+                    });
+                } else {
+                    // If any individual is unchecked, uncheck "All"
+                    const allCheck = document.getElementById('filter-all-disciplines');
+                    const others = Array.from(filterDisciplineChecks).filter(c => c.value !== 'All');
+                    const allOthersChecked = others.every(c => c.checked);
+                    
+                    allCheck.checked = allOthersChecked;
+                    updateCheckboxUI(allCheck);
+                }
+
                 currentFilterState.disciplines = Array.from(filterDisciplineChecks)
                     .filter(i => i.checked)
                     .map(i => i.value);
                 
-                // Update checkbox UI
-                const checkDiv = check.nextElementSibling;
-                const checkSvg = checkDiv.querySelector('svg');
-                if(check.checked) {
-                    checkDiv.classList.add('bg-seal-red', 'border-seal-red');
-                    checkDiv.classList.remove('bg-white', 'border-parchment-400');
-                    checkSvg.classList.remove('hidden');
-                } else {
-                    checkDiv.classList.remove('bg-seal-red', 'border-seal-red');
-                    checkDiv.classList.add('bg-white', 'border-parchment-400');
-                    checkSvg.classList.add('hidden');
-                }
-                
+                updateCheckboxUI(check);
                 updateFilterPreview();
             });
         });
+
+        function updateCheckboxUI(check) {
+            const checkDiv = check.nextElementSibling;
+            if (!checkDiv) return;
+            const checkSvg = checkDiv.querySelector('svg');
+            if(check.checked) {
+                checkDiv.classList.add('bg-seal-red', 'border-seal-red');
+                checkDiv.classList.remove('bg-white', 'border-parchment-400');
+                if (checkSvg) checkSvg.classList.remove('hidden');
+            } else {
+                checkDiv.classList.remove('bg-seal-red', 'border-seal-red');
+                checkDiv.classList.add('bg-white', 'border-parchment-400');
+                if (checkSvg) checkSvg.classList.add('hidden');
+            }
+        }
 
         // Utility Star Filtering
         filterStarButtons.forEach(btn => {
@@ -1112,8 +1156,9 @@
                                title.includes(currentFilterState.query) || 
                                desc.includes(currentFilterState.query);
             
-            // Discipline match (any part of the discipline string)
-            const disciplineMatch = currentFilterState.disciplines.some(d => disc.includes(d));
+            // Discipline match
+            const disciplineMatch = currentFilterState.disciplines.includes('All') || 
+                                     currentFilterState.disciplines.some(d => disc.includes(d));
             
             // Star match
             const starMatch = stars >= currentFilterState.minUtility;
@@ -1135,19 +1180,54 @@
             // Trigger masonry layout update if any
         }
 
+        // Sort Order Toggle Logic
+        const sortDirectionBtn = document.getElementById('sort-direction-toggle');
+        const sortDirectionLabel = document.getElementById('sort-direction-label');
+        const sortDirectionIcon = document.getElementById('sort-direction-icon');
+
+        sortDirectionBtn.addEventListener('click', () => {
+            currentFilterState.sortOrder = currentFilterState.sortOrder === 'desc' ? 'asc' : 'desc';
+            
+            // Update UI
+            sortDirectionLabel.textContent = currentFilterState.sortOrder === 'desc' ? 'Descending' : 'Ascending';
+            sortDirectionIcon.style.transform = currentFilterState.sortOrder === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)';
+            
+            updateFilterPreview();
+        });
+
         function sortCards() {
             const cardsArray = Array.from(cards);
+            const isDesc = currentFilterState.sortOrder === 'desc';
             
             cardsArray.sort((a, b) => {
+                let result = 0;
                 if (currentFilterState.sort === 'alphabetical') {
-                    return a.querySelector('.model-title').textContent.localeCompare(b.querySelector('.model-title').textContent);
+                    result = a.querySelector('.model-title').textContent.localeCompare(b.querySelector('.model-title').textContent);
                 } else if (currentFilterState.sort === 'most-used') {
-                    return parseInt(b.getAttribute('data-usage')) - parseInt(a.getAttribute('data-usage'));
+                    result = parseInt(a.getAttribute('data-usage')) - parseInt(b.getAttribute('data-usage'));
                 } else {
                     // Recently added - stay in original DOM order (mocking by original index)
-                    return 0; 
+                    // In a real app we'd compare dates. Here we treat DOM order as "descending" (newest first if appends are end)
+                    // But usually "Recently added" buttons imply newest at top.
+                    // For now, let's keep it simple.
+                    result = 0; 
                 }
+                
+                return isDesc ? -result : result;
             });
+
+            // Special handling for most-used default (usually high-to-low is 'desc')
+            // alphabetical default (A-Z is 'asc')
+            if (currentFilterState.sort === 'most-used') {
+                // If 'desc', we want high to low, so we want result = b - a. 
+                // My result above is a - b. If isDesc is true, we return -(a-b) which is b-a. Correct.
+            }
+
+            // Correction for Alphabetical: Usually A-Z is 'Ascending'. 
+            // If user selects 'Descending' in Alphabetical, it should be Z-A.
+            // My result a.localeCompare(b) is ASCENDING.
+            // isDesc ? -result : result;
+            // if isDesc(Descending) -> returns -(A-Z) -> Z-A. Correct.
             
             // Re-append in new order
             cardsArray.forEach(card => masonryGrid.appendChild(card));
