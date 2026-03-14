@@ -250,13 +250,55 @@
             background-image: repeating-linear-gradient(45deg, #2A2724 0, #2A2724 1px, transparent 0, transparent 8px);
         }
 
-        .custom-scrollbar-modal::-webkit-scrollbar {
-            width: 5px;
+        .custom-scrollbar-modal::-webkit-scrollbar-thumb {
+            background-color: rgba(42, 39, 36, 0.15);
+            border-radius: 10px;
         }
-        .custom-scrollbar-modal::-webkit-scrollbar-track {
+
+        /* Filter Modal Specifics */
+        @keyframes overlayIn {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(8px); }
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .animate-overlay-in {
+            animation: overlayIn 0.4s ease-out forwards;
+        }
+
+        .animate-modal-in {
+            animation: modalIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .font-reenie { font-family: "Reenie Beanie", cursive; }
+        .font-garamond { font-family: "EB Garamond", serif; }
+        .font-inter { font-family: "Inter", sans-serif; }
+        .text-seal-red { color: #8B2626; }
+        .bg-seal-red { background-color: #8B2626; }
+        .border-seal-red { border-color: #8B2626; }
+        
+        .custom-checkbox input:checked + div {
+            background-color: #8B2626;
+            border-color: #8B2626;
+        }
+        .custom-checkbox input:checked + div svg {
+            display: block;
+        }
+        .custom-checkbox div svg {
+            display: none;
+        }
+
+        .modal-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
-        .custom-scrollbar-modal::-webkit-scrollbar-thumb {
+        .modal-scrollbar::-webkit-scrollbar-thumb {
             background-color: rgba(42, 39, 36, 0.15);
             border-radius: 10px;
         }
@@ -298,9 +340,20 @@
                         </svg>
                     </span>
                 </h2>
-                <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed" vid="39">
+                <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed mb-10" vid="39">
                     Concepts for making sense of thought, behavior, and the self.
                 </p>
+
+                <button onclick="openFilterModal()" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-white border border-parchment-dark/30 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-seal-red group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                        </svg>
+                        <span class="font-serif text-xl text-ink">Filter & Sort</span>
+                    </div>
+                    <div class="h-4 w-px bg-parchment-200"></div>
+                    <span class="font-hand text-2xl text-seal-red translate-y-0.5">Refine the collection</span>
+                </button>
             </div>
         </section>
 
@@ -789,5 +842,148 @@
             if(e.key === 'Escape') hideModal();
         });
     </script>
-</body></html>
-```
+
+    <!-- Knowledge Filter Modal -->
+    <div id="filter-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6 bg-parchment-100/40 backdrop-blur-md animate-overlay-in">
+        <div class="relative z-20 w-full max-w-[420px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] animate-modal-in ink-stain">
+            
+            <!-- Header -->
+            <div class="px-7 pt-7 pb-4 border-b border-parchment-dark/15 flex justify-between items-start relative bg-white/50 backdrop-blur-md z-10 flex-shrink-0">
+                <div>
+                    <div class="font-hand text-xl text-parchment-400 -rotate-2 transform origin-left mb-1 opacity-80 animate-sidebar-item">
+                        Refine the collection
+                    </div>
+                    <h2 class="text-3xl font-garamond font-medium text-ink relative inline-block animate-sidebar-item">
+                        Filter & Sort
+                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-1 text-seal-red opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M2 7C25 2 75 -1 98 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                        </svg>
+                    </h2>
+                </div>
+                
+                <button onclick="closeFilterModal()" class="w-8 h-8 rounded-full bg-parchment-50 border border-parchment-dark/20 flex items-center justify-center text-ink/50 hover:text-ink hover:bg-parchment-100 transition-all focus:outline-none focus:ring-2 focus:ring-seal-red/30 mt-1 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="px-7 py-6 overflow-y-auto modal-scrollbar relative z-0 flex-grow space-y-8 h-[500px]">
+                <!-- Sort Order -->
+                <div class="animate-sidebar-item stagger-1">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                        <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Sort Order</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="px-4 py-2 bg-seal-red text-white font-inter text-sm font-medium rounded-full shadow-lg border border-seal-red transition-all">Most Used</button>
+                        <button class="px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Alphabetical</button>
+                        <button class="px-4 py-2 bg-white text-ink/70 font-inter text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Recently Added</button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-2"></div>
+
+                <!-- Disciplines -->
+                <div class="animate-sidebar-item stagger-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
+                            <input type="checkbox" class="hidden" checked>
+                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
+                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Systems Thinking</span>
+                                <span class="font-inter text-xs text-ink/40">Models of interconnectedness</span>
+                            </div>
+                        </label>
+                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
+                            <input type="checkbox" class="hidden">
+                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
+                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Philosophy</span>
+                                <span class="font-inter text-xs text-ink/40">Epistemology & Ethics</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-3"></div>
+
+                <!-- Utility stars -->
+                <div class="animate-sidebar-item stagger-3 pb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Minimum Utility</h3>
+                        </div>
+                        <span class="font-hand text-lg text-seal-red">3+ stars</span>
+                    </div>
+                    <div class="flex gap-2 p-3 bg-white border border-parchment-dark/10 rounded-xl shadow-inner-subtle w-fit">
+                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button class="text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button class="text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button class="text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-6 border-t border-parchment-dark/15 bg-parchment-50 relative z-10 flex items-center justify-between flex-shrink-0 animate-sidebar-item stagger-4">
+                <button onclick="closeFilterModal()" class="font-inter text-sm font-medium text-ink/50 hover:text-ink transition-colors underline underline-offset-4 decoration-parchment-300">Clear Filters</button>
+                <button onclick="closeFilterModal()" class="bg-ink hover:bg-black text-white px-6 py-3 rounded-xl font-inter text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                    <span>Apply Filters</span>
+                    <span class="font-hand text-lg text-white/80 pt-0.5">14 concepts</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script vid="78">
+        function openFilterModal() {
+            const modal = document.getElementById('filter-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Re-trigger heading animation inside modal
+            const path = modal.querySelector('.swoosh-path');
+            path.style.animation = 'none';
+            path.offsetHeight; // trigger reflow
+            path.style.animation = null;
+        }
+
+        function closeFilterModal() {
+            const modal = document.getElementById('filter-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFilterModal();
+            if (e.key === 'Escape') hideModal(); // Keep existing modal close on escape
+        });
+
+        // Close on backdrop click
+        document.getElementById('filter-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'filter-modal') closeFilterModal();
+        });
+    </script>
