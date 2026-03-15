@@ -584,73 +584,16 @@
 
                 <!-- Disciplines -->
                 <div class="animate-sidebar-item stagger-2" id="filter-disciplines-section">
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg>
-                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 gap-3">
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="All" id="filter-all-disciplines" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border-seal bg-seal flex items-center justify-center transition-colors shadow-sm">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-serif text-lg text-ink leading-tight group-hover:text-seal transition-colors font-bold">All Disciplines</span>
-                                <span class="font-sans text-xs text-ink/40">Show everything in the lexicon</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Systems Thinking" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-serif text-lg text-ink leading-tight group-hover:text-seal transition-colors">Systems Thinking</span>
-                                <span class="font-sans text-xs text-ink/40">Complexity & Mapping</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Philosophy" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-serif text-lg text-ink leading-tight group-hover:text-seal transition-colors">Philosophy</span>
-                                <span class="font-sans text-xs text-ink/40">Existence & Ethics</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Economics" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-serif text-lg text-ink leading-tight group-hover:text-seal transition-colors">Economics</span>
-                                <span class="font-sans text-xs text-ink/40">Incentives & Trade</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Statistics" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-serif text-lg text-ink leading-tight group-hover:text-seal transition-colors">Statistics</span>
-                                <span class="font-sans text-xs text-ink/40">Probability & Risk</span>
-                            </div>
-                        </label>
+                    <div id="filter-disciplines-container" class="flex flex-wrap gap-2">
+                        <!-- Disciplines populated via JS -->
                     </div>
                 </div>
 
@@ -715,7 +658,6 @@
         const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
-        const filterDisciplineChecks = document.querySelectorAll('#filter-disciplines-section input[type="checkbox"]');
         const filterStarButtons = document.querySelectorAll('.star-filter');
         const lexiconGrid = document.querySelector('.lexicon-grid');
 
@@ -730,10 +672,79 @@
             query: '',
             sort: 'most-used',
             sortOrder: 'desc',
-            disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
+            disciplines: ['All'], // Changed to array for pill-based filtering
             minUtility: 1,
             tags: [] // Selected tags
         };
+
+        // Discipline Discovery
+        const availableDisciplines = new Set();
+        cards.forEach(card => {
+            const disc = card.getAttribute('data-discipline');
+            if (disc) {
+                disc.split('/').forEach(d => availableDisciplines.add(d.trim()));
+            }
+        });
+
+        const sortedDisciplines = Array.from(availableDisciplines).sort();
+        const displayDisciplines = sortedDisciplines.slice(0, 7); // Limit to top 7
+
+        const filterDisciplinesContainer = document.getElementById('filter-disciplines-container');
+
+        function renderFilterDisciplines() {
+            if (!filterDisciplinesContainer) return;
+            
+            const allBtnActive = currentFilterState.disciplines.includes('All');
+            
+            let html = `
+                <button data-discipline="All" class="disc-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all
+                    ${allBtnActive 
+                        ? 'bg-ink text-white shadow-md scale-105' 
+                        : 'bg-parchment-100 text-ink/60 border border-parchment-dark/20 hover:bg-parchment-200'}">
+                    All Disciplines
+                </button>
+            `;
+            
+            html += displayDisciplines.map(disc => {
+                const isActive = currentFilterState.disciplines.includes(disc);
+                return `
+                    <button data-discipline="${disc}" class="disc-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all
+                        ${isActive 
+                            ? 'bg-seal text-white shadow-md scale-105' 
+                            : 'bg-parchment-50 text-ink/60 border border-parchment-dark/20 hover:bg-parchment-100'}">
+                        ${disc}
+                    </button>
+                `;
+            }).join('');
+            
+            filterDisciplinesContainer.innerHTML = html;
+            
+            filterDisciplinesContainer.querySelectorAll('.disc-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const disc = btn.getAttribute('data-discipline');
+                    if (disc === 'All') {
+                        currentFilterState.disciplines = ['All'];
+                    } else {
+                        // If 'All' was selected, deselect it first
+                        if (currentFilterState.disciplines.includes('All')) {
+                            currentFilterState.disciplines = [];
+                        }
+                        
+                        if (currentFilterState.disciplines.includes(disc)) {
+                            currentFilterState.disciplines = currentFilterState.disciplines.filter(d => d !== disc);
+                            // If no disciplines are selected, default to 'All'
+                            if (currentFilterState.disciplines.length === 0) currentFilterState.disciplines = ['All'];
+                        } else {
+                            currentFilterState.disciplines.push(disc);
+                        }
+                    }
+                    renderFilterDisciplines();
+                    updateFilterPreview();
+                });
+            });
+        }
+
+        renderFilterDisciplines();
 
         const availableTags = new Set();
         cards.forEach(card => {
@@ -845,49 +856,6 @@
             updateFilterPreview();
         });
 
-        // Discipline Filtering
-        filterDisciplineChecks.forEach(check => {
-            check.addEventListener('change', () => {
-                const isAll = check.value === 'All';
-                
-                if (isAll) {
-                    filterDisciplineChecks.forEach(c => {
-                        if (c.value !== 'All') {
-                            c.checked = check.checked;
-                            updateCheckboxUI(c);
-                        }
-                    });
-                } else {
-                    const allCheck = document.getElementById('filter-all-disciplines');
-                    const others = Array.from(filterDisciplineChecks).filter(c => c.value !== 'All');
-                    allCheck.checked = others.every(c => c.checked);
-                    updateCheckboxUI(allCheck);
-                }
-
-                currentFilterState.disciplines = Array.from(filterDisciplineChecks)
-                    .filter(i => i.checked)
-                    .map(i => i.value);
-                
-                updateCheckboxUI(check);
-                updateFilterPreview();
-            });
-        });
-
-        function updateCheckboxUI(check) {
-            const checkDiv = check.nextElementSibling;
-            if (!checkDiv) return;
-            const checkSvg = checkDiv.querySelector('svg');
-            if(check.checked) {
-                checkDiv.classList.add('bg-seal', 'border-seal');
-                checkDiv.classList.remove('bg-white', 'border-parchment-400');
-                if (checkSvg) checkSvg.classList.remove('hidden');
-            } else {
-                checkDiv.classList.remove('bg-seal', 'border-seal');
-                checkDiv.classList.add('bg-white', 'border-parchment-400');
-                if (checkSvg) checkSvg.classList.add('hidden');
-            }
-        }
-
         // Utility Star Filtering
         filterStarButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -935,15 +903,19 @@
                                cardWord.includes(currentFilterState.query) || 
                                cardSnippet.includes(currentFilterState.query);
             
-            const disciplineMatch = currentFilterState.disciplines.includes('All') || 
-                                     (cardDiscipline && currentFilterState.disciplines.some(d => cardDiscipline.includes(d)));
+            // Disciplines check
+            let passesDiscipline = currentFilterState.disciplines.includes('All');
+            if (!passesDiscipline) {
+                const cardDisciplines = cardDiscipline.split(',').map(d => d.trim()); // Handle multiple disciplines on a card
+                passesDiscipline = currentFilterState.disciplines.some(selectedDisc => cardDisciplines.includes(selectedDisc));
+            }
             
             const starMatch = cardStars >= currentFilterState.minUtility;
 
             const tagsMatch = currentFilterState.tags.length === 0 || 
                               currentFilterState.tags.some(selectedTag => cardTags.includes(selectedTag));
             
-            return queryMatch && disciplineMatch && starMatch && tagsMatch;
+            return queryMatch && passesDiscipline && starMatch && tagsMatch;
         }
 
         function applyFilterSystem() {
@@ -980,12 +952,33 @@
                 minUtility: 1,
                 tags: []
             };
-            
-            filterDisciplineChecks.forEach(i => {
-                i.checked = true;
-                if (typeof updateCheckboxUI === 'function') updateCheckboxUI(i);
-            });
+            // Reset UI
+            renderFilterDisciplines();
             renderFilterTags();
+            // Reset sort button UI
+            filterSortButtons.forEach(b => {
+                b.classList.remove('bg-seal', 'text-white', 'shadow-lg', 'border-seal');
+                b.classList.add('bg-white', 'text-ink/70', 'border-parchment-dark/30');
+            });
+            document.querySelector('[data-sort="most-used"]').classList.add('bg-seal', 'text-white', 'shadow-lg', 'border-seal');
+            document.querySelector('[data-sort="most-used"]').classList.remove('bg-white', 'text-ink/70', 'border-parchment-dark/30');
+
+            // Reset sort direction UI
+            sortDirectionLabel.textContent = 'Descending';
+            sortDirectionIcon.style.transform = 'rotate(0deg)';
+
+            // Reset star filter UI
+            filterStarButtons.forEach((star, index) => {
+                if(index < 1) { // Only the first star should be gold for 1+ stars
+                    star.classList.remove('text-parchment-200');
+                    star.classList.add('text-gold');
+                } else {
+                    star.classList.add('text-parchment-200');
+                    star.classList.remove('text-gold');
+                }
+            });
+            document.querySelector('#filter-utility-stars').previousElementSibling.querySelector('span').textContent = '1+ stars';
+
             applyFilterSystem();
         }
 

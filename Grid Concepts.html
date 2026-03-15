@@ -837,75 +837,17 @@
 
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-2"></div>
 
-                <!-- Disciplines -->
                 <div class="animate-sidebar-item stagger-2" id="filter-disciplines-section">
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg>
-                        <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Disciplines</h3>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 gap-3">
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="All" id="filter-all-disciplines" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border-seal-red bg-seal-red flex items-center justify-center transition-colors shadow-sm">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors font-bold">All Disciplines</span>
-                                <span class="font-inter text-xs text-ink/40">Show everything in the collection</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Systems Thinking" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Systems Thinking</span>
-                                <span class="font-inter text-xs text-ink/40">Models of interconnectedness</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Philosophy" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Philosophy</span>
-                                <span class="font-inter text-xs text-ink/40">Epistemology & Ethics</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Economics" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Economics</span>
-                                <span class="font-inter text-xs text-ink/40">Value & Incentives</span>
-                            </div>
-                        </label>
-                        <label class="custom-checkbox flex items-start gap-3 cursor-pointer group p-2 -ml-2 rounded-lg hover:bg-parchment-50 transition-colors">
-                            <input type="checkbox" class="hidden" value="Statistics" checked>
-                            <div class="w-5 h-5 mt-0.5 rounded flex-shrink-0 border border-parchment-400 bg-white flex items-center justify-center transition-colors shadow-sm group-hover:border-seal-red/50">
-                                <svg class="w-3.5 h-3.5 text-white pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="font-garamond text-lg text-ink leading-tight group-hover:text-seal-red transition-colors">Statistics</span>
-                                <span class="font-inter text-xs text-ink/40">Probability & Data</span>
-                            </div>
-                        </label>
+                    <div id="filter-disciplines-container" class="flex flex-wrap gap-2">
+                        <!-- Disciplines populated via JS -->
                     </div>
                 </div>
 
@@ -1128,19 +1070,88 @@
         const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
-        const filterDisciplineChecks = document.querySelectorAll('#filter-disciplines-section input[type="checkbox"]');
-        const filterStarButtons = document.querySelectorAll('.star-filter');
         const masonryGrid = document.querySelector('.masonry-grid');
         const filterTagsContainer = document.getElementById('filter-tags-container');
+        const filterDisciplinesContainer = document.getElementById('filter-disciplines-container');
 
         let currentFilterState = {
             query: '',
             sort: 'most-used',
             sortOrder: 'desc', // 'asc' or 'desc'
-            disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
+            disciplines: ['All'], // Selected disciplines
             tags: [], // Selected tags
             minUtility: 1
         };
+
+        // Discipline Discovery
+        const availableDisciplines = new Set();
+        cards.forEach(card => {
+            const disc = card.getAttribute('data-discipline');
+            if (disc) {
+                // Handle cases like "Psychology/Self"
+                disc.split('/').forEach(d => availableDisciplines.add(d.trim()));
+            }
+        });
+
+        const sortedDisciplines = Array.from(availableDisciplines).sort();
+        const displayDisciplines = sortedDisciplines.slice(0, 7); // Show 4 to 7 as per request
+
+        function renderFilterDisciplines() {
+            if (!filterDisciplinesContainer) return;
+            
+            const allBtnActive = currentFilterState.disciplines.includes('All');
+            
+            let html = `
+                <button data-discipline="All" class="disc-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all
+                    ${allBtnActive 
+                        ? 'bg-ink text-white shadow-md scale-105' 
+                        : 'bg-parchment-100 text-ink/60 border border-parchment-dark/20 hover:bg-parchment-200'}">
+                    All Disciplines
+                </button>
+            `;
+            
+            html += displayDisciplines.map(disc => {
+                const isActive = currentFilterState.disciplines.includes(disc);
+                return `
+                    <button data-discipline="${disc}" class="disc-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all
+                        ${isActive 
+                            ? 'bg-seal-red text-white shadow-md scale-105' 
+                            : 'bg-parchment-50 text-ink/60 border border-parchment-dark/20 hover:bg-parchment-100'}">
+                        ${disc}
+                    </button>
+                `;
+            }).join('');
+            
+            filterDisciplinesContainer.innerHTML = html;
+            
+            // Re-attach listeners
+            filterDisciplinesContainer.querySelectorAll('.disc-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const disc = btn.getAttribute('data-discipline');
+                    
+                    if (disc === 'All') {
+                        currentFilterState.disciplines = ['All'];
+                    } else {
+                        // Remove 'All' if selecting a specific one
+                        currentFilterState.disciplines = currentFilterState.disciplines.filter(d => d !== 'All');
+                        
+                        if (currentFilterState.disciplines.includes(disc)) {
+                            currentFilterState.disciplines = currentFilterState.disciplines.filter(d => d !== disc);
+                            // If none left, revert to All
+                            if (currentFilterState.disciplines.length === 0) currentFilterState.disciplines = ['All'];
+                        } else {
+                            currentFilterState.disciplines.push(disc);
+                        }
+                    }
+                    
+                    renderFilterDisciplines();
+                    updateFilterPreview();
+                });
+            });
+        }
+
+        // Initialize Disciplines UI
+        renderFilterDisciplines();
 
         // Tag Discovery & Rendering
         const availableTags = new Set();
@@ -1328,7 +1339,12 @@
         function shouldShowCard(card) {
             const cardTitle = card.querySelector('.model-title').textContent;
             const cardDesc = card.querySelector('p').textContent;
-            const cardDiscipline = card.getAttribute('data-discipline');
+            // Disciplines check
+            let passesDiscipline = currentFilterState.disciplines.includes('All');
+            if (!passesDiscipline) {
+                const cardDiscipline = card.getAttribute('data-discipline') || '';
+                passesDiscipline = currentFilterState.disciplines.some(d => cardDiscipline.includes(d));
+            }
             const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',').map(t => t.trim()) : [];
             
             // Search query match
@@ -1427,10 +1443,7 @@
             };
             
             // Reset UI
-            filterDisciplineChecks.forEach(i => {
-                i.checked = true;
-                if (typeof updateCheckboxUI === 'function') updateCheckboxUI(i);
-            });
+            renderFilterDisciplines();
             renderFilterTags();
             if (filterStarButtons.length > 0) filterStarButtons[0].click();
             applyFilterSystem();
