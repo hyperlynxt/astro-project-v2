@@ -584,7 +584,14 @@
                     <div id="modal-bg-letter" class="absolute top-10 right-16 text-[32rem] font-serif font-bold text-ink/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3">D</div>
 
                     <div class="mb-12">
-                        <h1 id="modal-title" class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-ink leading-[1.02] mb-12 tracking-tight">Diminishing Returns</h1>
+                        <h1 id="modal-title" class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-ink leading-[1.02] mb-12 tracking-tight">
+                            <span class="italic hand-underline-sm inline-block relative">
+                                <span id="modal-title-text">Diminishing Returns</span>
+                                <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-seal opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                    <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                                </svg>
+                            </span>
+                        </h1>
                         
                         <div class="bg-[#FCFBF8] border border-gold/15 rounded-2xl p-6 md:p-8 relative max-w-4xl shadow-sm">
                             <div class="absolute left-0 top-6 bottom-6 w-[3px] bg-gradient-to-b from-gold/40 via-gold to-gold/40 rounded-r-md"></div>
@@ -749,7 +756,7 @@
         const closeModalBtn = document.getElementById('close-modal-btn');
 
         // Modal Elements
-        const modalTitle = document.getElementById('modal-title');
+        const modalTitle = document.getElementById('modal-title-text');
         const modalSummary = document.getElementById('modal-summary');
         const modalDesc = document.getElementById('modal-detailed-desc');
         const modalDiscipline = document.getElementById('modal-discipline');
