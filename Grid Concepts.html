@@ -785,171 +785,6 @@
             Filter & Sort
         </button>
     </div>
-    <script vid="search-logic">
-        const searchInput = document.getElementById('frame-search');
-        const cards = document.querySelectorAll('.catalog-card');
-        const modal = document.getElementById('concept-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-
-        // Modal Elements
-        const modalTitle = document.getElementById('modal-title-text');
-        const modalTitleUnderline = document.getElementById('modal-title-underline');
-        const modalSummary = document.getElementById('modal-summary');
-        const modalDesc = document.getElementById('modal-detailed-desc');
-        const modalDiscipline = document.getElementById('modal-discipline');
-        const modalParentFramework = document.getElementById('modal-parent-framework');
-        const modalParentFrameworkContainer = document.getElementById('modal-parent-framework-container');
-        const modalOrigin = document.getElementById('modal-origin');
-        const modalUsage = document.getElementById('modal-usage-count');
-        const modalStars = document.getElementById('modal-stars');
-        const modalBgLetter = document.getElementById('modal-bg-letter');
-        const modalNotesSection = document.getElementById('modal-notes-section');
-        const modalNotesItems = document.getElementById('modal-notes-items');
-        const modalRelatedSection = document.getElementById('modal-related-section');
-        const modalRelatedItems = document.getElementById('modal-related-items');
-        const modalTagsContainer = document.getElementById('modal-tags-container');
-
-        // Search Logic removed (consolidated below)
-
-        // Modal Helper Functions
-        const createStars = (count) => {
-            let html = '';
-            const starSvg = (opacity) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" fill-opacity="${opacity}" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="drop-shadow-sm"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`;
-            for(let i=1; i<=5; i++) {
-                html += starSvg(i <= count ? '1' : '0.2');
-            }
-            return html;
-        };
-
-        const createRelationshipItem = (name, type) => {
-            const colorClass = type === 'note' ? 'teal' : 'gold';
-            return `
-                <div class="group p-3.5 bg-parchment/50 border border-parchment-dark/40 rounded-xl hover:bg-[#FDFCF9] hover:border-${colorClass}/40 hover:shadow-sm transition-all cursor-pointer flex items-center justify-between">
-                    <p class="font-serif text-[17px] text-ink group-hover:text-${colorClass} transition-colors font-medium">${name}</p>
-                    <svg class="w-4 h-4 text-ink-light group-hover:text-${colorClass}/80 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-            `;
-        };
-
-        const showModal = (data) => {
-            modalTitle.textContent = data.title;
-            modalSummary.textContent = data.description.split('.')[0] + '.';
-            modalDesc.innerHTML = `<p>${data.description}</p>`;
-            
-            // Handle Discipline split
-            if (data.discipline.includes('/')) {
-                const parts = data.discipline.split('/');
-                modalDiscipline.textContent = parts[0].trim();
-                modalParentFramework.textContent = parts[1].trim();
-                modalParentFrameworkContainer.classList.remove('hidden');
-                if (modalParentFrameworkContainer.previousElementSibling) {
-                    modalParentFrameworkContainer.previousElementSibling.classList.remove('hidden');
-                }
-            } else {
-                modalDiscipline.textContent = data.discipline;
-                modalParentFrameworkContainer.classList.add('hidden');
-                if (modalParentFrameworkContainer.previousElementSibling) {
-                    modalParentFrameworkContainer.previousElementSibling.classList.add('hidden');
-                }
-            }
-
-            modalOrigin.textContent = data.origin;
-            modalUsage.textContent = data.usage;
-            modalStars.innerHTML = createStars(parseInt(data.stars));
-            modalBgLetter.textContent = data.title.charAt(0);
-
-            // Populate Notes of Used
-            if (data.notesOfUsed) {
-                const notes = data.notesOfUsed.split(',');
-                modalNotesItems.innerHTML = notes.map(name => createRelationshipItem(name.trim(), 'note')).join('');
-                modalNotesSection.classList.remove('hidden');
-            } else {
-                modalNotesSection.classList.add('hidden');
-            }
-
-            // Populate Related Concepts
-            if (data.relatedConcepts) {
-                const related = data.relatedConcepts.split(',');
-                modalRelatedItems.innerHTML = related.map(name => createRelationshipItem(name.trim(), 'related')).join('');
-                modalRelatedSection.classList.remove('hidden');
-            } else {
-                modalRelatedSection.classList.add('hidden');
-            }
-
-            // Populate Tags
-            if (data.tags) {
-                const colors = ['teal', 'gold', 'seal'];
-                const tags = data.tags.split(',');
-                modalTagsContainer.innerHTML = tags.map((tag, i) => {
-                    const color = colors[i % colors.length];
-                    return `<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest text-${color} bg-${color}/10">${tag.trim()}</span>`;
-                }).join('');
-            } else {
-                modalTagsContainer.innerHTML = '';
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-
-            // Precise underline positioning for the first line
-            requestAnimationFrame(() => {
-                const rects = modalTitle.getClientRects();
-                const containerRect = modalTitle.parentElement.getBoundingClientRect();
-
-                if (rects.length > 0) {
-                    const firstRect = rects[0];
-                    const firstLineWidth = firstRect.width;
-                    
-                    modalTitleUnderline.style.width = (firstLineWidth * 1.05) + 'px';
-                    modalTitleUnderline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
-                    modalTitleUnderline.style.left = (firstRect.left - containerRect.left - (firstLineWidth * 0.025)) + 'px';
-                    modalTitleUnderline.style.display = 'block';
-                    
-                    // Trigger animation
-                    const path = modalTitleUnderline.querySelector('path');
-                    path.classList.remove('animate-draw-line');
-                    void path.offsetWidth; // trigger reflow
-                    path.classList.add('animate-draw-line');
-                }
-            });
-        };
-
-        const hideModal = () => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
-        };
-
-        // Event Listeners
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                const data = {
-                    title: card.querySelector('.model-title').textContent,
-                    description: card.getAttribute('data-description'),
-                    discipline: card.getAttribute('data-discipline'),
-                    origin: card.getAttribute('data-origin'),
-                    stars: card.getAttribute('data-stars'),
-                    usage: card.getAttribute('data-usage'),
-                    notesOfUsed: card.getAttribute('data-notes-of-used'),
-                    relatedConcepts: card.getAttribute('data-related-concepts'),
-                    tags: card.getAttribute('data-tags')
-                };
-                showModal(data);
-            });
-        });
-
-        closeModalBtn.addEventListener('click', hideModal);
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) hideModal();
-        });
-        document.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape') hideModal();
-        });
-    </script>
-
     <!-- Knowledge Filter Modal -->
     <div id="filter-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6 bg-parchment-100/40 backdrop-blur-md animate-overlay-in">
         <div class="relative z-20 w-full max-w-[420px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] animate-modal-in ink-stain">
@@ -1126,22 +961,248 @@
         </div>
     </div>
 
-    <script vid="78">
+    <script vid="search-logic">
+        const searchInput = document.getElementById('frame-search');
+        const cards = document.querySelectorAll('.catalog-card');
+        const modal = document.getElementById('concept-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // Modal Elements
+        const modalTitle = document.getElementById('modal-title-text');
+        const modalTitleUnderline = document.getElementById('modal-title-underline');
+        const modalSummary = document.getElementById('modal-summary');
+        const modalDesc = document.getElementById('modal-detailed-desc');
+        const modalDiscipline = document.getElementById('modal-discipline');
+        const modalParentFramework = document.getElementById('modal-parent-framework');
+        const modalParentFrameworkContainer = document.getElementById('modal-parent-framework-container');
+        const modalOrigin = document.getElementById('modal-origin');
+        const modalUsage = document.getElementById('modal-usage-count');
+        const modalStars = document.getElementById('modal-stars');
+        const modalBgLetter = document.getElementById('modal-bg-letter');
+        const modalNotesSection = document.getElementById('modal-notes-section');
+        const modalNotesItems = document.getElementById('modal-notes-items');
+        const modalRelatedSection = document.getElementById('modal-related-section');
+        const modalRelatedItems = document.getElementById('modal-related-items');
+        const modalTagsContainer = document.getElementById('modal-tags-container');
+
+        // Search Logic removed (consolidated below)
+
+        // Modal Helper Functions
+        const createStars = (count) => {
+            let html = '';
+            const starSvg = (opacity) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" fill-opacity="${opacity}" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="drop-shadow-sm"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`;
+            for(let i=1; i<=5; i++) {
+                html += starSvg(i <= count ? '1' : '0.2');
+            }
+            return html;
+        };
+
+        const createRelationshipItem = (name, type) => {
+            const colorClass = type === 'note' ? 'teal' : 'gold';
+            return `
+                <div class="group p-3.5 bg-parchment/50 border border-parchment-dark/40 rounded-xl hover:bg-[#FDFCF9] hover:border-${colorClass}/40 hover:shadow-sm transition-all cursor-pointer flex items-center justify-between">
+                    <p class="font-serif text-[17px] text-ink group-hover:text-${colorClass} transition-colors font-medium">${name}</p>
+                    <svg class="w-4 h-4 text-ink-light group-hover:text-${colorClass}/80 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            `;
+        };
+
+        const showModal = (data) => {
+            modalTitle.textContent = data.title;
+            modalSummary.textContent = data.description.split('.')[0] + '.';
+            modalDesc.innerHTML = `<p>${data.description}</p>`;
+            
+            // Handle Discipline split
+            if (data.discipline.includes('/')) {
+                const parts = data.discipline.split('/');
+                modalDiscipline.textContent = parts[0].trim();
+                modalParentFramework.textContent = parts[1].trim();
+                modalParentFrameworkContainer.classList.remove('hidden');
+                if (modalParentFrameworkContainer.previousElementSibling) {
+                    modalParentFrameworkContainer.previousElementSibling.classList.remove('hidden');
+                }
+            } else {
+                modalDiscipline.textContent = data.discipline;
+                modalParentFrameworkContainer.classList.add('hidden');
+                if (modalParentFrameworkContainer.previousElementSibling) {
+                    modalParentFrameworkContainer.previousElementSibling.classList.add('hidden');
+                }
+            }
+
+            modalOrigin.textContent = data.origin;
+            modalUsage.textContent = data.usage;
+            modalStars.innerHTML = createStars(parseInt(data.stars));
+            modalBgLetter.textContent = data.title.charAt(0);
+
+            // Populate Notes of Used
+            if (data.notesOfUsed) {
+                const notes = data.notesOfUsed.split(',');
+                modalNotesItems.innerHTML = notes.map(name => createRelationshipItem(name.trim(), 'note')).join('');
+                modalNotesSection.classList.remove('hidden');
+            } else {
+                modalNotesSection.classList.add('hidden');
+            }
+
+            // Populate Related Concepts
+            if (data.relatedConcepts) {
+                const related = data.relatedConcepts.split(',');
+                modalRelatedItems.innerHTML = related.map(name => createRelationshipItem(name.trim(), 'related')).join('');
+                modalRelatedSection.classList.remove('hidden');
+            } else {
+                modalRelatedSection.classList.add('hidden');
+            }
+
+            // Populate Tags
+            if (data.tags) {
+                const colors = ['teal', 'gold', 'seal'];
+                const tags = data.tags.split(',');
+                modalTagsContainer.innerHTML = tags.map((tag, i) => {
+                    const color = colors[i % colors.length];
+                    return `<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest text-${color} bg-${color}/10">${tag.trim()}</span>`;
+                }).join('');
+            } else {
+                modalTagsContainer.innerHTML = '';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // Precise underline positioning for the first line
+            requestAnimationFrame(() => {
+                const rects = modalTitle.getClientRects();
+                const containerRect = modalTitle.parentElement.getBoundingClientRect();
+
+                if (rects.length > 0) {
+                    const firstRect = rects[0];
+                    const firstLineWidth = firstRect.width;
+                    
+                    modalTitleUnderline.style.width = (firstLineWidth * 1.05) + 'px';
+                    modalTitleUnderline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
+                    modalTitleUnderline.style.left = (firstRect.left - containerRect.left - (firstLineWidth * 0.025)) + 'px';
+                    modalTitleUnderline.style.display = 'block';
+                    
+                    // Trigger animation
+                    const path = modalTitleUnderline.querySelector('path');
+                    path.classList.remove('animate-draw-line');
+                    void path.offsetWidth; // trigger reflow
+                    path.classList.add('animate-draw-line');
+                }
+            });
+        };
+
+        const hideModal = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        };
+
+        // Event Listeners
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const data = {
+                    title: card.querySelector('.model-title').textContent,
+                    description: card.getAttribute('data-description'),
+                    discipline: card.getAttribute('data-discipline'),
+                    origin: card.getAttribute('data-origin'),
+                    stars: card.getAttribute('data-stars'),
+                    usage: card.getAttribute('data-usage'),
+                    notesOfUsed: card.getAttribute('data-notes-of-used'),
+                    relatedConcepts: card.getAttribute('data-related-concepts'),
+                    tags: card.getAttribute('data-tags')
+                };
+                showModal(data);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) hideModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') hideModal();
+        });
+
         const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
         const filterDisciplineChecks = document.querySelectorAll('#filter-disciplines-section input[type="checkbox"]');
         const filterStarButtons = document.querySelectorAll('.star-filter');
         const masonryGrid = document.querySelector('.masonry-grid');
+        const filterTagsContainer = document.getElementById('filter-tags-container');
 
         let currentFilterState = {
             query: '',
             sort: 'most-used',
             sortOrder: 'desc', // 'asc' or 'desc'
             disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
-            tags: [], // New state for tags
+            tags: [], // Selected tags
             minUtility: 1
         };
+
+        // Tag Discovery & Rendering
+        const availableTags = new Set();
+        cards.forEach(card => {
+            const tags = card.getAttribute('data-tags');
+            if (tags) {
+                tags.split(',').forEach(t => availableTags.add(t.trim()));
+            }
+        });
+
+        const sortedTags = Array.from(availableTags).sort();
+        const displayTags = sortedTags.slice(0, 8); // Display first 8 as per request
+
+        function renderFilterTags() {
+            if (!filterTagsContainer) return;
+            filterTagsContainer.innerHTML = displayTags.map((tag, i) => {
+                const colors = ['teal', 'gold', 'seal-red'];
+                const colorArray = ['teal', 'gold', 'seal-red'];
+                const color = colorArray[i % colorArray.length];
+                const isActive = currentFilterState.tags.includes(tag);
+                
+                return `
+                    <button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all
+                        ${isActive 
+                            ? `bg-${color} text-white shadow-md scale-105` 
+                            : `bg-${color}/10 text-${color} border border-${color}/20 hover:bg-${color}/20`}">
+                        ${tag}
+                    </button>
+                `;
+            }).join('');
+
+            // Add Event Listeners
+            document.querySelectorAll('.tag-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tag = btn.getAttribute('data-tag');
+                    if (currentFilterState.tags.includes(tag)) {
+                        currentFilterState.tags = currentFilterState.tags.filter(t => t !== tag);
+                    } else {
+                        currentFilterState.tags.push(tag);
+                    }
+                    renderFilterTags();
+                    updateFilterPreview();
+                });
+            });
+        }
+
+        renderFilterTags();
+
+        const toggleAllTagsBtn = document.getElementById('toggle-all-tags');
+        if (toggleAllTagsBtn) {
+            toggleAllTagsBtn.addEventListener('click', () => {
+                if (currentFilterState.tags.length === displayTags.length) {
+                    currentFilterState.tags = [];
+                    toggleAllTagsBtn.textContent = 'Select All';
+                } else {
+                    currentFilterState.tags = [...displayTags];
+                    toggleAllTagsBtn.textContent = 'Clear All';
+                }
+                renderFilterTags();
+                updateFilterPreview();
+            });
+        }
 
         function openFilterModal() {
             filterModal.classList.remove('hidden');
@@ -1394,4 +1455,4 @@
         // Initialize counts
         updateFilterPreview();
     </script>
-</script>
+```
