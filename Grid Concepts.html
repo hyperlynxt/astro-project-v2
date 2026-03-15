@@ -622,13 +622,11 @@
                     <div id="modal-bg-letter" class="absolute top-10 right-16 text-[32rem] font-serif font-bold text-ink/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3">D</div>
 
                     <div class="mb-12">
-                        <h1 id="modal-title" class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-ink leading-[1.02] mb-12 tracking-tight">
-                            <span class="italic hand-underline-sm inline-block relative">
-                                <span id="modal-title-text">Diminishing Returns</span>
-                                <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-seal opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                                    <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
-                                </svg>
-                            </span>
+                        <h1 id="modal-title" class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-ink leading-[1.02] mb-12 tracking-tight relative">
+                            <span id="modal-title-text" class="italic inline">Diminishing Returns</span>
+                            <svg id="modal-title-underline" class="absolute h-[12px] text-seal opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display: none;">
+                                <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
+                            </svg>
                         </h1>
                         
                         <div class="bg-[#FCFBF8] border border-gold/15 rounded-2xl p-6 md:p-8 relative max-w-4xl shadow-sm">
@@ -795,6 +793,7 @@
 
         // Modal Elements
         const modalTitle = document.getElementById('modal-title-text');
+        const modalTitleUnderline = document.getElementById('modal-title-underline');
         const modalSummary = document.getElementById('modal-summary');
         const modalDesc = document.getElementById('modal-detailed-desc');
         const modalDiscipline = document.getElementById('modal-discipline');
@@ -894,6 +893,28 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
+
+            // Precise underline positioning for the first line
+            requestAnimationFrame(() => {
+                const rects = modalTitle.getClientRects();
+                const containerRect = modalTitle.parentElement.getBoundingClientRect();
+
+                if (rects.length > 0) {
+                    const firstRect = rects[0];
+                    const firstLineWidth = firstRect.width;
+                    
+                    modalTitleUnderline.style.width = (firstLineWidth * 1.05) + 'px';
+                    modalTitleUnderline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
+                    modalTitleUnderline.style.left = (firstRect.left - containerRect.left - (firstLineWidth * 0.025)) + 'px';
+                    modalTitleUnderline.style.display = 'block';
+                    
+                    // Trigger animation
+                    const path = modalTitleUnderline.querySelector('path');
+                    path.classList.remove('animate-draw-line');
+                    void path.offsetWidth; // trigger reflow
+                    path.classList.add('animate-draw-line');
+                }
+            });
         };
 
         const hideModal = () => {
