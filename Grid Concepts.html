@@ -1070,6 +1070,7 @@
         const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
+        const filterStarButtons = document.querySelectorAll('.star-filter');
         const masonryGrid = document.querySelector('.masonry-grid');
         const filterTagsContainer = document.getElementById('filter-tags-container');
         const filterDisciplinesContainer = document.getElementById('filter-disciplines-container');
@@ -1251,52 +1252,6 @@
             });
         });
 
-        // Discipline Filtering
-        filterDisciplineChecks.forEach(check => {
-            check.addEventListener('change', () => {
-                const isAll = check.value === 'All';
-                
-                if (isAll) {
-                    // Toggle all others to match "All"
-                    filterDisciplineChecks.forEach(c => {
-                        if (c.value !== 'All') {
-                            c.checked = check.checked;
-                            updateCheckboxUI(c);
-                        }
-                    });
-                } else {
-                    // If any individual is unchecked, uncheck "All"
-                    const allCheck = document.getElementById('filter-all-disciplines');
-                    const others = Array.from(filterDisciplineChecks).filter(c => c.value !== 'All');
-                    const allOthersChecked = others.every(c => c.checked);
-                    
-                    allCheck.checked = allOthersChecked;
-                    updateCheckboxUI(allCheck);
-                }
-
-                currentFilterState.disciplines = Array.from(filterDisciplineChecks)
-                    .filter(i => i.checked)
-                    .map(i => i.value);
-                
-                updateCheckboxUI(check);
-                updateFilterPreview();
-            });
-        });
-
-        function updateCheckboxUI(check) {
-            const checkDiv = check.nextElementSibling;
-            if (!checkDiv) return;
-            const checkSvg = checkDiv.querySelector('svg');
-            if(check.checked) {
-                checkDiv.classList.add('bg-seal-red', 'border-seal-red');
-                checkDiv.classList.remove('bg-white', 'border-parchment-400');
-                if (checkSvg) checkSvg.classList.remove('hidden');
-            } else {
-                checkDiv.classList.remove('bg-seal-red', 'border-seal-red');
-                checkDiv.classList.add('bg-white', 'border-parchment-400');
-                if (checkSvg) checkSvg.classList.add('hidden');
-            }
-        }
 
         // Utility Star Filtering
         filterStarButtons.forEach(btn => {
@@ -1337,33 +1292,31 @@
         }
 
         function shouldShowCard(card) {
-            const cardTitle = card.querySelector('.model-title').textContent;
-            const cardDesc = card.querySelector('p').textContent;
-            // Disciplines check
-            let passesDiscipline = currentFilterState.disciplines.includes('All');
-            if (!passesDiscipline) {
-                const cardDiscipline = card.getAttribute('data-discipline') || '';
-                passesDiscipline = currentFilterState.disciplines.some(d => cardDiscipline.includes(d));
-            }
+            const cardTitle = card.querySelector('.model-title').textContent.toLowerCase();
+            const cardDesc = card.querySelector('p').textContent.toLowerCase();
             const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',').map(t => t.trim()) : [];
-            
+            const cardStars = parseInt(card.getAttribute('data-stars')) || 0;
+            const cardDiscipline = card.getAttribute('data-discipline') || '';
+
             // Search query match
             const matchesSearch = !currentFilterState.query || 
-                               cardTitle.toLowerCase().includes(currentFilterState.query) || 
-                               cardDesc.toLowerCase().includes(currentFilterState.query);
+                                cardTitle.includes(currentFilterState.query) || 
+                                cardDesc.includes(currentFilterState.query);
             
-            // Discipline match: Show if 'All' is selected OR if card matches any selected discipline
-            const matchesDiscipline = currentFilterState.disciplines.includes('All') || 
-                                     (cardDiscipline && currentFilterState.disciplines.some(d => cardDiscipline.includes(d)));
+            // Discipline match
+            let passesDiscipline = currentFilterState.disciplines.includes('All');
+            if (!passesDiscipline) {
+                passesDiscipline = currentFilterState.disciplines.some(d => cardDiscipline.includes(d));
+            }
 
-            // Tags match: Show if no tags are selected OR if card has any of the selected tags
+            // Tags match
             const matchesTags = currentFilterState.tags.length === 0 || 
                                 currentFilterState.tags.some(t => cardTags.includes(t));
             
             // Star match
-            const matchesStars = parseInt(card.getAttribute('data-stars')) >= currentFilterState.minUtility;
+            const matchesStars = cardStars >= currentFilterState.minUtility;
             
-            return matchesSearch && matchesDiscipline && matchesStars && matchesTags;
+            return matchesSearch && passesDiscipline && matchesStars && matchesTags;
         }
 
         function applyFilterSystem() {
