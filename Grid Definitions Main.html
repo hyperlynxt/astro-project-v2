@@ -328,7 +328,7 @@
         <div class="max-w-7xl mx-auto px-6 pb-40" vid="41">
             <div class="lexicon-grid" vid="42">
                 
-                <div class="lexicon-card" vid="21" data-discipline="Philosophy" data-stars="3" data-usage="12">
+                <div class="lexicon-card" vid="27" data-discipline="Psychology" data-stars="3" data-usage="12" data-tags="Introspection,Self,Awareness">
                     <div class="card-word" vid="22">
                         Ephemeral
                         <span class="card-pos" vid="23">adj.</span>
@@ -353,7 +353,7 @@
                     </div>
                 </div>
 
-                <div class="lexicon-card" vid="36" data-discipline="Philosophy" data-stars="2" data-usage="5">
+                <div class="lexicon-card" vid="36" data-discipline="Philosophy" data-stars="2" data-usage="5" data-tags="Ghostly,Passing,Memory">
                     <div class="card-word" vid="37">
                         Evanescent
                         <span class="card-pos" vid="38">adj.</span>
@@ -375,7 +375,7 @@
                     </div>
                 </div>
 
-                <div class="lexicon-card" vid="49" data-discipline="Statistics" data-stars="1" data-usage="2">
+                <div class="lexicon-card" vid="49" data-discipline="Statistics" data-stars="1" data-usage="2" data-tags="Fleeting,Ephemeral,Probability">
                     <div class="card-word" vid="50">
                         Fugacious
                         <span class="card-pos" vid="51">adj.</span>
@@ -394,7 +394,7 @@
                     </div>
                 </div>
 
-                <div class="lexicon-card" vid="60" data-discipline="Philosophy" data-stars="2" data-usage="8">
+                <div class="lexicon-card" vid="60" data-discipline="Philosophy" data-stars="2" data-usage="8" data-tags="Temporary,Brief,Ethereal">
                     <div class="card-word" vid="61">
                         Transitory
                         <span class="card-pos" vid="62">adj.</span>
@@ -416,7 +416,7 @@
                     </div>
                 </div>
 
-                <div class="lexicon-card" vid="73" data-discipline="Systems Thinking" data-stars="3" data-usage="15">
+                <div class="lexicon-card" vid="73" data-discipline="Systems Thinking" data-stars="3" data-usage="15" data-tags="Complex,Twisting,Navigation">
                     <div class="card-word" vid="74">
                         Labyrinthine
                         <span class="card-pos" vid="75">adj.</span>
@@ -441,7 +441,7 @@
                     </div>
                 </div>
 
-                <div class="lexicon-card" vid="88" data-discipline="Philosophy" data-stars="2" data-usage="20">
+                <div class="lexicon-card" vid="88" data-discipline="Philosophy" data-stars="2" data-usage="20" data-tags="Secret,Hidden,Esoteric">
                     <div class="card-word" vid="89">
                         Arcane
                         <span class="card-pos" vid="90">adj.</span>
@@ -675,6 +675,24 @@
                         <button data-rating="5" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                     </div>
                 </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-3"></div>
+
+                <!-- Tags -->
+                <div class="animate-sidebar-item stagger-3" id="filter-tags-section">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Filter by Tags</h3>
+                        </div>
+                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-seal/60 hover:text-seal transition-colors">Select All</button>
+                    </div>
+                    <div id="filter-tags-container" class="flex flex-wrap gap-2">
+                        <!-- Tags populated via JS -->
+                    </div>
+                </div>
             </div>
 
             <!-- Footer -->
@@ -712,9 +730,70 @@
             query: '',
             sort: 'most-used',
             sortOrder: 'desc',
-            disciplines: ['All', 'Systems Thinking', 'Philosophy', 'Economics', 'Statistics'],
-            minUtility: 1
+            disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
+            minUtility: 1,
+            tags: [] // Selected tags
         };
+
+        const availableTags = new Set();
+        cards.forEach(card => {
+            const tags = card.getAttribute('data-tags');
+            if (tags) {
+                tags.split(',').forEach(t => availableTags.add(t.trim()));
+            }
+        });
+
+        const filterTagsContainer = document.getElementById('filter-tags-container');
+        const sortedTags = Array.from(availableTags).sort();
+        const displayTags = sortedTags; // Use all available tags for display
+
+        function renderFilterTags() {
+            filterTagsContainer.innerHTML = displayTags.map((tag, i) => {
+                const colors = ['teal', 'gold', 'seal-red'];
+                const color = colors[i % colors.length];
+                const isActive = currentFilterState.tags.includes(tag);
+                
+                // Note: Definitions page uses 'seal' instead of 'seal-red' class
+                const themeColor = color === 'seal-red' ? 'seal' : color;
+                
+                return `
+                    <button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all
+                        ${isActive 
+                            ? `bg-${themeColor} text-white shadow-md scale-105` 
+                            : `bg-${themeColor}/10 text-${themeColor} border border-${themeColor}/20 hover:bg-${themeColor}/20`}">
+                        ${tag}
+                    </button>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.tag-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tag = btn.getAttribute('data-tag');
+                    if (currentFilterState.tags.includes(tag)) {
+                        currentFilterState.tags = currentFilterState.tags.filter(t => t !== tag);
+                    } else {
+                        currentFilterState.tags.push(tag);
+                    }
+                    renderFilterTags();
+                    updateFilterPreview();
+                });
+            });
+        }
+
+        renderFilterTags();
+
+        document.getElementById('toggle-all-tags').addEventListener('click', (e) => {
+            const btn = e.target;
+            if (currentFilterState.tags.length === displayTags.length) {
+                currentFilterState.tags = [];
+                btn.textContent = 'Select All';
+            } else {
+                currentFilterState.tags = [...displayTags];
+                btn.textContent = 'Clear All';
+            }
+            renderFilterTags();
+            updateFilterPreview();
+        });
 
         // Filter Modal Functions
         function openFilterModal() {
@@ -846,21 +925,25 @@
         }
 
         function shouldShowCard(card) {
-            const disc = card.getAttribute('data-discipline') || '';
-            const stars = parseInt(card.getAttribute('data-stars')) || 0;
-            const word = card.querySelector('.card-word').textContent.toLowerCase();
-            const snippet = card.querySelector('.card-snippet').textContent.toLowerCase();
+            const cardDiscipline = card.getAttribute('data-discipline') || '';
+            const cardStars = parseInt(card.getAttribute('data-stars')) || 0;
+            const cardWord = card.querySelector('.card-word').textContent.toLowerCase();
+            const cardSnippet = card.querySelector('.card-snippet').textContent.toLowerCase();
+            const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',').map(t => t.trim()) : [];
             
             const queryMatch = !currentFilterState.query || 
-                               word.includes(currentFilterState.query) || 
-                               snippet.includes(currentFilterState.query);
+                               cardWord.includes(currentFilterState.query) || 
+                               cardSnippet.includes(currentFilterState.query);
             
             const disciplineMatch = currentFilterState.disciplines.includes('All') || 
-                                     (disc && currentFilterState.disciplines.some(d => disc.includes(d)));
+                                     (cardDiscipline && currentFilterState.disciplines.some(d => cardDiscipline.includes(d)));
             
-            const starMatch = stars >= currentFilterState.minUtility;
+            const starMatch = cardStars >= currentFilterState.minUtility;
+
+            const tagsMatch = currentFilterState.tags.length === 0 || 
+                              currentFilterState.tags.some(selectedTag => cardTags.includes(selectedTag));
             
-            return queryMatch && disciplineMatch && starMatch;
+            return queryMatch && disciplineMatch && starMatch && tagsMatch;
         }
 
         function applyFilterSystem() {
@@ -893,15 +976,16 @@
                 query: '',
                 sort: 'most-used',
                 sortOrder: 'desc',
-                disciplines: ['All', 'Systems Thinking', 'Philosophy', 'Economics', 'Statistics'],
-                minUtility: 1
+                disciplines: ['All'],
+                minUtility: 1,
+                tags: []
             };
             
             filterDisciplineChecks.forEach(i => {
                 i.checked = true;
-                updateCheckboxUI(i);
+                if (typeof updateCheckboxUI === 'function') updateCheckboxUI(i);
             });
-            filterStarButtons[0].click();
+            renderFilterTags();
             applyFilterSystem();
         }
 

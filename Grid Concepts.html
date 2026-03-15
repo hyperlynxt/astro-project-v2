@@ -1076,8 +1076,26 @@
 
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-3"></div>
 
+                <!-- Tags -->
+                <div class="animate-sidebar-item stagger-3" id="filter-tags-section">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            <h3 class="font-inter text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Filter by Tags</h3>
+                        </div>
+                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-seal-red/60 hover:text-seal-red transition-colors">Select All</button>
+                    </div>
+                    <div id="filter-tags-container" class="flex flex-wrap gap-2">
+                        <!-- Tags populated via JS -->
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent animate-sidebar-item stagger-4"></div>
+
                 <!-- Utility stars -->
-                <div class="animate-sidebar-item stagger-3 pb-4">
+                <div class="animate-sidebar-item stagger-4 pb-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-seal-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1121,6 +1139,7 @@
             sort: 'most-used',
             sortOrder: 'desc', // 'asc' or 'desc'
             disciplines: Array.from(filterDisciplineChecks).filter(i => i.checked).map(i => i.value),
+            tags: [], // New state for tags
             minUtility: 1
         };
 
@@ -1246,24 +1265,28 @@
         }
 
         function shouldShowCard(card) {
-            const disc = card.getAttribute('data-discipline') || '';
-            const stars = parseInt(card.getAttribute('data-stars')) || 0;
-            const title = card.querySelector('.model-title').textContent.toLowerCase();
-            const desc = card.querySelector('p').textContent.toLowerCase();
+            const cardTitle = card.querySelector('.model-title').textContent;
+            const cardDesc = card.querySelector('p').textContent;
+            const cardDiscipline = card.getAttribute('data-discipline');
+            const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',').map(t => t.trim()) : [];
             
             // Search query match
-            const queryMatch = !currentFilterState.query || 
-                               title.includes(currentFilterState.query) || 
-                               desc.includes(currentFilterState.query);
+            const matchesSearch = !currentFilterState.query || 
+                               cardTitle.toLowerCase().includes(currentFilterState.query) || 
+                               cardDesc.toLowerCase().includes(currentFilterState.query);
             
             // Discipline match: Show if 'All' is selected OR if card matches any selected discipline
-            const disciplineMatch = currentFilterState.disciplines.includes('All') || 
-                                     (disc && currentFilterState.disciplines.some(d => disc.includes(d)));
+            const matchesDiscipline = currentFilterState.disciplines.includes('All') || 
+                                     (cardDiscipline && currentFilterState.disciplines.some(d => cardDiscipline.includes(d)));
+
+            // Tags match: Show if no tags are selected OR if card has any of the selected tags
+            const matchesTags = currentFilterState.tags.length === 0 || 
+                                currentFilterState.tags.some(t => cardTags.includes(t));
             
             // Star match
-            const starMatch = stars >= currentFilterState.minUtility;
+            const matchesStars = parseInt(card.getAttribute('data-stars')) >= currentFilterState.minUtility;
             
-            return queryMatch && disciplineMatch && starMatch;
+            return matchesSearch && matchesDiscipline && matchesStars && matchesTags;
         }
 
         function applyFilterSystem() {
@@ -1326,7 +1349,6 @@
             // Correction for Alphabetical: Usually A-Z is 'Ascending'. 
             // If user selects 'Descending' in Alphabetical, it should be Z-A.
             // My result a.localeCompare(b) is ASCENDING.
-            // isDesc ? -result : result;
             // if isDesc(Descending) -> returns -(A-Z) -> Z-A. Correct.
             
             // Re-append in new order
@@ -1338,15 +1360,18 @@
                 query: '',
                 sort: 'most-used',
                 sortOrder: 'desc',
-                disciplines: Array.from(filterDisciplineChecks).map(i => i.value),
+                disciplines: ['All'],
+                tags: [], // Selected tags
                 minUtility: 1
             };
             
             // Reset UI
-            filterDisciplineChecks.forEach(i => i.checked = true);
-            filterStarButtons[0].click(); // Reset to 1 star (simulated)
-            filterSortButtons[0].click(); // Reset to most used
-            
+            filterDisciplineChecks.forEach(i => {
+                i.checked = true;
+                if (typeof updateCheckboxUI === 'function') updateCheckboxUI(i);
+            });
+            renderFilterTags();
+            if (filterStarButtons.length > 0) filterStarButtons[0].click();
             applyFilterSystem();
         }
 
