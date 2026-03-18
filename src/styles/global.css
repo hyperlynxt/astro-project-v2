@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-parchment-50: #FDFCF9;
+  --color-parchment-100: #F5F2EB;
+  --color-parchment-200: #E8E2D2;
+  --color-parchment-300: #D5CCB6;
+  --color-parchment-400: #A39985;
+  --color-parchment-500: #8C8070;
+  --color-ink: #2A2724;
+  --color-seal: #8B2626;
+  --color-teal: #2A4747;
+  --color-gold: #B08D57;
+  --font-serif: "EB Garamond", serif;
+  --font-sans: Inter, sans-serif;
+  --font-hand: "Reenie Beanie", cursive;
+}
