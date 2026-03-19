@@ -17,4 +17,22 @@ const definitions = defineCollection({
   }),
 });
 
-export const collections = { definitions };
+const concepts = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/concepts' }),
+  schema: z.object({
+    title: z.string(),
+    authors: z.array(z.string()).optional(),
+    short_description: z.string(),
+    discipline: z.string(),
+    tags: z.array(z.string()),
+    origin: z.string(),
+    rating: z.number().min(0).max(5),
+    linked_notes: z.number(),
+    field_note: z.string().optional(),
+    notes_of_used: z.array(z.string()).optional(),
+    related_concepts: z.array(z.string()).optional(),
+    date_added: z.date(),
+  }),
+});
+
+export const collections = { definitions, concepts };
