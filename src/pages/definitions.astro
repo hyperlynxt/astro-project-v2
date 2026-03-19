@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import '../styles/global.css';
 const definitions = await getCollection('definitions');
 
-definitions.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime());
+definitions.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

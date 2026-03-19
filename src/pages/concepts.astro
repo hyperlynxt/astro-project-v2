@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import '../styles/global.css';
 
 const concepts = await getCollection('concepts');
-concepts.sort((a, b) => b.data.linked_notes - a.data.linked_notes);
+concepts.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
 
 const renderedConcepts = await Promise.all(
   concepts.map(async (entry) => {
