@@ -3,7 +3,12 @@ import { getCollection } from 'astro:content';
 import '../styles/global.css';
 const definitions = await getCollection('definitions');
 
-definitions.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
+definitions.sort((a, b) => {
+  const ratingA = a.data.rating || 0;
+  const ratingB = b.data.rating || 0;
+  if (ratingB !== ratingA) return ratingB - ratingA;
+  return new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime();
+});
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
