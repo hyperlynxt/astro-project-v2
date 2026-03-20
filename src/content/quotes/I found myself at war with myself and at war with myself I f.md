@@ -4,6 +4,6 @@ author: "Unknown"
 source: "X"
 tags: ["INNER WORLD"]
 stars: 1
-summary: ""
+summary: "Love this"
 date_added: 2026-03-20
 ---
