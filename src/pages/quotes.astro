@@ -127,42 +127,6 @@ const STAR_ROTATIONS = [0, 15, -10];
         .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
-
-        @keyframes quoteFlipOutNext { from { opacity: 1; transform: rotateX(0deg) scale(1); } to { opacity: 0; transform: rotateX(60deg) scale(0.95); } }
-        @keyframes quoteFlipInNext { from { opacity: 0; transform: rotateX(-60deg) scale(0.95); } to { opacity: 1; transform: rotateX(0deg) scale(1); } }
-        @keyframes quoteFlipOutPrev { from { opacity: 1; transform: rotateX(0deg) scale(1); } to { opacity: 0; transform: rotateX(-60deg) scale(0.95); } }
-        @keyframes quoteFlipInPrev { from { opacity: 0; transform: rotateX(60deg) scale(0.95); } to { opacity: 1; transform: rotateX(0deg) scale(1); } }
-        
-        .quote-anim-out-left { animation: quoteFlipOutNext 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .quote-anim-in-right { animation: quoteFlipInNext 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .quote-anim-out-right { animation: quoteFlipOutPrev 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .quote-anim-in-left { animation: quoteFlipInPrev 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(253, 252, 249, 0.8);
-            border: 1px solid rgba(42, 39, 35, 0.1);
-            color: rgba(42, 39, 35, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(4px);
-            z-index: 60;
-        }
-        .nav-btn:hover { background: #ffffff; color: #2A2724; border-color: rgba(42, 39, 35, 0.2); transform: translateY(-50%) scale(1.05); }
-        .nav-btn-prev { left: 24px; }
-        .nav-btn-next { right: 24px; }
-        @media (max-width: 768px) {
-            .nav-btn { width: 40px; height: 40px; }
-            .nav-btn-prev { left: 8px; }
-            .nav-btn-next { right: 8px; }
-        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -251,15 +215,7 @@ const STAR_ROTATIONS = [0, 15, -10];
 
     <!-- Modal Overlay -->
     <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none;">
-        <div class="relative w-full max-w-[960px]" style="perspective: 1200px;">
-            <button id="modal-prev-btn" class="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
-                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-            </button>
-            <button id="modal-next-btn" class="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
-                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-            </button>
-
-            <div id="modal-card" class="modal-card relative w-full rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-2xl" style="max-height: 90vh;">
+        <div id="modal-card" class="modal-card relative w-full max-w-[960px] rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-2xl" style="max-height: 90vh;">
             <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
 
             <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
@@ -291,7 +247,6 @@ const STAR_ROTATIONS = [0, 15, -10];
                     </div>
                     <div id="sidebar-tags" class="flex flex-wrap gap-2"></div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -416,59 +371,29 @@ const STAR_ROTATIONS = [0, 15, -10];
             el.style.animation = null;
         }
 
-        let currentVisibleCards = [];
-        let currentCardIndex = -1;
-
-        function populateModal(card, direction = null) {
-            const text = card.getAttribute('data-fulltext');
-            const summary = card.getAttribute('data-summary') || '';
-            const author = card.getAttribute('data-author');
-            const source = card.getAttribute('data-source') || '';
-            const stars = parseInt(card.getAttribute('data-stars')) || 0;
-            const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
-
-            document.getElementById('modal-quote-text').textContent = '\u201C' + text + '\u201D';
-            document.getElementById('modal-summary').textContent = summary;
-            document.getElementById('modal-stars').innerHTML = buildStars(stars);
-            document.getElementById('sidebar-author').textContent = author;
-            document.getElementById('sidebar-source').textContent = source;
-            document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
-                `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
-            ).join('');
-
-            const modalCard = document.getElementById('modal-card');
-            
-            if (direction) {
-                resetAnimation(document.getElementById('modal-quote-text'));
-                overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
-                resetAnimation(overlay.querySelector('.draw-line path'));
-                
-                modalCard.style.animation = 'none';
-                modalCard.offsetHeight;
-                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
-                modalCard.classList.add(direction === 'next' ? 'quote-anim-in-right' : 'quote-anim-in-left');
-                
-                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
-                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
-            } else {
-                resetAnimation(modalCard);
-                resetAnimation(document.getElementById('modal-quote-text'));
-                overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
-                resetAnimation(overlay.querySelector('.draw-line path'));
-                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
-            }
-        }
-
         // Card click → open modal
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                currentVisibleCards = Array.from(quotesGrid.querySelectorAll('.quote-card')).filter(c => c.style.display !== 'none');
-                currentCardIndex = currentVisibleCards.indexOf(card);
-                
-                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
-                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+                const text = card.getAttribute('data-fulltext');
+                const summary = card.getAttribute('data-summary') || '';
+                const author = card.getAttribute('data-author');
+                const source = card.getAttribute('data-source') || '';
+                const stars = parseInt(card.getAttribute('data-stars')) || 0;
+                const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
 
-                populateModal(card, null);
+                document.getElementById('modal-quote-text').textContent = '\u201C' + text + '\u201D';
+                document.getElementById('modal-summary').textContent = summary;
+                document.getElementById('modal-stars').innerHTML = buildStars(stars);
+                document.getElementById('sidebar-author').textContent = author;
+                document.getElementById('sidebar-source').textContent = source;
+                document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
+                    `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
+                ).join('');
+
+                resetAnimation(document.getElementById('modal-card'));
+                resetAnimation(document.getElementById('modal-quote-text'));
+                overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
+                resetAnimation(overlay.querySelector('.draw-line path'));
 
                 overlay.style.display = 'flex';
                 overlay.style.opacity = '0';
@@ -484,28 +409,6 @@ const STAR_ROTATIONS = [0, 15, -10];
         }
         function closeModalDirect() { doClose(); }
         overlay.addEventListener('click', (e) => { if (e.target === overlay) doClose(); });
-
-        // Navigation controls
-        function navigateModal(direction) {
-            if (currentVisibleCards.length <= 1) return;
-            const modalCard = document.getElementById('modal-card');
-            
-            modalCard.style.animation = 'none';
-            modalCard.offsetHeight;
-            modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
-            modalCard.classList.add(direction === 'next' ? 'quote-anim-out-left' : 'quote-anim-out-right');
-
-            setTimeout(() => {
-                currentCardIndex = direction === 'next' 
-                    ? (currentCardIndex + 1) % currentVisibleCards.length 
-                    : (currentCardIndex - 1 + currentVisibleCards.length) % currentVisibleCards.length;
-                    
-                populateModal(currentVisibleCards[currentCardIndex], direction);
-            }, 250); // match out animation length
-        }
-
-        document.getElementById('modal-prev-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('prev'); });
-        document.getElementById('modal-next-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('next'); });
 
         // Filter state
         let filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 1 };
@@ -656,10 +559,6 @@ const STAR_ROTATIONS = [0, 15, -10];
         filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeFilterModal(); });
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') { doClose(); closeFilterModal(); }
-            if (overlay.style.display === 'flex') {
-                if (e.key === 'ArrowLeft') { navigateModal('prev'); }
-                if (e.key === 'ArrowRight') { navigateModal('next'); }
-            }
         });
 
         updatePreviewCount();
