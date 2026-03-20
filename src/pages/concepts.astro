@@ -62,13 +62,22 @@ const renderedConcepts = await Promise.all(
         .catalog-card:hover .bookmark-icon { color: #8B2626; }
         .star-rating { display: flex; gap: 4px; color: #B08D57; }
         .masonry-grid {
-            display: grid;
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-            gap: 2rem;
+            position: relative;
+            width: 100%;
+            transition: height 0.4s ease;
         }
-        @media (min-width: 768px) { .masonry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (min-width: 1024px) { .masonry-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        .masonry-item { break-inside: avoid; margin-bottom: 2rem; display: block; }
+        .masonry-item-wrapper {
+            position: absolute;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, width 0.4s ease;
+            padding: 0;
+            margin: 0;
+        }
+        .masonry-item { 
+            break-inside: avoid; 
+            margin-bottom: 1.25rem; 
+            display: block; 
+            position: relative;
+        }
         .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -106,8 +115,6 @@ const renderedConcepts = await Promise.all(
         <div class="flex items-center gap-10">
             <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
             <div class="h-8 w-px bg-[#E8E2D2]"></div>
-            <span class="font-['Reenie_Beanie'] text-[2rem] leading-none text-[#2A2724] tracking-tight whitespace-nowrap translate-y-1 block">Knowledge Playground</span>
-            <div class="h-8 w-px bg-[#E8E2D2]"></div>
             <nav class="flex items-center gap-8 translate-y-[2px]">
                 <a href="/astro-project-v2/concepts" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#8B2626] shadow-[0_0_8px_rgba(139,38,38,0.4)]"></span>
@@ -141,42 +148,43 @@ const renderedConcepts = await Promise.all(
         <div class="max-w-7xl mx-auto px-6">
             <div class="masonry-grid">
                 {renderedConcepts.map(({ entry, Content }) => (
-    <article
-        class="masonry-item catalog-card group bg-white rounded-3xl border border-[#E8E2D2] p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]"
-        data-title={entry.data.title}
-        data-short={entry.data.short_description}
-        data-id={entry.id}
-        data-discipline={entry.data.discipline}
-        data-tags={entry.data.tags.join(',')}
-        data-origin={entry.data.origin}
-        data-rating={entry.data.rating}
-        data-linked={entry.data.linked_notes}
-        data-fieldnote={entry.data.field_note || ''}
-        data-notesofused={entry.data.notes_of_used ? entry.data.notes_of_used.join(',') : ''}
-        data-related={entry.data.related_concepts ? entry.data.related_concepts.join(',') : ''}
-	data-authors={entry.data.authors ? entry.data.authors.join(',') : ''} 
-    >
-        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-        <div class="flex flex-col gap-2">
-            <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
-            <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.short_description}</p>
-        </div>
-        <div class="pt-4 border-t border-[#F5F2EB] mt-auto flex justify-between items-center">
-            <div class="star-rating">
-                {Array.from({ length: entry.data.rating }).map((_, i) => (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform: rotate(15deg);" : i === 2 ? "transform: rotate(-10deg);" : i === 3 ? "transform: rotate(5deg);" : i === 4 ? "transform: rotate(-15deg);" : ""}>
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
-                    </svg>
+                    <div class="masonry-item-wrapper">
+                        <article
+                            class="masonry-item catalog-card group bg-white rounded-3xl border border-[#E8E2D2] p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]"
+                            data-title={entry.data.title}
+                            data-short={entry.data.short_description}
+                            data-id={entry.id}
+                            data-discipline={entry.data.discipline}
+                            data-tags={entry.data.tags.join(',')}
+                            data-origin={entry.data.origin}
+                            data-rating={entry.data.rating}
+                            data-linked={entry.data.linked_notes}
+                            data-fieldnote={entry.data.field_note || ''}
+                            data-notesofused={entry.data.notes_of_used ? entry.data.notes_of_used.join(',') : ''}
+                            data-related={entry.data.related_concepts ? entry.data.related_concepts.join(',') : ''}
+                            data-authors={entry.data.authors ? entry.data.authors.join(',') : ''} 
+                        >
+                            <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                            <div class="flex flex-col gap-2">
+                                <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
+                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.short_description}</p>
+                            </div>
+                            <div class="pt-4 border-t border-[#F5F2EB] mt-auto flex justify-between items-center">
+                                <div class="star-rating">
+                                    {Array.from({ length: entry.data.rating }).map((_, i) => (
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform: rotate(15deg);" : i === 2 ? "transform: rotate(-10deg);" : i === 3 ? "transform: rotate(5deg);" : i === 4 ? "transform: rotate(-15deg);" : ""}>
+                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                        </svg>
+                                    ))}
+                                </div>
+                                <span class="font-['Reenie_Beanie'] text-[26px] text-[#8B2626] translate-y-1">{entry.data.linked_notes} times used</span>
+                            </div>
+                        </article>
+                    </div>
                 ))}
             </div>
-            <span class="font-['Reenie_Beanie'] text-[26px] text-[#8B2626] translate-y-1">{entry.data.linked_notes} times used</span>
         </div>
-    </article>
-))}
-            </div>
-        </div>
-	</div>
-    </div>
+    </main>
 
     <div style="display:none;" aria-hidden="true">
         {renderedConcepts.map(({ entry, Content }) => (
@@ -756,6 +764,58 @@ if (authors) {
         conceptModal.addEventListener('click', (e) => { if (e.target === conceptModal) hideModal(); });
         filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeFilterModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeFilterModal(); hideModal(); } });
+
+        function layoutMasonryConcepts() {
+            const grid = document.querySelector('.masonry-grid');
+            if (!grid) return;
+
+            const itemsArr = Array.from(grid.querySelectorAll('.masonry-item-wrapper')).filter(item => {
+                const card = item.querySelector('.catalog-card');
+                return card && card.style.display !== 'none';
+            });
+            
+            const containerWidth = grid.offsetWidth;
+            let cols = 1;
+            if (window.innerWidth >= 1024) cols = 3;
+            else if (window.innerWidth >= 768) cols = 2;
+
+            const gap = 20; // 1.25rem = 20px
+            const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
+            const colHeights = new Array(cols).fill(0);
+
+            itemsArr.forEach((item, index) => {
+                const colIndex = index % cols;
+                const x = colIndex * (colWidth + gap);
+                const y = colHeights[colIndex];
+
+                item.style.width = `${colWidth}px`;
+                item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                
+                colHeights[colIndex] += item.offsetHeight + gap;
+            });
+
+            grid.style.height = `${Math.max(...colHeights)}px`;
+        }
+
+        // Trigger masonry layout
+        window.addEventListener('load', layoutMasonryConcepts);
+        window.addEventListener('resize', layoutMasonryConcepts);
+        
+        // Wrap filter/sort functions
+        const originalApplyFilterSystem = applyFilterSystem;
+        applyFilterSystem = function() {
+            originalApplyFilterSystem();
+            setTimeout(layoutMasonryConcepts, 50);
+        };
+
+        const originalClearAllFilters = clearAllFilters;
+        clearAllFilters = function() {
+            originalClearAllFilters();
+            setTimeout(layoutMasonryConcepts, 50);
+        };
+
+        // Initial run
+        layoutMasonryConcepts();
 
         updateFilterPreview();
     </script>
