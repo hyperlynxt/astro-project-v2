@@ -29,16 +29,18 @@ const STAR_ROTATIONS = [0, 15, -10];
         }
         .glass-nav { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
         .quotes-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 1.75rem;
-            align-items: stretch;
+            position: relative;
+            width: 100%;
+            transition: height 0.4s ease;
         }
-        @media (min-width: 640px)  { .quotes-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .quotes-grid { grid-template-columns: repeat(3, 1fr); } }
-
+        .quote-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            will-change: transform;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        }
         .quote-card {
-            height: 100%;
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -46,21 +48,34 @@ const STAR_ROTATIONS = [0, 15, -10];
             background-color: #ffffff;
             border-radius: 22px;
             padding: 2rem 2rem 1.6rem;
-            position: relative;
+            position: relative; /* Fixed: no longer absolute */
             overflow: hidden;
             border: 1px solid #E8E2D2;
             box-shadow: 0 2px 12px rgba(42,39,35,0.06);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             backface-visibility: hidden;
             transform: translateZ(0);
-            display: flex;
-            flex-direction: column;
         }
+        /* Fallback for noscript/initial load */
+        .quotes-grid:not(.masonry-ready) {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.75rem;
+            align-items: start;
+        }
+        .quotes-grid:not(.masonry-ready) .quote-item {
+            position: relative;
+            transform: none !important;
+        }
+        @media (min-width: 640px)  { .quotes-grid:not(.masonry-ready) { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .quotes-grid:not(.masonry-ready) { grid-template-columns: repeat(3, 1fr); } }
+
         .quote-card:hover {
             background: #F5F2EB;
-            border-color: #D5CCB6;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px -10px rgba(42, 39, 36, 0.1);
+            border-color: #7BA08A;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(123, 160, 138, 0.25);
+            z-index: 10;
         }
         .quote-card:hover .card-body p { color: #7BA08A; }
         .quote-card:hover .card-quote-icon { color: #7BA08A; }
@@ -228,42 +243,44 @@ const STAR_ROTATIONS = [0, 15, -10];
                 const visibleTags = entry.data.tags.slice(0, 2);
                 const overflow = entry.data.tags.length > 2 ? entry.data.tags.length - 2 : 0;
                 return (
-                    <article
-                        class="quote-card"
-                        data-tags={entry.data.tags.join(',')}
-                        data-stars={entry.data.stars}
-                        data-author={entry.data.author}
-                        data-text={entry.data.text.toLowerCase()}
-                        data-summary={entry.data.summary || ''}
-                        data-source={entry.data.source || ''}
-                        data-fulltext={entry.data.text}
-                    >
-                        <span class="card-expand">↗</span>
-                        <div class="card-quote-icon">
-                            <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                                <path d="M0 16V9.6C0 4.267 2.667 1.067 8 0l1.067 1.6C6.4 2.4 4.8 4.133 4.267 6.667H8V16H0ZM12 16V9.6C12 4.267 14.667 1.067 20 0l1.067 1.6C18.4 2.4 16.8 4.133 16.267 6.667H20V16H12Z" fill="currentColor"/>
-                            </svg>
-                        </div>
-                        <div class="card-body">
-                            <p class="font-serif text-[1.45rem] leading-[1.75] text-[#2A2724]" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;">{entry.data.text}</p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="min-w-0">
-                                <div class="star-rating mb-1.5">
-                                    {Array.from({ length: entry.data.stars }).map((_, i) => (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform:rotate(15deg)" : i === 2 ? "transform:rotate(-10deg)" : ""}>
-                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
-                                        </svg>
-                                    ))}
+                    <div class="quote-item">
+                        <article 
+                            class="quote-card"
+                            data-text={entry.data?.text?.toLowerCase() || ""}
+                            data-author={entry.data?.author || ""}
+                            data-tags={entry.data?.tags?.join(',') || ""}
+                            data-stars={entry.data?.stars || 0}
+                            data-summary={entry.data?.summary || ''}
+                            data-source={entry.data?.source || ''}
+                            data-fulltext={entry.data?.text || ""}
+                        >
+                            <span class="card-expand">↗</span>
+                            <div class="card-quote-icon">
+                                <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                                    <path d="M0 16V9.6C0 4.267 2.667 1.067 8 0l1.067 1.6C6.4 2.4 4.8 4.133 4.267 6.667H8V16H0ZM12 16V9.6C12 4.267 14.667 1.067 20 0l1.067 1.6C18.4 2.4 16.8 4.133 16.267 6.667H20V16H12Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <div class="card-body">
+                                <p class="font-serif text-[1.45rem] leading-[1.75] text-[#2A2724]" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;">{entry.data?.text || ""}</p>
+                            </div>
+                            <div class="card-footer">
+                                <div class="min-w-0">
+                                    <div class="star-rating mb-1.5">
+                                        {Array.from({ length: entry.data.stars }).map((_, i) => (
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform:rotate(15deg)" : i === 2 ? "transform:rotate(-10deg)" : ""}>
+                                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                            </svg>
+                                        ))}
+                                    </div>
+                                    <p class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/70 truncate">{entry.data.author || 'Unknown'}</p>
                                 </div>
-                                <p class="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-[#2A2724]/70 truncate">{entry.data.author}</p>
+                                <div class="flex items-center gap-1.5 flex-wrap justify-end flex-shrink-0">
+                                    {visibleTags.map(t => <span class="card-tag">{t}</span>)}
+                                    {overflow > 0 && <span class="card-tag">+{overflow}</span>}
+                                </div>
                             </div>
-                            <div class="flex items-center gap-1.5 flex-wrap justify-end flex-shrink-0">
-                                {visibleTags.map(t => <span class="card-tag">{t}</span>)}
-                                {overflow > 0 && <span class="card-tag">+{overflow}</span>}
-                            </div>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
                 );
             })}
         </div>
@@ -735,7 +752,60 @@ const STAR_ROTATIONS = [0, 15, -10];
             if (e.key === 'Escape') { doClose(); closeFilterModal(); }
         });
 
-        updatePreviewCount();
+        // --- NEW MASONRY IMPLEMENTATION ---
+        function layoutMasonry() {
+            const grid = document.getElementById('quotes-grid');
+            if (!grid) return;
+
+            const itemsArr = Array.from(grid.querySelectorAll('.quote-item')).filter(item => {
+                const card = item.querySelector('.quote-card');
+                return card && card.style.display !== 'none';
+            });
+            
+            const containerWidth = grid.offsetWidth;
+            
+            let cols = 1;
+            if (window.innerWidth >= 1024) cols = 3;
+            else if (window.innerWidth >= 640) cols = 2;
+
+            const gap = 28; 
+            const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
+            const colHeights = new Array(cols).fill(0);
+
+            itemsArr.forEach((item, index) => {
+                const colIndex = index % cols;
+                const x = colIndex * (colWidth + gap);
+                const y = colHeights[colIndex];
+
+                item.style.width = `${colWidth}px`;
+                item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                
+                colHeights[colIndex] += item.offsetHeight + gap;
+            });
+
+            grid.style.height = `${Math.max(...colHeights)}px`;
+            grid.classList.add('masonry-ready');
+        }
+
+        // Initialize masonry
+        window.addEventListener('load', layoutMasonry);
+        window.addEventListener('resize', layoutMasonry);
+        
+        // Ensure layout runs after any filter/sort change
+        const originalApplyFilters = applyFilters;
+        applyFilters = function() {
+            originalApplyFilters();
+            setTimeout(layoutMasonry, 50); // Small delay for display:none to take effect
+        };
+
+        const originalClearAllFilters = clearAllFilters;
+        clearAllFilters = function() {
+            originalClearAllFilters();
+            setTimeout(layoutMasonry, 50);
+        };
+        
+        // Run once immediately
+        layoutMasonry();
     </script>
 </body>
 </html>
