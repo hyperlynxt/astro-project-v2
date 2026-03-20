@@ -35,4 +35,17 @@ const concepts = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts };
+const quotes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/quotes' }),
+  schema: z.object({
+    text: z.string(),
+    author: z.string(),
+    source: z.string().optional(),
+    tags: z.array(z.string()),
+    stars: z.number().min(0).max(3),
+    summary: z.string().optional(),
+    date_added: z.date(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes };
