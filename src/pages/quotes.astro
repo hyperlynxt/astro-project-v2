@@ -148,18 +148,18 @@ const STAR_ROTATIONS = [0, 15, -10];
         /* 3D Flip Animations */
         @keyframes flipNext {
             0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); }
-            45%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
-            45.1%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
+            49.9%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
+            50%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
             100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
         }
         @keyframes flipPrev {
             0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); }
-            45%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
-            45.1%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
+            49.9%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
+            50%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
             100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
         }
-        .flipping-next { animation: flipNext 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
-        .flipping-prev { animation: flipPrev 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+        .flipping-next { animation: flipNext 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+        .flipping-prev { animation: flipPrev 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -503,20 +503,20 @@ const STAR_ROTATIONS = [0, 15, -10];
             // Phase 1: Start CSS Animation
             modalCard.classList.add(direction === 'next' ? 'flipping-next' : 'flipping-prev');
 
-            // Phase 2: Swap content at the "edge-on" mark (approx 360ms into 800ms total)
+            // Phase 2: Swap content at the "edge-on" mark (approx 300ms into 600ms total)
             setTimeout(() => {
                 currentCardIndex = direction === 'next' 
                     ? (currentCardIndex + 1) % currentVisibleCards.length 
                     : (currentCardIndex - 1 + currentVisibleCards.length) % currentVisibleCards.length;
                 
                 populateModal(currentVisibleCards[currentCardIndex], true);
-            }, 360);
+            }, 300);
 
             // Phase 3: Animation cleanup
             setTimeout(() => {
                 modalCard.classList.remove('flipping-next', 'flipping-prev');
                 isNavigating = false;
-            }, 800);
+            }, 600);
         }
 
         document.getElementById('modal-prev-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('prev'); });
