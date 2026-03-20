@@ -102,9 +102,26 @@ const STAR_ROTATIONS = [0, 15, -10];
             to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+        .scene { 
+            perspective: 1200px; 
+            perspective-origin: center;
+            width: 100%; 
+            min-height: 500px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 10; 
+            position: relative;
+            overflow: visible;
+        }
         .modal-card {
             background-color: #FDFCF9;
             background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+        .modal-card-initial {
             animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .modal-quote-text { opacity: 0; animation: textReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards; }
@@ -128,15 +145,21 @@ const STAR_ROTATIONS = [0, 15, -10];
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
 
-        @keyframes quoteSlideOutLeft { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
-        @keyframes quoteSlideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes quoteSlideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
-        @keyframes quoteSlideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .quote-anim-out-left { animation: quoteSlideOutLeft 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .quote-anim-in-right { animation: quoteSlideInRight 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .quote-anim-out-right { animation: quoteSlideOutRight 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .quote-anim-in-left { animation: quoteSlideInLeft 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        /* 3D Flip Animations */
+        @keyframes flipNext {
+            0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); }
+            45%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
+            45.1%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
+            100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        @keyframes flipPrev {
+            0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); }
+            45%    { transform: perspective(1000px) rotateX(1.5deg) rotateY(90deg) scale(0.94); opacity: 0.9; }
+            45.1%  { transform: perspective(1000px) rotateX(1.5deg) rotateY(-90deg) scale(0.94); opacity: 0.9; }
+            100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        .flipping-next { animation: flipNext 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+        .flipping-prev { animation: flipPrev 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -233,7 +256,8 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </button>
 
-            <div id="modal-card" class="modal-card relative w-full rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-[0_25px_50px_-12px_rgba(42,39,36,0.25)]" style="max-height: 90vh;">
+        <div class="scene">
+            <div id="modal-card" class="modal-card relative w-full rounded-[24px] flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-[0_25px_50px_-12px_rgba(42,39,36,0.25)]" style="max-height: 90vh;">
             <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
 
             <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
@@ -265,6 +289,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                     </div>
                     <div id="sidebar-tags" class="flex flex-wrap gap-2"></div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -393,7 +418,7 @@ const STAR_ROTATIONS = [0, 15, -10];
         let currentVisibleCards = [];
         let currentCardIndex = -1;
 
-        function populateModal(card, direction = null) {
+        function populateModal(card, isNavigation = false) {
             const text = card.getAttribute('data-fulltext');
             const summary = card.getAttribute('data-summary') || '';
             const author = card.getAttribute('data-author');
@@ -410,26 +435,18 @@ const STAR_ROTATIONS = [0, 15, -10];
                 `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
             ).join('');
 
-            const modalCard = document.getElementById('modal-card');
+            // Restart line drawing
+            const path = overlay.querySelector('.draw-line path');
+            if (path) {
+                path.style.animation = 'none';
+                path.offsetHeight;
+                path.style.animation = null;
+            }
             
-            if (direction) {
+            // Only re-trigger reveal animations on initial modal open
+            if (!isNavigation) {
                 resetAnimation(document.getElementById('modal-quote-text'));
                 overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
-                resetAnimation(overlay.querySelector('.draw-line path'));
-                
-                modalCard.style.animation = 'none';
-                modalCard.offsetHeight;
-                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
-                modalCard.classList.add(direction === 'next' ? 'quote-anim-in-right' : 'quote-anim-in-left');
-                
-                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
-                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
-            } else {
-                resetAnimation(modalCard);
-                resetAnimation(document.getElementById('modal-quote-text'));
-                overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
-                resetAnimation(overlay.querySelector('.draw-line path'));
-                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
             }
         }
 
@@ -442,12 +459,22 @@ const STAR_ROTATIONS = [0, 15, -10];
                 document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
                 document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
 
-                populateModal(card, null);
+                populateModal(card, false);
 
                 overlay.style.display = 'flex';
                 overlay.style.opacity = '0';
                 document.body.style.overflow = 'hidden';
-                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+                requestAnimationFrame(() => { 
+                    overlay.style.opacity = '1'; 
+                    modalCard.classList.add('modal-card-initial');
+                    // Clear the entry animation after it finishes so it doesn't fight Y-axis transforms
+                    setTimeout(() => {
+                        modalCard.classList.remove('modal-card-initial');
+                        modalCard.style.animation = 'none';
+                        modalCard.style.transform = 'none';
+                        modalCard.style.opacity = '1';
+                    }, 550);
+                });
             });
         });
 
@@ -460,22 +487,36 @@ const STAR_ROTATIONS = [0, 15, -10];
         overlay.addEventListener('click', (e) => { if (e.target === overlay) doClose(); });
 
         // Navigation controls
-        function navigateModal(direction) {
-            if (currentVisibleCards.length <= 1) return;
+        let isNavigating = false;
+        async function navigateModal(direction) {
+            if (isNavigating || currentVisibleCards.length <= 1) return;
+            isNavigating = true;
+
             const modalCard = document.getElementById('modal-card');
             
+            // Clean up any existing flip or entry classes explicitly before starting
+            modalCard.classList.remove('flipping-next', 'flipping-prev', 'modal-card-initial');
             modalCard.style.animation = 'none';
-            modalCard.offsetHeight;
-            modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
-            modalCard.classList.add(direction === 'next' ? 'quote-anim-out-left' : 'quote-anim-out-right');
+            modalCard.style.transform = 'none';
+            modalCard.offsetHeight; // force reflow
 
+            // Phase 1: Start CSS Animation
+            modalCard.classList.add(direction === 'next' ? 'flipping-next' : 'flipping-prev');
+
+            // Phase 2: Swap content at the "edge-on" mark (approx 360ms into 800ms total)
             setTimeout(() => {
                 currentCardIndex = direction === 'next' 
                     ? (currentCardIndex + 1) % currentVisibleCards.length 
                     : (currentCardIndex - 1 + currentVisibleCards.length) % currentVisibleCards.length;
-                    
-                populateModal(currentVisibleCards[currentCardIndex], direction);
-            }, 150); // match out animation length
+                
+                populateModal(currentVisibleCards[currentCardIndex], true);
+            }, 360);
+
+            // Phase 3: Animation cleanup
+            setTimeout(() => {
+                modalCard.classList.remove('flipping-next', 'flipping-prev');
+                isNavigating = false;
+            }, 800);
         }
 
         document.getElementById('modal-prev-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('prev'); });
