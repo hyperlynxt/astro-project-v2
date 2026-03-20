@@ -330,7 +330,8 @@ const STAR_ROTATIONS = [0, 15, -10];
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button data-sort="default" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#7BA08A] transition-all">Default</button>
-                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">By Author</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="category" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">By Category</button>
                         <button data-sort="most-stars" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">Most Stars</button>
                     </div>
                 </div>
@@ -358,10 +359,22 @@ const STAR_ROTATIONS = [0, 15, -10];
                         </div>
                         <span class="font-['Reenie_Beanie'] text-lg text-[#7BA08A] hand-label">1+ stars</span>
                     </div>
-                    <div class="flex gap-2 p-3 bg-white border border-[#2A2724]/10 rounded-xl w-fit" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter text-[#B08D57] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="2" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="3" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-[#2A2724]/10 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter text-[#B08D57] hover:scale-110 transition-all active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter text-[#E8E2D2] hover:scale-110 transition-all active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter text-[#E8E2D2] hover:scale-110 transition-all active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -597,8 +610,11 @@ const STAR_ROTATIONS = [0, 15, -10];
                 const rating = parseInt(btn.dataset.rating);
                 filterState.minStars = rating;
                 document.querySelectorAll('.star-filter').forEach(s => {
-                    s.classList.toggle('text-[#B08D57]', parseInt(s.dataset.rating) <= rating);
-                    s.classList.toggle('text-[#E8E2D2]', parseInt(s.dataset.rating) > rating);
+                    const isActive = parseInt(s.dataset.rating) <= rating;
+                    s.classList.toggle('text-[#B08D57]', isActive);
+                    s.classList.toggle('text-[#E8E2D2]', !isActive);
+                    s.classList.toggle('opacity-40', !isActive);
+                    s.classList.toggle('opacity-100', isActive);
                 });
                 const label = document.querySelector('.hand-label');
                 if (label) label.textContent = `${rating}+ stars`;
@@ -629,14 +645,17 @@ const STAR_ROTATIONS = [0, 15, -10];
             const isDesc = filterState.sortOrder === 'desc';
             if (filterState.sort !== 'default') {
                 visible.sort((a, b) => {
+                    let cmp = 0;
                     if (filterState.sort === 'alphabetical') {
-                        const cmp = a.dataset.author.localeCompare(b.dataset.author);
-                        return isDesc ? -cmp : cmp;
+                        cmp = a.dataset.fulltext.localeCompare(b.dataset.fulltext);
+                    } else if (filterState.sort === 'category') {
+                        const catA = (a.dataset.tags || '').split(',')[0] || '';
+                        const catB = (b.dataset.tags || '').split(',')[0] || '';
+                        cmp = catA.localeCompare(catB);
                     } else if (filterState.sort === 'most-stars') {
-                        const cmp = parseInt(a.dataset.stars) - parseInt(b.dataset.stars);
-                        return isDesc ? -cmp : cmp;
+                        cmp = parseInt(a.dataset.stars) - parseInt(b.dataset.stars);
                     }
-                    return 0;
+                    return isDesc ? -cmp : cmp;
                 });
                 visible.forEach(c => quotesGrid.appendChild(c));
             }
