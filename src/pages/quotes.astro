@@ -264,6 +264,9 @@ const STAR_ROTATIONS = [0, 15, -10];
             <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
 
             <div class="flex-1 overflow-y-auto px-8 md:px-12 pt-14 pb-10 relative">
+                <div class="flex justify-center mb-6">
+                    <div id="modal-stars" class="star-rating px-1"></div>
+                </div>
                 <blockquote class="modal-quote-text font-serif font-bold text-[1.8rem] md:text-[2.1rem] leading-relaxed text-[#2A2724] mt-2 mb-2 relative z-10" id="modal-quote-text"></blockquote>
                 <svg class="draw-line w-full mb-6" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
                     <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#7BA08A" stroke-width="1.3" stroke-linecap="round"/>
@@ -271,7 +274,6 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <div id="summary-container" class="modal-attribution border-l-4 border-[#7BA08A] pl-6 py-1 mb-8">
                     <p id="modal-summary" class="font-serif italic text-[1.1rem] leading-relaxed text-[#8C8070]"></p>
                 </div>
-                <div id="modal-stars" class="star-rating px-1"></div>
             </div>
 
             <div class="w-full border-t border-[#2A2724]/[0.08] bg-white/50 backdrop-blur-sm px-8 py-8 flex flex-col md:flex-row gap-6">
@@ -421,6 +423,14 @@ const STAR_ROTATIONS = [0, 15, -10];
             ).join('');
         }
 
+        function buildModalStars(count) {
+            return Array.from({ length: count }, (_, i) =>
+                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(${STAR_ROTATIONS[i] || 0}deg)">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"/>
+                </svg>`
+            ).join('');
+        }
+
         function resetAnimation(el) {
             if (!el) return;
             el.style.animation = 'none';
@@ -449,7 +459,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                 summaryContainer.style.display = 'none';
             }
 
-            document.getElementById('modal-stars').innerHTML = buildStars(stars);
+            document.getElementById('modal-stars').innerHTML = buildModalStars(stars);
             document.getElementById('sidebar-author').textContent = author;
             document.getElementById('sidebar-source').textContent = source;
             document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
