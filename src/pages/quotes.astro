@@ -127,6 +127,16 @@ const STAR_ROTATIONS = [0, 15, -10];
         .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        @keyframes quoteSlideOutLeft { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
+        @keyframes quoteSlideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes quoteSlideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
+        @keyframes quoteSlideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .quote-anim-out-left { animation: quoteSlideOutLeft 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .quote-anim-in-right { animation: quoteSlideInRight 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .quote-anim-out-right { animation: quoteSlideOutRight 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .quote-anim-in-left { animation: quoteSlideInLeft 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -214,8 +224,16 @@ const STAR_ROTATIONS = [0, 15, -10];
     </main>
 
     <!-- Modal Overlay -->
-    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none;">
-        <div id="modal-card" class="modal-card relative w-full max-w-[960px] rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-2xl" style="max-height: 90vh;">
+    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; background-color: rgba(245, 242, 235, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <div class="relative w-full max-w-[960px]">
+            <button id="modal-prev-btn" class="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
+                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            </button>
+            <button id="modal-next-btn" class="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
+                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+
+            <div id="modal-card" class="modal-card relative w-full rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-[0_25px_50px_-12px_rgba(42,39,36,0.25)]" style="max-height: 90vh;">
             <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
 
             <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
@@ -249,6 +267,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Filter Modal -->
@@ -371,29 +390,59 @@ const STAR_ROTATIONS = [0, 15, -10];
             el.style.animation = null;
         }
 
-        // Card click → open modal
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                const text = card.getAttribute('data-fulltext');
-                const summary = card.getAttribute('data-summary') || '';
-                const author = card.getAttribute('data-author');
-                const source = card.getAttribute('data-source') || '';
-                const stars = parseInt(card.getAttribute('data-stars')) || 0;
-                const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
+        let currentVisibleCards = [];
+        let currentCardIndex = -1;
 
-                document.getElementById('modal-quote-text').textContent = '\u201C' + text + '\u201D';
-                document.getElementById('modal-summary').textContent = summary;
-                document.getElementById('modal-stars').innerHTML = buildStars(stars);
-                document.getElementById('sidebar-author').textContent = author;
-                document.getElementById('sidebar-source').textContent = source;
-                document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
-                    `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
-                ).join('');
+        function populateModal(card, direction = null) {
+            const text = card.getAttribute('data-fulltext');
+            const summary = card.getAttribute('data-summary') || '';
+            const author = card.getAttribute('data-author');
+            const source = card.getAttribute('data-source') || '';
+            const stars = parseInt(card.getAttribute('data-stars')) || 0;
+            const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
 
-                resetAnimation(document.getElementById('modal-card'));
+            document.getElementById('modal-quote-text').textContent = '\u201C' + text + '\u201D';
+            document.getElementById('modal-summary').textContent = summary;
+            document.getElementById('modal-stars').innerHTML = buildStars(stars);
+            document.getElementById('sidebar-author').textContent = author;
+            document.getElementById('sidebar-source').textContent = source;
+            document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
+                `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
+            ).join('');
+
+            const modalCard = document.getElementById('modal-card');
+            
+            if (direction) {
                 resetAnimation(document.getElementById('modal-quote-text'));
                 overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
                 resetAnimation(overlay.querySelector('.draw-line path'));
+                
+                modalCard.style.animation = 'none';
+                modalCard.offsetHeight;
+                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
+                modalCard.classList.add(direction === 'next' ? 'quote-anim-in-right' : 'quote-anim-in-left');
+                
+                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+            } else {
+                resetAnimation(modalCard);
+                resetAnimation(document.getElementById('modal-quote-text'));
+                overlay.querySelectorAll('.modal-attribution').forEach(el => resetAnimation(el));
+                resetAnimation(overlay.querySelector('.draw-line path'));
+                modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
+            }
+        }
+
+        // Card click → open modal
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                currentVisibleCards = Array.from(quotesGrid.querySelectorAll('.quote-card')).filter(c => c.style.display !== 'none');
+                currentCardIndex = currentVisibleCards.indexOf(card);
+                
+                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+
+                populateModal(card, null);
 
                 overlay.style.display = 'flex';
                 overlay.style.opacity = '0';
@@ -409,6 +458,36 @@ const STAR_ROTATIONS = [0, 15, -10];
         }
         function closeModalDirect() { doClose(); }
         overlay.addEventListener('click', (e) => { if (e.target === overlay) doClose(); });
+
+        // Navigation controls
+        function navigateModal(direction) {
+            if (currentVisibleCards.length <= 1) return;
+            const modalCard = document.getElementById('modal-card');
+            
+            modalCard.style.animation = 'none';
+            modalCard.offsetHeight;
+            modalCard.classList.remove('quote-anim-in-left', 'quote-anim-in-right', 'quote-anim-out-left', 'quote-anim-out-right');
+            modalCard.classList.add(direction === 'next' ? 'quote-anim-out-left' : 'quote-anim-out-right');
+
+            setTimeout(() => {
+                currentCardIndex = direction === 'next' 
+                    ? (currentCardIndex + 1) % currentVisibleCards.length 
+                    : (currentCardIndex - 1 + currentVisibleCards.length) % currentVisibleCards.length;
+                    
+                populateModal(currentVisibleCards[currentCardIndex], direction);
+            }, 150); // match out animation length
+        }
+
+        document.getElementById('modal-prev-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('prev'); });
+        document.getElementById('modal-next-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('next'); });
+
+        document.addEventListener('keydown', (e) => {
+            if (overlay.style.display === 'flex') {
+                if (e.key === 'ArrowRight') navigateModal('next');
+                if (e.key === 'ArrowLeft') navigateModal('prev');
+                if (e.key === 'Escape') closeModalDirect();
+            }
+        });
 
         // Filter state
         let filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 1 };
