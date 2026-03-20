@@ -1,5 +1,5 @@
 ﻿---
-text: "Estaba cuando no estabas, y estarÃ© cuando no estÃ©s."
+text: "Estaba cuando no estabas, y estaré cuando no estés."
 author: "Unknown"
 source: ""
 tags: ["RELATIONSHIP"]

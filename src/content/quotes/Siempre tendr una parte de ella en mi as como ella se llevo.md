@@ -1,5 +1,5 @@
 ﻿---
-text: "Siempre tendrÃ© una parte de ella en mi, asÃ­ como ella se llevo una parte de mi con ella."
+text: "Siempre tendré una parte de ella en mi, así como ella se llevo una parte de mi con ella."
 author: "Me"
 source: ""
 tags: ["RELATIONSHIP"]

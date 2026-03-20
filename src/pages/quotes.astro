@@ -32,20 +32,25 @@ const STAR_ROTATIONS = [0, 15, -10];
             display: grid;
             grid-template-columns: repeat(1, 1fr);
             gap: 1.75rem;
-            align-items: start;
+            align-items: stretch;
         }
         @media (min-width: 640px)  { .quotes-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .quotes-grid { grid-template-columns: repeat(3, 1fr); } }
+
         .quote-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
             cursor: pointer;
             background-color: #ffffff;
             border-radius: 22px;
             padding: 2rem 2rem 1.6rem;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(42,39,35,0.10);
+            border: 1px solid #E8E2D2;
             box-shadow: 0 2px 12px rgba(42,39,35,0.06);
-            transition: all 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             backface-visibility: hidden;
             transform: translateZ(0);
             display: flex;
