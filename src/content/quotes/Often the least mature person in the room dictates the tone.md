@@ -3,7 +3,7 @@ text: "Often the least mature person in the room dictates the tone and the subje
 author: "Unknown"
 source: "X"
 tags: ["SOCIAL DYNAMICS"]
-stars: 1
+stars: 2
 summary: ""
 date_added: 2026-03-20
 ---

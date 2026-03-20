@@ -3,7 +3,7 @@ text: "How do I take off a mask when it stops being a mask, and is as much part 
 author: "Unknown"
 source: "X"
 tags: ["PERSONAL"]
-stars: 1
+stars: 3
 summary: "Love this"
 date_added: 2026-03-20
 ---

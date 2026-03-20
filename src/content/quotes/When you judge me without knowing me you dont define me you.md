@@ -3,7 +3,7 @@ text: "When you judge me without knowing me, you don't define me, you define you
 author: "Unknown"
 source: "X"
 tags: ["PEOPLE"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

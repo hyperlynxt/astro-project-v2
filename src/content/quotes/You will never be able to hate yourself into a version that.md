@@ -3,7 +3,7 @@ text: "You will never be able to hate yourself into a version that you love."
 author: "Lori Deschene"
 source: "X"
 tags: ["INNER WORLD"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

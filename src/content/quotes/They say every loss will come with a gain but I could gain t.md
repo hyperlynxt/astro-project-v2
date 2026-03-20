@@ -3,7 +3,7 @@ text: "They say every loss will come with a gain, but I could gain the world and
 author: "Unknown"
 source: "X"
 tags: ["RELATIONSHIP"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

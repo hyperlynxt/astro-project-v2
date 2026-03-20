@@ -3,7 +3,7 @@ text: "No amount of love can make two mismatched pieces fit together, not unless
 author: "Unknown"
 source: "X"
 tags: ["RELATIONSHIP"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

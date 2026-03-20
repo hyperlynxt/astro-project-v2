@@ -3,7 +3,7 @@ text: "After a while you learn the subtle difference, between holding a hand and
 author: "Jorge Luis Borges"
 source: "After a While"
 tags: ["RELATIONSHIP"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

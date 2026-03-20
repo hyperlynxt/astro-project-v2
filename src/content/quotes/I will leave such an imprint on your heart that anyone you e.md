@@ -3,7 +3,7 @@ text: "I will leave such an imprint on your heart that anyone you entertain afte
 author: "Unknown"
 source: "X"
 tags: ["RELATIONSHIP"]
-stars: 1
+stars: 3
 summary: ""
 date_added: 2026-03-20
 ---

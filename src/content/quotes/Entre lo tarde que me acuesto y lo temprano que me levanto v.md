@@ -3,7 +3,7 @@ text: "Entre lo tarde que me acuesto y lo temprano que me levanto, va a haber un
 author: "Unknown"
 source: "X"
 tags: ["UNDECIDED"]
-stars: 1
+stars: 2
 summary: ""
 date_added: 2026-03-20
 ---
