@@ -168,6 +168,16 @@ const STAR_ROTATIONS = [0, 15, -10];
         }
         .flipping-next { animation: flipNext 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
         .flipping-prev { animation: flipPrev 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+        
+        /* Star Filter Fixes */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .star-filter.active { color: #7BA08A !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #7BA08A !important; }
+        .star-filter.active svg path { fill: #7BA08A !important; fill-opacity: 0.8 !important; stroke: #7BA08A !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
+        .star-filter:not(.active) svg { color: #A39985 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.15 !important; stroke: #A39985 !important; }
+        .star-filter:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -364,19 +374,19 @@ const STAR_ROTATIONS = [0, 15, -10];
                         <span class="font-['Reenie_Beanie'] text-lg text-[#7BA08A] hand-label">1+ stars</span>
                     </div>
                     <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-[#2A2724]/10 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter text-[#B08D57] hover:scale-110 transition-all active:scale-95">
+                        <button data-rating="1" class="star-filter active active:scale-95">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
                             </svg>
                         </button>
-                        <button data-rating="2" class="star-filter text-[#E8E2D2] hover:scale-110 transition-all active:scale-95">
+                        <button data-rating="2" class="star-filter active:scale-95">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
                             </svg>
                         </button>
-                        <button data-rating="3" class="star-filter text-[#E8E2D2] hover:scale-110 transition-all active:scale-95">
+                        <button data-rating="3" class="star-filter active:scale-95">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
                             </svg>
                         </button>
                     </div>
@@ -623,10 +633,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                 filterState.minStars = rating;
                 document.querySelectorAll('.star-filter').forEach(s => {
                     const isActive = parseInt(s.dataset.rating) <= rating;
-                    s.classList.toggle('text-[#B08D57]', isActive);
-                    s.classList.toggle('text-[#E8E2D2]', !isActive);
-                    s.classList.toggle('opacity-40', !isActive);
-                    s.classList.toggle('opacity-100', isActive);
+                    s.classList.toggle('active', isActive);
                 });
                 const label = document.querySelector('.hand-label');
                 if (label) label.textContent = `${rating}+ stars`;
@@ -706,8 +713,8 @@ const STAR_ROTATIONS = [0, 15, -10];
                 }
             });
             document.querySelectorAll('.star-filter').forEach(s => {
-                s.classList.toggle('text-[#B08D57]', parseInt(s.dataset.rating) <= 1);
-                s.classList.toggle('text-[#E8E2D2]', parseInt(s.dataset.rating) > 1);
+                const isActive = parseInt(s.dataset.rating) <= 1;
+                s.classList.toggle('active', isActive);
             });
             cards.forEach(c => { c.style.display = ''; });
             document.getElementById('count-label').textContent = `${cards.length} entries`;
