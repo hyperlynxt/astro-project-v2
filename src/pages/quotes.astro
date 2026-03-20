@@ -3,7 +3,12 @@ import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
 const quotes = await getCollection('quotes');
-quotes.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime());
+quotes.sort((a, b) => {
+    if (b.data.stars !== a.data.stars) {
+        return b.data.stars - a.data.stars;
+    }
+    return new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime();
+});
 
 const STAR_ROTATIONS = [0, 15, -10];
 ---
