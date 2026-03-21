@@ -176,6 +176,16 @@ function starRotations(index: number) {
         .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        /* Star Filter Fixes */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .star-filter.active { color: #8B2626 !important; opacity: 1 !important; transform: scale(1.05); }
+        .star-filter.active svg { color: #8B2626 !important; }
+        .star-filter.active svg path { fill: #8B2626 !important; fill-opacity: 0.2 !important; stroke: #8B2626 !important; stroke-width: 1.5 !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; transform: scale(0.95); }
+        .star-filter:not(.active) svg { color: #A39985 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.1 !important; stroke: #A39985 !important; stroke-width: 1.5 !important; }
+        .star-filter:hover { transform: scale(1.1); opacity: 0.8 !important; }
     </style>
 </head>
 <body class="min-h-screen bg-parchment-50 antialiased selection:bg-seal selection:text-white flex flex-col">
@@ -347,10 +357,22 @@ function starRotations(index: number) {
                         </div>
                         <span class="font-hand text-lg text-seal" id="min-rating-label">1+ stars</span>
                     </div>
-                    <div class="flex gap-2 p-3 w-fit" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter text-seal hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="2" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="3" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-parchment-dark/15 rounded-2xl w-fit shadow-inner-subtle" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter active active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent"></div>
@@ -498,8 +520,11 @@ function starRotations(index: number) {
                 const rating = parseInt(btn.getAttribute('data-rating'));
                 currentFilterState.minRating = rating;
                 filterStarButtons.forEach((star, index) => {
-                    star.classList.toggle('text-seal', index < rating);
-                    star.classList.toggle('text-parchment-200', index >= rating);
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
                 });
                 document.getElementById('min-rating-label').textContent = `${rating}+ stars`;
                 updateFilterPreview();
@@ -550,8 +575,7 @@ function starRotations(index: number) {
             currentFilterState = { query: '', sort: 'alphabetical', sortOrder: 'asc', minRating: 0, tags: [] };
             renderFilterTags();
             filterStarButtons.forEach(star => {
-                star.classList.remove('text-seal');
-                star.classList.add('text-parchment-200');
+                star.classList.remove('active');
             });
             document.getElementById('min-rating-label').textContent = '1+ stars';
             applyFilterSystem();

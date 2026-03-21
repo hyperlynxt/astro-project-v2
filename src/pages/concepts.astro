@@ -186,6 +186,18 @@ const renderedConcepts = await Promise.all(
         </div>
     </main>
 
+    <style>
+        /* Star Filter Fixes */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .star-filter.active { color: #8B2626 !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #8B2626 !important; }
+        .star-filter.active svg path { fill: #8B2626 !important; fill-opacity: 0.2 !important; stroke: #8B2626 !important; stroke-width: 1.5 !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
+        .star-filter:not(.active) svg { color: #A39985 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.1 !important; stroke: #A39985 !important; stroke-width: 1.5 !important; }
+        .star-filter:hover { transform: scale(1.1); }
+    </style>
+
     <div style="display:none;" aria-hidden="true">
         {renderedConcepts.map(({ entry, Content }) => (
             <div id={`content-${entry.id}`} class="concept-body prose font-serif text-xl leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[850px]">
@@ -339,6 +351,36 @@ const renderedConcepts = await Promise.all(
 
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
 
+                <!-- Stars -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Utility</h3>
+                        </div>
+                        <span id="min-rating-label" class="font-['Reenie_Beanie'] text-lg text-[#8B2626]">1+ stars</span>
+                    </div>
+                    <div class="flex gap-3 p-3.5 bg-white border border-[#D5CCB6]/20 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter active active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
+
                 <!-- Disciplines -->
                 <div>
                     <div class="flex items-center gap-2 mb-4">
@@ -351,7 +393,7 @@ const renderedConcepts = await Promise.all(
                 <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
 
                 <!-- Tags -->
-                <div>
+                <div class="pb-4">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
@@ -360,26 +402,6 @@ const renderedConcepts = await Promise.all(
                         <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-[#8B2626]/60 hover:text-[#8B2626] transition-colors">Select All</button>
                     </div>
                     <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
-                </div>
-
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
-
-                <!-- Stars -->
-                <div class="pb-4">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Utility</h3>
-                        </div>
-                        <span id="min-rating-label" class="font-['Reenie_Beanie'] text-lg text-[#8B2626]">1+ stars</span>
-                    </div>
-                    <div class="flex gap-2 p-3 w-fit" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter text-seal hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="2" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="3" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="4" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="5" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                    </div>
                 </div>
             </div>
 
@@ -536,8 +558,11 @@ const renderedConcepts = await Promise.all(
                 const rating = parseInt(btn.getAttribute('data-rating'));
                 currentFilterState.minUtility = rating;
                 filterStarButtons.forEach((star, index) => {
-                    star.classList.toggle('text-seal', index < rating);
-                    star.classList.toggle('text-[#E8E2D2]', index >= rating);
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
                 });
                 document.getElementById('min-rating-label').textContent = `${rating}+ stars`;
                 updateFilterPreview();
@@ -619,7 +644,7 @@ const renderedConcepts = await Promise.all(
             currentFilterState = { query: '', sort: 'most-used', sortOrder: 'desc', disciplines: ['All'], tags: [], minUtility: 0 };
             renderFilterDisciplines();
             renderFilterTags();
-            filterStarButtons.forEach(star => { star.classList.remove('text-seal'); star.classList.add('text-[#E8E2D2]'); });
+            filterStarButtons.forEach(star => { star.classList.remove('active'); });
             document.getElementById('min-rating-label').textContent = '0+ stars';
             searchInput.value = ''; // Clear search input
             applyFilterSystem();
