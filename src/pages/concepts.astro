@@ -228,29 +228,31 @@ const renderedConcepts = await Promise.all(
                                 <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
                             </svg>
                         </h1>
-                        <div id="modal-stars" class="flex gap-2 items-center text-[#8B2626] mb-5 mt-2 ml-2 translate-y-2"></div>
-
-
-
-                        <!-- Header Ontology Section -->
-                        <div id="modal-ontology-attribution" class="font-serif italic text-[1.25rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
-                            <div id="modal-discipline-container" class="flex items-baseline gap-2">
-                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Discipline</span>
-                                <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                        <div class="relative">
+                            <div id="modal-stars" class="absolute flex flex-col gap-4 items-center text-[#8B2626] -left-5 md:-left-10 lg:-left-12 -translate-x-1/2 top-4 group"></div>
+    
+                            <div class="flex flex-col">
+                                <!-- Header Ontology Section -->
+                                <div id="modal-ontology-attribution" class="font-serif italic text-[1.25rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
+                                    <div id="modal-discipline-container" class="flex items-baseline gap-2">
+                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Discipline</span>
+                                        <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                                    </div>
+                                    <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
+                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Parent Framework</span>
+                                        <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                                    </div>
+                                </div>
+    
+                                <div id="modal-attribution" class="font-serif italic text-[1.35rem] mb-6 flex items-baseline gap-2" style="display:none;">
+                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">From the work of</span>
+                                    <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                                </div>
+                                <div id="modal-tags-attribution" class="font-serif italic text-[1.25rem] mb-12 flex items-baseline gap-2" style="display:none;">
+                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
+                                    <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                                </div>
                             </div>
-                            <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
-                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Parent Framework</span>
-                                <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                            </div>
-                        </div>
-
-                        <div id="modal-attribution" class="font-serif italic text-[1.35rem] mb-6 flex items-baseline gap-2" style="display:none;">
-                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">From the work of</span>
-                            <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                        </div>
-                        <div id="modal-tags-attribution" class="font-serif italic text-[1.25rem] mb-12 flex items-baseline gap-2" style="display:none;">
-                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
-                            <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                         </div>
                         <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
                             <p id="modal-summary"></p>
