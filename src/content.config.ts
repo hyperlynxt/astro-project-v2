@@ -48,4 +48,16 @@ const quotes = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes };
+const linguisticTreats = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/linguistic-treats' }),
+  schema: z.object({
+    word: z.string(),
+    definition: z.string(),
+    note: z.string().optional(),
+    tags: z.array(z.string()),
+    stars: z.number().min(0).max(3),
+    date_added: z.date(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes, linguisticTreats };
