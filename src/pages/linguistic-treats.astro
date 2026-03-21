@@ -58,6 +58,16 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
         .swoosh-path { stroke-dasharray:100; stroke-dashoffset:100; }
         @keyframes drawSwoosh { to { stroke-dashoffset:0; } }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+        
+        /* Star Filter Fixes */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
+        .star-filter.active { color: #7BA08A !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #7BA08A !important; }
+        .star-filter.active svg path { fill: #7BA08A !important; fill-opacity: 0.8 !important; stroke: #7BA08A !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
+        .star-filter:not(.active) svg { color: #A39985 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.15 !important; stroke: #A39985 !important; }
+        .star-filter:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -173,17 +183,16 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
     <!-- Filter Modal -->
     <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-[#F5F2EB]/40 backdrop-blur-md">
         <div class="relative w-full max-w-[630px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh]" style="background-image:url('https://www.transparenttextures.com/patterns/natural-paper.png'),linear-gradient(white,white);">
-            <div class="px-7 pt-7 pb-4 border-b border-[#2A2724]/10 flex justify-between items-start bg-white/60 backdrop-blur-md flex-shrink-0">
-                <div>
-                    <div class="font-['Reenie_Beanie'] text-xl text-[#A39985] -rotate-2 origin-left mb-1 opacity-80">Refine the lexicon</div>
-                    <h2 class="text-3xl font-serif font-medium text-[#2A2724] relative inline-block">
+            <div class="px-7 pt-9 pb-6 border-b border-[#2A2724]/10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-md flex-shrink-0 relative">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
                         Filter & Sort
-                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-1 text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
-                            <path d="M2 7C25 2 75 -1 98 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                            <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
                         </svg>
                     </h2>
                 </div>
-                <button id="close-filter-btn" class="w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#2A2724]/15 flex items-center justify-center text-[#2A2724]/50 hover:text-[#2A2724] hover:bg-[#F5F2EB] transition-all mt-1 group">
+                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#2A2724]/15 flex items-center justify-center text-[#2A2724]/50 hover:text-[#2A2724] hover:bg-[#F5F2EB] transition-all group">
                     <svg class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -225,18 +234,30 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
                         </div>
                         <span class="font-['Reenie_Beanie'] text-lg text-[#7BA08A] hand-label">1+ stars</span>
                     </div>
-                    <div class="flex gap-2 p-3 bg-white border border-[#2A2724]/10 rounded-xl w-fit" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter text-[#B08D57] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="2" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                        <button data-rating="3" class="star-filter text-[#E8E2D2] hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-[#2A2724]/10 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter active active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="p-6 border-t border-[#2A2724]/10 bg-[#FDFCF9] flex items-center justify-between flex-shrink-0">
-                <button id="clear-filter-btn" class="font-sans text-sm font-medium text-[#2A2724]/50 hover:text-[#2A2724] transition-colors underline underline-offset-4">Clear Filters</button>
-                <button id="apply-filter-btn" class="bg-[#2A2724] hover:bg-black text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                <button id="clear-filter-btn" class="font-['Reenie_Beanie'] text-[1.4rem] font-medium text-[#7BA08A] hover:bg-[#7BA08A]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4 decoration-current">Clear Filters</button>
+                <button id="apply-filter-btn" class="bg-[#7BA08A] hover:bg-[#6a9079] text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
                     <span>Apply Filters</span>
-                    <span id="filter-result-count" class="font-['Reenie_Beanie'] text-lg text-white/80 pt-0.5">-- words</span>
+                    <span id="filter-result-count" class="font-['Reenie_Beanie'] text-lg text-white/90 pt-0.5">-- words</span>
                 </button>
             </div>
         </div>
@@ -363,8 +384,8 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
                 const rating = parseInt(btn.dataset.rating);
                 filterState.minStars = rating;
                 document.querySelectorAll('.star-filter').forEach(s => {
-                    s.classList.toggle('text-[#B08D57]', parseInt(s.dataset.rating) <= rating);
-                    s.classList.toggle('text-[#E8E2D2]', parseInt(s.dataset.rating) > rating);
+                    const isActive = parseInt(s.dataset.rating) <= rating;
+                    s.classList.toggle('active', isActive);
                 });
                 const label = document.querySelector('.hand-label');
                 if (label) label.textContent = `${rating}+ stars`;
@@ -429,8 +450,8 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
                 if (i === 0) { b.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg'); b.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20'); }
             });
             document.querySelectorAll('.star-filter').forEach(s => {
-                s.classList.toggle('text-[#B08D57]', parseInt(s.dataset.rating) <= 1);
-                s.classList.toggle('text-[#E8E2D2]', parseInt(s.dataset.rating) > 1);
+                const isActive = parseInt(s.dataset.rating) <= 1;
+                s.classList.toggle('active', isActive);
             });
             cards.forEach(c => { c.style.display = ''; });
             document.getElementById('count-label').textContent = `${cards.length} entries`;
