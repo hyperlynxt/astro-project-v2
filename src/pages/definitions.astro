@@ -305,17 +305,16 @@ function starRotations(index: number) {
     <!-- Filter Modal -->
     <div id="filter-modal" style="display:none" class="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-parchment-100/40 backdrop-blur-md animate-fade-in">
         <div class="relative z-20 w-full max-w-[630px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] animate-modal-enter ink-stain">
-            <div class="px-7 pt-7 pb-4 border-b border-parchment-dark/15 flex justify-between items-start relative bg-white/50 backdrop-blur-md z-10 flex-shrink-0">
-                <div>
-                    <div class="font-hand text-xl text-parchment-400 -rotate-2 transform origin-left mb-1 opacity-80">Refine the collection</div>
-                    <h2 class="text-3xl font-serif font-medium text-ink relative inline-block">
+            <div class="px-7 pt-9 pb-6 border-b border-parchment-dark/15 flex flex-col items-center justify-center bg-white/50 backdrop-blur-md z-10 flex-shrink-0 relative">
+                <div class="text-center w-full">
+                    <h2 class="text-3xl md:text-4xl font-serif font-medium text-ink relative inline-block">
                         Filter & Sort
-                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-1 text-seal opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                            <path d="M2 7C25 2 75 -1 98 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-seal opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                            <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
                         </svg>
                     </h2>
                 </div>
-                <button id="close-filter-btn" class="w-8 h-8 rounded-full bg-parchment-50 border border-parchment-dark/20 flex items-center justify-center text-ink/50 hover:text-ink hover:bg-parchment-100 transition-all focus:outline-none focus:ring-2 focus:ring-seal/30 mt-1 group">
+                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-parchment-50 border border-parchment-dark/20 flex items-center justify-center text-ink/50 hover:text-ink hover:bg-parchment-100 transition-all focus:outline-none focus:ring-2 focus:ring-seal/30 group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -339,7 +338,7 @@ function starRotations(index: number) {
                         <button data-sort="rating" class="sort-btn px-4 py-2 bg-white text-ink/70 font-sans text-sm font-medium rounded-full border border-parchment-dark/30 hover:border-parchment-dark hover:text-ink transition-all shadow-sm">Rating</button>
                     </div>
                 </div>
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent"></div>
                 <div class="animate-sidebar-item stagger-2">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
@@ -348,13 +347,13 @@ function starRotations(index: number) {
                         </div>
                         <span class="font-hand text-lg text-seal" id="min-rating-label">1+ stars</span>
                     </div>
-                    <div class="flex gap-2 p-3 bg-white border border-parchment-dark/10 rounded-xl shadow-inner-subtle w-fit" id="filter-utility-stars">
+                    <div class="flex gap-2 p-3 w-fit" id="filter-utility-stars">
                         <button data-rating="1" class="star-filter text-seal hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                         <button data-rating="2" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                         <button data-rating="3" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                     </div>
                 </div>
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-parchment-dark/20 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent"></div>
                 <div class="animate-sidebar-item stagger-3">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
@@ -367,7 +366,7 @@ function starRotations(index: number) {
                 </div>
             </div>
             <div class="p-6 border-t border-parchment-dark/15 bg-parchment-50 relative z-10 flex items-center justify-between flex-shrink-0">
-                <button id="clear-filter-btn" class="font-sans text-sm font-medium text-ink/50 hover:text-ink transition-colors underline underline-offset-4 decoration-parchment-300">Clear Filters</button>
+                <button id="clear-filter-btn" class="font-hand text-[1.4rem] font-medium text-seal hover:bg-seal/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
                 <button id="apply-filter-btn" class="bg-seal hover:bg-[#6D1E1E] text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
                     <span>Apply Filters</span>
                     <span id="filter-result-count" class="font-hand text-lg text-white/80 pt-0.5">-- definitions</span>
