@@ -597,10 +597,14 @@ const renderedConcepts = await Promise.all(
             cards.forEach(card => { 
                 const wrapper = card.closest('.masonry-item-wrapper');
                 if (wrapper) wrapper.style.display = shouldShowCard(card) ? 'block' : 'none';
-                card.style.display = shouldShowCard(card) ? 'flex' : 'none'; 
             });
             sortCards();
             closeFilterModal();
+            
+            // Trigger masonry reflow
+            requestAnimationFrame(() => {
+                requestAnimationFrame(layoutMasonryConcepts);
+            });
         }
 
         function sortCards() {
@@ -629,8 +633,9 @@ const renderedConcepts = await Promise.all(
             currentFilterState = { query: '', sort: 'most-used', sortOrder: 'desc', disciplines: ['All'], tags: [], minUtility: 0 };
             renderFilterDisciplines();
             renderFilterTags();
-            filterStarButtons.forEach(star => { star.classList.remove('text-[#B08D57]'); star.classList.add('text-[#E8E2D2]'); });
+            filterStarButtons.forEach(star => { star.classList.remove('text-seal'); star.classList.add('text-[#E8E2D2]'); });
             document.getElementById('min-rating-label').textContent = '0+ stars';
+            searchInput.value = ''; // Clear search input
             applyFilterSystem();
         }
 
@@ -773,7 +778,8 @@ if (authors) {
             if (!grid) return;
 
             const itemsArr = Array.from(grid.querySelectorAll('.masonry-item-wrapper')).filter(item => {
-                return item.style.display !== 'none';
+                // More robust check for visibility
+                return item.style.display !== 'none' && (item.offsetWidth > 0 || item.offsetHeight > 0 || item.getClientRects().length > 0);
             });
             
             const containerWidth = grid.offsetWidth;
@@ -785,10 +791,11 @@ if (authors) {
             const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
             const colHeights = new Array(cols).fill(0);
 
-            itemsArr.forEach((item, index) => {
-                const colIndex = index % cols;
+            itemsArr.forEach((item) => {
+                const minHeight = Math.min(...colHeights);
+                const colIndex = colHeights.indexOf(minHeight);
                 const x = colIndex * (colWidth + gap);
-                const y = colHeights[colIndex];
+                const y = minHeight;
 
                 item.style.width = `${colWidth}px`;
                 item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
@@ -803,18 +810,8 @@ if (authors) {
         window.addEventListener('load', layoutMasonryConcepts);
         window.addEventListener('resize', layoutMasonryConcepts);
         
-        // Wrap filter/sort functions
-        const originalApplyFilterSystem = applyFilterSystem;
-        applyFilterSystem = function() {
-            originalApplyFilterSystem();
-            setTimeout(layoutMasonryConcepts, 100);
-        };
-
-        const originalClearAllFilters = clearAllFilters;
-        clearAllFilters = function() {
-            originalClearAllFilters();
-            setTimeout(layoutMasonryConcepts, 100);
-        };
+        // Initial run
+        layoutMasonryConcepts();
 
         // Initial run
         layoutMasonryConcepts();
