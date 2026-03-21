@@ -230,9 +230,13 @@ const renderedConcepts = await Promise.all(
                             </div>
                         </div>
 
-                        <div id="modal-attribution" class="font-serif italic text-[1.2rem] mb-12 flex items-baseline gap-2" style="display:none;">
+                        <div id="modal-attribution" class="font-serif italic text-[1.2rem] mb-6 flex items-baseline gap-2" style="display:none;">
                             <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">From the work of</span>
                             <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                        </div>
+                        <div id="modal-tags-attribution" class="font-serif italic text-[1.1rem] mb-12 flex items-baseline gap-2" style="display:none;">
+                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Tags</span>
+                            <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                         </div>
                         <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
                             <p id="modal-summary"></p>
@@ -251,14 +255,6 @@ const renderedConcepts = await Promise.all(
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px]">
                         <!-- Ontology -->
 
-                        <!-- Tags -->
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                                Tags
-                            </h3>
-                            <div id="modal-tags" class="flex flex-wrap gap-2.5"></div>
-                        </div>
 
                         <!-- Origin -->
                         <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
@@ -697,15 +693,13 @@ const renderedConcepts = await Promise.all(
                     }
                 }
 
-                // Tags
-                const tagColors = ['#2A4747', '#B08D57', '#8B2626'];
-                const tagBgColors = ['rgba(42,71,71,0.1)', 'rgba(176,141,87,0.1)', 'rgba(139,38,38,0.1)'];
-                const tagsHtml = tags ? tags.split(',').map((tag, i) => {
-                    const c = tagColors[i % tagColors.length];
-                    const bg = tagBgColors[i % tagBgColors.length];
-                    return `<span style="color:${c};background:${bg};padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">${tag.trim()}</span>`;
-                }).join('') : '';
-                setElHtml('modal-tags', tagsHtml);
+                // Tags header section
+                if (tags) {
+                    setElTxt('modal-tags-list', tags.split(',').map(t => t.trim()).join(', '));
+                    toggleSecFlex('modal-tags-attribution', true);
+                } else {
+                    toggleSecFlex('modal-tags-attribution', false);
+                }
 
                 // Stars
                 const starsHtml = Array.from({length: Math.min(rating, 3)}).map((_, i) =>
