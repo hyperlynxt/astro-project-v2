@@ -151,30 +151,28 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
 
     <!-- Modal -->
     <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; opacity:0;">
-        <div id="modal-card" class="modal-card relative w-full max-w-[960px] rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-[#2A2724]/[0.08] shadow-2xl" style="max-height:90vh;">
+        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-2xl animate-slide-up" style="max-height:90vh;">
             <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
             <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
+                <div class="flex justify-center mb-6">
+                    <div id="modal-stars" class="star-rating px-1"></div>
+                </div>
                 <div class="modal-word-text mb-2">
                     <h2 class="font-serif text-[3.8rem] md:text-[4.5rem] font-medium leading-none text-[#2A2724]" id="modal-word"></h2>
-                    <p id="modal-definition" class="font-serif text-[1.1rem] leading-relaxed text-[#8C8070] mt-4"></p>
+                </div>
+                <div id="modal-tags-attribution" class="flex flex-wrap items-baseline gap-2 font-serif italic text-[1.25rem] mb-4" style="display:none;">
+                    <span style="color:#7BA08A;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
+                    <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;"></span>
                 </div>
                 <svg class="draw-line w-full my-7" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
                     <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#7BA08A" stroke-width="1.3" stroke-linecap="round"/>
                 </svg>
-                <div class="modal-reveal border-l-4 border-[#7BA08A] pl-6 py-1 mb-8">
-                    <p id="modal-note" class="font-serif italic text-[1.1rem] leading-relaxed text-[#8C8070]"></p>
+                <div id="summary-container" class="modal-definition mb-10">
+                    <p id="modal-definition" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724]"></p>
                 </div>
-                <footer class="modal-reveal">
-                    <div id="modal-stars" class="star-rating"></div>
-                </footer>
-            </div>
-            <div class="w-full md:w-[300px] flex-shrink-0 border-t md:border-t-0 md:border-l border-[#2A2724]/[0.08] bg-white/50 backdrop-blur-sm px-7 py-10 overflow-y-auto flex flex-col gap-5">
-                <div class="sidebar-block bg-white/80 rounded-2xl border border-[#2A2724]/[0.07] p-5 shadow-sm">
-                    <div class="flex items-center gap-2 mb-4">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#7BA08A]"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                        <span class="font-sans text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Categories</span>
-                    </div>
-                    <div id="sidebar-tags" class="flex flex-wrap gap-2"></div>
+                <div id="modal-note-section" class="modal-reveal mb-10" style="display:none;">
+                    <div style="color:#7BA08A;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;font-family:serif;">Notes from Self</div>
+                    <span id="modal-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724] leading-tight block"></span>
                 </div>
             </div>
         </div>
@@ -306,11 +304,23 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
 
                 document.getElementById('modal-word').textContent = word;
                 document.getElementById('modal-definition').textContent = definition;
-                document.getElementById('modal-note').textContent = note;
+                const noteSection = document.getElementById('modal-note-section');
+                if (note) {
+                    document.getElementById('modal-note').textContent = note;
+                    noteSection.style.display = 'block';
+                } else {
+                    noteSection.style.display = 'none';
+                }
                 document.getElementById('modal-stars').innerHTML = buildStars(stars);
-                document.getElementById('sidebar-tags').innerHTML = tags.map(t =>
-                    `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t.trim()}</span>`
-                ).join('');
+                
+                const tagsAttribution = document.getElementById('modal-tags-attribution');
+                const tagsList = document.getElementById('modal-tags-list');
+                if (tags.length > 0 && tags[0] !== "") {
+                    tagsList.textContent = tags.map(t => t.trim()).join(', ');
+                    tagsAttribution.style.display = 'flex';
+                } else {
+                    tagsAttribution.style.display = 'none';
+                }
 
                 resetAnimation(document.getElementById('modal-card'));
                 overlay.querySelectorAll('.modal-word-text, .modal-reveal').forEach(el => resetAnimation(el));
