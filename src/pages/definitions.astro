@@ -291,9 +291,9 @@ function starRotations(index: number) {
                     </div>
                     <div id="modal-stars" class="flex gap-1 mt-0.5 shrink-0" style="color: #8B2626;"></div>
                 </div>
-                <div class="bg-parchment-100 rounded-xl p-5 border border-dashed border-parchment-300 relative">
-                    <span class="font-sans text-[10px] uppercase tracking-[0.12em] text-ink-light mb-3 block font-medium absolute top-4 right-5 bg-parchment-100 px-1">Personal Note</span>
-                    <span id="modal-note" class="font-hand text-[1.85rem] text-ink leading-tight -rotate-1 block mt-2"></span>
+                <div id="modal-note-section" class="mb-8" style="display:none;">
+                    <div style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;">Notes of Myself</div>
+                    <span id="modal-note" class="font-hand text-2xl text-ink leading-tight block"></span>
                 </div>
             </div>
         </div>
@@ -577,6 +577,12 @@ function starRotations(index: number) {
                 modalPOS.textContent = pos;
                 modalDef.textContent = snippet;
                 modalNote.textContent = note;
+                const noteSection = document.getElementById('modal-note-section');
+                if (note) {
+                    noteSection.style.display = 'block';
+                } else {
+                    noteSection.style.display = 'none';
+                }
                 modalPronunciation.textContent = pronunciation;
                 modalEtymology.textContent = etymology;
 

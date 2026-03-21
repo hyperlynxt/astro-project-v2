@@ -216,7 +216,20 @@ const renderedConcepts = await Promise.all(
                                 <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
                             </svg>
                         </h1>
-                        <div id="modal-stars" class="flex gap-2 items-center text-[#B08D57] mb-10"></div>
+                        <div id="modal-stars" class="flex gap-2 items-center text-[#B08D57] mb-6"></div>
+
+                        <!-- Header Ontology Section -->
+                        <div id="modal-ontology-attribution" class="font-serif italic text-[1.1rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
+                            <div id="modal-discipline-container" class="flex items-baseline gap-2">
+                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Discipline</span>
+                                <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                            </div>
+                            <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
+                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Parent Framework</span>
+                                <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
+                            </div>
+                        </div>
+
                         <div id="modal-attribution" class="font-serif italic text-[1.2rem] mb-12 flex items-baseline gap-2" style="display:none;">
                             <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">From the work of</span>
                             <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
@@ -228,37 +241,15 @@ const renderedConcepts = await Promise.all(
 
                     <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[900px] z-10 relative mb-20"></div>
 
-                    <div id="modal-field-note-container" class="mb-20 max-w-[900px] relative rounded-[2.5rem] overflow-hidden border border-[#D5CCB6] shadow-sm bg-[#FDFCF9]/50 p-8 md:p-12" style="display:none;">
-                        <div class="absolute inset-0 hatched-pattern opacity-[0.02] z-0"></div>
-                        <div class="relative z-10">
-                            <div class="flex items-center gap-3 text-[#2A2724]/50 mb-8 border-b border-[#2A2724]/40 pb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                <span class="font-sans text-[11px] font-bold uppercase tracking-[0.25em]">Field Notes & Observations</span>
-                            </div>
-                            <p id="modal-field-note" class="font-['Reenie_Beanie'] text-3xl md:text-[2.75rem] leading-[1.2] text-[#2A2724]/90 -rotate-[1deg] pl-2 md:pl-6 py-2"></p>
-                        </div>
+                    <!-- Notes of Myself Section (Replaces Field Note Container) -->
+                    <div id="modal-field-note-section" class="mb-12 max-w-[900px]" style="display:none;">
+                        <div style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;">Notes of Myself</div>
+                        <p id="modal-field-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724]/90"></p>
                     </div>
 
                     <!-- Metadata Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px]">
                         <!-- Ontology -->
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                Ontology
-                            </h3>
-                            <div class="space-y-5">
-                                <div>
-                                    <p class="text-[10px] text-[#2A2724]/40 mb-1.5 font-bold tracking-[0.15em] uppercase">Discipline</p>
-                                    <p id="modal-discipline" class="font-serif text-[1.4rem] text-[#2A2724] leading-tight font-medium"></p>
-                                </div>
-                                <div id="modal-parent-divider" class="w-full h-[1px] bg-[#D5CCB6]/30" style="display:none;"></div>
-                                <div id="modal-parent-container" style="display:none;">
-                                    <p class="text-[10px] text-[#2A2724]/40 mb-1.5 font-bold tracking-[0.15em] uppercase">Parent Framework</p>
-                                    <p id="modal-parent" class="font-serif text-[1.4rem] text-[#2A2724] leading-tight font-medium"></p>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Tags -->
                         <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
@@ -658,85 +649,116 @@ const renderedConcepts = await Promise.all(
                 const notesOfUsed = card.getAttribute('data-notesofused') || '';
                 const related = card.getAttribute('data-related') || '';
 
-                document.getElementById('modal-title').textContent = title;
-                document.getElementById('modal-bg-letter').textContent = title.charAt(0);
-		document.getElementById('modal-summary').textContent = card.getAttribute('data-short') || '';
-		const bodyContent = document.getElementById(`content-${card.getAttribute('data-id')}`);
-		document.getElementById('modal-detailed-desc').innerHTML = bodyContent ? bodyContent.innerHTML : `<p>${description}</p>`;
-                document.getElementById('modal-origin').textContent = origin;
-                document.getElementById('modal-linked').textContent = linked;
+                // Metadata population
+                const setElTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || ''; };
+                const setElHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val || ''; };
+                const toggleSec = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
+                const toggleSecFlex = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'flex' : 'none'; };
 
-                // Discipline / parent framework
-                if (discipline.includes('/')) {
+                setElTxt('modal-title', title);
+                setElTxt('modal-bg-letter', title.charAt(0));
+                setElTxt('modal-summary', card.getAttribute('data-short'));
+                
+                const bodyContent = document.getElementById(`content-${card.getAttribute('data-id')}`);
+                setElHtml('modal-detailed-desc', bodyContent ? bodyContent.innerHTML : `<p>${description}</p>`);
+                
+                setElTxt('modal-origin', origin);
+                setElTxt('modal-linked', linked);
+
+                // Extract discipline and framework
+                let displayDiscipline = discipline;
+                let displayFramework = '';
+                if (discipline && discipline.includes('/')) {
                     const parts = discipline.split('/');
-                    document.getElementById('modal-discipline').textContent = parts[0].trim();
-                    document.getElementById('modal-parent').textContent = parts[1].trim();
-                    document.getElementById('modal-parent-container').style.display = 'block';
-                    document.getElementById('modal-parent-divider').style.display = 'block';
-                } else {
-                    document.getElementById('modal-discipline').textContent = discipline;
-                    document.getElementById('modal-parent-container').style.display = 'none';
-                    document.getElementById('modal-parent-divider').style.display = 'none';
+                    displayDiscipline = parts[0].trim();
+                    displayFramework = parts[1].trim();
+                }
+
+                // Ontology header section
+                const discTxt = document.getElementById('modal-discipline-text');
+                const frameTxt = document.getElementById('modal-framework-text');
+                const ontSec = document.getElementById('modal-ontology-attribution');
+                const frameCont = document.getElementById('modal-framework-container');
+                const discCont = document.getElementById('modal-discipline-container');
+                
+                if (ontSec) ontSec.style.display = 'none';
+                if (discCont) discCont.style.display = 'none';
+                if (frameCont) frameCont.style.display = 'none';
+
+                if (displayDiscipline || displayFramework) {
+                    if (ontSec) ontSec.style.display = 'flex';
+                    if (displayDiscipline) {
+                        if (discTxt) discTxt.textContent = displayDiscipline;
+                        if (discCont) discCont.style.display = 'flex';
+                    }
+                    if (displayFramework) {
+                        if (frameTxt) frameTxt.textContent = displayFramework;
+                        if (frameCont) frameCont.style.display = 'flex';
+                    }
                 }
 
                 // Tags
                 const tagColors = ['#2A4747', '#B08D57', '#8B2626'];
                 const tagBgColors = ['rgba(42,71,71,0.1)', 'rgba(176,141,87,0.1)', 'rgba(139,38,38,0.1)'];
-                document.getElementById('modal-tags').innerHTML = tags ? tags.split(',').map((tag, i) => {
+                const tagsHtml = tags ? tags.split(',').map((tag, i) => {
                     const c = tagColors[i % tagColors.length];
                     const bg = tagBgColors[i % tagBgColors.length];
                     return `<span style="color:${c};background:${bg};padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">${tag.trim()}</span>`;
                 }).join('') : '';
+                setElHtml('modal-tags', tagsHtml);
 
                 // Stars
-                document.getElementById('modal-stars').innerHTML = Array.from({length: Math.min(rating, 3)}).map((_, i) =>
+                const starsHtml = Array.from({length: Math.min(rating, 3)}).map((_, i) =>
                     `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="#8B2626" stroke-width="2" stroke-linejoin="round" class="rotate-[12deg]"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`
                 ).join('');
+                setElHtml('modal-stars', starsHtml);
 
-                // Field note
+                // Field note (Notes of Myself)
                 if (fieldNote) {
-                    document.getElementById('modal-field-note').textContent = fieldNote;
-                    document.getElementById('modal-field-note-container').style.display = 'block';
+                    setElTxt('modal-field-note', fieldNote);
+                    toggleSec('modal-field-note-section', true);
                 } else {
-                    document.getElementById('modal-field-note-container').style.display = 'none';
+                    toggleSec('modal-field-note-section', false);
                 }
 
                 // Notes of used
                 if (notesOfUsed) {
                     const notes = notesOfUsed.split(',').filter(n => n.trim());
-                    document.getElementById('modal-notes-items').innerHTML = notes.map(name =>
+                    const nHtml = notes.map(name =>
                         `<div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#7C6B9E]/40 hover:shadow-sm transition-all">
     <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#7C6B9E] font-medium transition-colors">${name.trim()}</p>
     <svg class="w-4 h-4 text-[#A39985] opacity-0 group-hover:opacity-100 group-hover:text-[#7C6B9E] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
 </div>`
                     ).join('');
-                    document.getElementById('modal-notes-section').style.display = 'block';
+                    setElHtml('modal-notes-items', nHtml);
+                    toggleSec('modal-notes-section', true);
                 } else {
-                    document.getElementById('modal-notes-section').style.display = 'none';
+                    toggleSec('modal-notes-section', false);
                 }
 
                 // Related concepts
                 if (related) {
-                    const relatedItems = related.split(',').filter(r => r.trim());
-                    document.getElementById('modal-related-items').innerHTML = relatedItems.map(name =>
+                    const rItems = related.split(',').filter(r => r.trim());
+                    const rHtml = rItems.map(name =>
     `<div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all">
         <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors">${name.trim()}</p>
         <svg class="w-4 h-4 text-[#A39985] opacity-0 group-hover:opacity-100 group-hover:text-[#B08D57] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
     </div>`
 ).join('');
-                    document.getElementById('modal-related-section').style.display = 'block';
+                    setElHtml('modal-related-items', rHtml);
+                    toggleSec('modal-related-section', true);
                 } else {
-                    document.getElementById('modal-related-section').style.display = 'none';
+                    toggleSec('modal-related-section', false);
                 }
-		const authors = card.getAttribute('data-authors') || '';
-const authorsList = document.getElementById('modal-authors-list');
-const attribution = document.getElementById('modal-attribution');
-if (authors) {
-    authorsList.textContent = authors.split(',').map(a => a.trim()).join(', ');
-    attribution.style.display = 'flex';
-} else {
-    attribution.style.display = 'none';
-}
+
+                // Attribution
+                const authors = card.getAttribute('data-authors') || '';
+                if (authors) {
+                    setElTxt('modal-authors-list', authors.split(',').map(a => a.trim()).join(', '));
+                    toggleSecFlex('modal-attribution', true);
+                } else {
+                    toggleSecFlex('modal-attribution', false);
+                }
                 // Underline animation
                 const modalTitleEl = document.getElementById('modal-title');
                 const modalTitleUnderline = document.getElementById('modal-title-underline');
