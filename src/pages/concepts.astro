@@ -219,23 +219,23 @@ const renderedConcepts = await Promise.all(
                         <div id="modal-stars" class="flex gap-2 items-center text-[#B08D57] mb-6"></div>
 
                         <!-- Header Ontology Section -->
-                        <div id="modal-ontology-attribution" class="font-serif italic text-[1.1rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
+                        <div id="modal-ontology-attribution" class="font-serif italic text-[1.25rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
                             <div id="modal-discipline-container" class="flex items-baseline gap-2">
-                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Discipline</span>
+                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Discipline</span>
                                 <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                             </div>
                             <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
-                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Parent Framework</span>
+                                <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Parent Framework</span>
                                 <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                             </div>
                         </div>
 
-                        <div id="modal-attribution" class="font-serif italic text-[1.2rem] mb-6 flex items-baseline gap-2" style="display:none;">
-                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">From the work of</span>
+                        <div id="modal-attribution" class="font-serif italic text-[1.35rem] mb-6 flex items-baseline gap-2" style="display:none;">
+                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">From the work of</span>
                             <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                         </div>
-                        <div id="modal-tags-attribution" class="font-serif italic text-[1.1rem] mb-12 flex items-baseline gap-2" style="display:none;">
-                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;">Tags</span>
+                        <div id="modal-tags-attribution" class="font-serif italic text-[1.25rem] mb-12 flex items-baseline gap-2" style="display:none;">
+                            <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
                             <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
                         </div>
                         <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
@@ -255,6 +255,14 @@ const renderedConcepts = await Promise.all(
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px]">
                         <!-- Ontology -->
 
+                        <!-- Related Concepts -->
+                        <div id="modal-related-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
+                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                Related Concepts
+                            </h3>
+                            <div id="modal-related-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                        </div>
 
                         <!-- Origin -->
                         <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
@@ -286,14 +294,6 @@ const renderedConcepts = await Promise.all(
                             <div id="modal-notes-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
                         </div>
 
-                        <!-- Related Concepts -->
-                        <div id="modal-related-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                                Related Concepts
-                            </h3>
-                            <div id="modal-related-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -702,8 +702,9 @@ const renderedConcepts = await Promise.all(
                 }
 
                 // Stars
-                const starsHtml = Array.from({length: Math.min(rating, 3)}).map((_, i) =>
-                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="#8B2626" stroke-width="2" stroke-linejoin="round" class="rotate-[12deg]"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`
+                const rotations = ['', 'transform: rotate(15deg);', 'transform: rotate(-10deg);', 'transform: rotate(5deg);', 'transform: rotate(-15deg);'];
+                const starsHtml = Array.from({length: rating}).map((_, i) =>
+                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="#8B2626" stroke-width="2" stroke-linejoin="round" style="${rotations[i] || ''}"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>`
                 ).join('');
                 setElHtml('modal-stars', starsHtml);
 
