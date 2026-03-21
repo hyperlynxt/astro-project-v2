@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Field Notes — Linguistic Treats</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: { 50:'#FDFCF9', 100:'#F5F2EB', 200:'#E8E2D2', 300:'#D5CCB6', 400:'#A39985', 500:'#8C8070' },
+                        ink: { DEFAULT: '#2A2724' },
+                        seal: '#8B2626', teal: '#2A4747', gold: '#B08D57',
+                    },
+                    fontFamily: {
+                        serif: ['"EB Garamond"', 'serif'],
+                        sans:  ['Inter', 'sans-serif'],
+                        hand:  ['"Reenie Beanie"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            color: #2A2724;
+        }
+        .glass-nav { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+        .words-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; align-items: start; }
+        @media (min-width: 640px)  { .words-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (min-width: 1024px) { .words-grid { grid-template-columns: repeat(3,1fr); } }
+
+        .word-card {
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 22px;
+            padding: 2rem 2rem 1.6rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(42,39,35,0.10);
+            box-shadow: 0 2px 12px rgba(42,39,35,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .word-card:hover {
+            background: #F5F2EB;
+            border-color: #D5CCB6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42,39,36,0.1);
+        }
+        .word-card:hover .card-word       { color: #7BA08A; }
+        .word-card:hover .card-definition { color: #7BA08A; }
+        .word-card:hover .card-type-icon  { color: #7BA08A; }
+
+        .card-expand {
+            position: absolute; top: 1.1rem; right: 1.1rem;
+            opacity: 0; transform: scale(0.85);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            color: rgba(42,39,35,0.28); font-size: 0.75rem; line-height: 1;
+        }
+        .word-card:hover .card-expand { opacity: 1; transform: scale(1); }
+
+        /* ─── Typographic Aa icon ─── */
+        .card-type-icon {
+            color: #7BA08A;
+            margin-bottom: 0.9rem;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: baseline;
+            gap: 1px;
+            line-height: 1;
+        }
+        .icon-big  { font-family: 'EB Garamond', serif; font-size: 1.55rem; font-weight: 600; line-height: 1; }
+        .icon-small{ font-family: 'EB Garamond', serif; font-size: 1.0rem; font-weight: 400; line-height: 1; opacity: 0.6; }
+
+        .card-word {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.1rem; font-weight: 500; line-height: 1.15;
+            color: #2A2724; margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        .card-definition {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.05rem; line-height: 1.65;
+            color: rgba(42,39,35,0.50); flex-grow: 1;
+            transition: color 0.3s ease;
+        }
+        .card-footer {
+            margin-top: 1.4rem; padding-top: 1rem;
+            border-top: 1px solid rgba(42,39,35,0.06);
+            display: flex; align-items: flex-end; justify-content: space-between; gap: 0.75rem;
+        }
+        .card-tag {
+            background: rgba(42,39,35,0.04); color: rgba(42,39,35,0.5);
+            font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; border-radius: 6px;
+        }
+        .star-rating { display: flex; gap: 4px; color: #7BA08A; }
+
+        #modal-overlay {
+            background: rgba(42,39,35,0.38);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.35s ease;
+        }
+        @keyframes cardIn    { from { opacity:0; transform: translateY(28px) scale(0.96); } to { opacity:1; transform: translateY(0) scale(1); } }
+        @keyframes textReveal{ from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes drawStroke{ to { stroke-dashoffset: 0; } }
+
+        .modal-card      { background-color:#FDFCF9; background-image:url("https://www.transparenttextures.com/patterns/natural-paper.png"); animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .modal-word-text { opacity:0; animation: textReveal 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards; }
+        .modal-reveal    { opacity:0; animation: textReveal 0.5s cubic-bezier(0.16,1,0.3,1) 0.28s forwards; }
+        .draw-line path  { stroke-dasharray:600; stroke-dashoffset:600; animation: drawStroke 1.1s cubic-bezier(0.22,1,0.36,1) 0.18s forwards; }
+
+        .sidebar-block { opacity:0; transform:translateY(12px); animation: sidebarIn 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .sidebar-block:nth-child(1){ animation-delay:.20s; }
+        .sidebar-block:nth-child(2){ animation-delay:.32s; }
+        @keyframes sidebarIn { to { opacity:1; transform:translateY(0); } }
+
+        ::-webkit-scrollbar { width:7px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background-color:rgba(42,39,35,0.1); border-radius:10px; }
+        ::-webkit-scrollbar-thumb:hover { background-color:rgba(42,39,35,0.2); }
+
+        .hand-underline-sm { position:relative; display:inline-block; }
+        .swoosh-path { stroke-dasharray:100; stroke-dashoffset:100; }
+        @keyframes drawSwoosh { to { stroke-dashoffset:0; } }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- NAV -->
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-parchment-100/95 glass-nav border-b border-ink/[0.08] flex items-center justify-between px-10 shadow-sm">
+        <div class="flex items-center gap-10">
+            <a href="index.html" class="font-serif text-xl text-parchment-400 transition-all duration-300 hover:text-ink hover:-translate-y-[1px] hover:opacity-80">Main Page</a>
+            <div class="h-8 w-px bg-parchment-200"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="Quotes_Page.html" class="font-serif text-xl text-parchment-400 transition-all duration-300 hover:text-ink hover:-translate-y-[1px] hover:opacity-80">Quotes</a>
+                <a href="#" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#7BA08A] shadow-[0_0_8px_rgba(123,160,138,0.5)]"></span>
+                    <span class="font-serif text-xl text-ink">Linguistic Treats</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-hand text-[1.75rem] leading-none text-[#7BA08A] tracking-tight translate-y-1">hyperlynxt | teo</div>
+    </header>
+
+    <!-- HERO -->
+    <section class="w-full bg-gradient-to-b from-parchment-100 to-transparent pt-20 pb-16 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="font-hand text-2xl text-parchment-500 mb-2 block">words that carry whole worlds</span>
+            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-ink mb-8">
+                Collected <span class="italic hand-underline-sm inline-block">
+                    Words
+                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                    </svg>
+                </span>
+            </h2>
+            <p class="font-serif italic text-lg md:text-xl text-parchment-500 max-w-2xl mx-auto leading-relaxed">
+                Terms loved not for how they sound, but for what they name — gaps in thought, folds in meaning, semantic sleight of hand.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION LABEL -->
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between border-b border-ink/[0.08] pb-3">
+        <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">The Lexicon</span>
+        <span id="count-label" class="font-serif italic text-ink/35 text-sm"></span>
+    </div>
+
+    <!-- GRID -->
+    <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-36">
+        <div class="words-grid" id="words-grid"></div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 hidden opacity-0 flex items-center justify-center p-6 md:p-10" onclick="closeModal(event)">
+        <div id="modal-card" class="modal-card relative w-full max-w-[960px] rounded-[24px] overflow-hidden flex flex-col md:flex-row border border-ink/8 shadow-2xl" style="max-height:90vh;" onclick="event.stopPropagation()">
+
+            <button onclick="closeModalDirect()" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-ink/10 bg-white/60 text-ink/35 hover:text-ink/70 hover:border-ink/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
+
+            <!-- LEFT PANEL -->
+            <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
+                <div class="modal-word-text mb-2">
+                    <h2 class="font-serif text-[3.8rem] md:text-[4.5rem] font-medium leading-none text-ink" id="modal-word"></h2>
+                    <p id="modal-definition" class="font-serif text-[1.1rem] leading-relaxed text-parchment-500 mt-4"></p>
+                </div>
+                <svg class="draw-line w-full my-7" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
+                    <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#7BA08A" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+                <div class="modal-reveal border-l-4 border-[#7BA08A] pl-6 py-1 mb-8">
+                    <p id="modal-note" class="font-serif italic text-[1.1rem] leading-relaxed text-parchment-500"></p>
+                </div>
+                <footer class="modal-reveal">
+                    <div id="modal-stars" class="star-rating"></div>
+                </footer>
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="w-full md:w-[300px] flex-shrink-0 border-t md:border-t-0 md:border-l border-ink/8 bg-white/50 backdrop-blur-sm px-7 py-10 overflow-y-auto flex flex-col gap-5">
+                <div class="sidebar-block bg-white/80 rounded-2xl border border-ink/[0.07] p-5 shadow-sm">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#7BA08A]"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        <span class="font-sans text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink/40">Categories</span>
+                    </div>
+                    <div id="sidebar-tags" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { id:1,  stars:3, word:"Slippery Slope",     definition:"A logical fallacy arguing that one small step will inevitably lead to extreme consequences, without demonstrating why that progression is necessary.", note:"What I find compelling is that the slope isn't always fallacious — sometimes it's a real warning. The word's power is in how it gets weaponised: to shut down conversations before they begin, by invoking a catastrophe no one has proven.", tags:["Logic","Rhetoric","Fallacy"] },
+            { id:2,  stars:2, word:"Conduits",            definition:"Channels or means through which something is transmitted — people, structures, or systems that carry something along without originating it.", note:"There's something philosophically interesting about conduit-ness. A conduit doesn't generate, it transmits. The metaphor quietly asks: are we ever the source, or always just passing something through?", tags:["Metaphor","Systems","Pragmatics"] },
+            { id:3,  stars:2, word:"Flippant",            definition:"Treating serious issues with inappropriate levity; a refusal — conscious or not — to match the weight of a moment with commensurate seriousness.", note:"Flippancy has a social function people underestimate. Sometimes it's a defence mechanism, sometimes a power move, sometimes exhaustion dressed as irreverence. The word never says which.", tags:["Register","Affect","Pragmatics"] },
+            { id:4,  stars:3, word:"Threshold",           definition:"The point at which something begins or changes — a physical doorway, but also the minimum condition for an effect to occur, or the moment before one thing becomes another.", note:"This word does double duty in every domain. In physics, in psychology, in architecture, in narrative — the threshold is always the same: the charged moment that is neither here nor there.", tags:["Phenomenology","Semantics","Transitions"] },
+            { id:5,  stars:3, word:"Vagueposting",        definition:"Posting intentionally ambiguous, emotionally loaded content on social media — communicating distress or drama without enough context for others to respond concretely.", note:"It's a new social act with a very old structure: the public soliloquy. A performance of suffering that invites concern without enabling it. The vagueness is not a bug — it's the point.", tags:["Vernacular","Digital","Pragmatics"] },
+            { id:6,  stars:2, word:"Looksmaxxing",        definition:"The systematic optimisation of one's physical appearance, framing self-improvement through a maximal, algorithmic logic — treating beauty as a technical problem to be solved.", note:"What disturbs me semantically is the suffix: -maxxing implies a ceiling to be reached, a score to be optimised. It turns the self into a project with metrics. The word reveals the logic more honestly than the people using it usually intend.", tags:["Vernacular","Semantics","Identity"] },
+            { id:7,  stars:3, word:"I am the Truth",      definition:"A phrase asserting identity with truth itself — drawn from theological discourse but now used culturally to claim absolute authority or unquestionable authenticity.", note:"What's fascinating is the shift from 'I tell the truth' to 'I am the truth.' The first is epistemological. The second is ontological — it doesn't claim accuracy, it claims essence. A very different kind of assertion.", tags:["Rhetoric","Epistemology","Phrase"] },
+            { id:8,  stars:2, word:"Riveting",            definition:"Completely engrossing; holding the attention with an almost physical grip. From rivet — the metal fastener that locks things permanently in place under pressure.", note:"The metaphor hidden inside is structural: to rivet is to fasten through force. When something is riveting, it has done that to your attention. You are held. You did not choose to stay.", tags:["Metaphor","Register","Affect"] },
+            { id:9,  stars:1, word:"Behoove",             definition:"To be necessary, proper, or advantageous for someone — typically in formal or archaic register, carrying a moral or practical obligation.", note:"An almost extinct word carrying a delightful weight of propriety. Using it signals a speaker who knows they're being a little formal on purpose — it always arrives with a raised eyebrow.", tags:["Register","Morphology","Formality"] },
+            { id:10, stars:2, word:"Hubristic",           definition:"Displaying hubris: excessive pride or self-confidence of a kind that invites narrative punishment — overreach that carries the seeds of its own ruin.", note:"What's semantically rich here is that the judgment is embedded in the word. You can't call something 'hubristic' neutrally. The word already knows how the story ends.", tags:["Ethics","Rhetoric","Narrative"] },
+            { id:11, stars:3, word:"Slopscaling",         definition:"The act of amplifying low-quality, poorly considered output — especially content — through sheer volume, distribution, or platform reach, without improving the underlying quality.", note:"A coinage that names something the internet desperately needed a word for. It's not just bad content — it's bad content made large. The scale doesn't redeem the slop; it just makes the problem proportional.", tags:["Neologism","Digital","Semantics"] },
+            { id:12, stars:2, word:"Forage",              definition:"To search widely and actively for food or provisions — extended metaphorically to any wide-ranging, improvisational search for what one needs.", note:"The word implies resourcefulness through movement. You don't forage by staying still. It carries a connotation of adapting to whatever the environment offers — a very different kind of seeking than research or inquiry.", tags:["Metaphor","Semantics","Agency"] },
+            { id:13, stars:2, word:"Forgone",             definition:"Past participle of forgo — to willingly abstain from or surrender something. Also appears in 'foregone conclusion': an outcome treated as already decided before examination.", note:"The 'foregone conclusion' usage is the more interesting case. It names a cognitive move: treating the future as already settled. Once something is foregone, scrutiny feels superfluous. The word is a trap.", tags:["Epistemology","Logic","Morphology"] },
+            { id:14, stars:3, word:"Eulogy",              definition:"A speech or piece of writing that praises someone highly, typically delivered at a funeral. From Greek eu (well) + logos (word) — literally: a good word.", note:"What moves me is the etymology: a eulogy is eu-logos, a well-word. It is language put in service of goodness, of making the invisible visible one last time. The word treats language itself as a final gift.", tags:["Rhetoric","Affect","Etymology"] },
+            { id:15, stars:3, word:"Nuance",              definition:"A subtle difference in or shade of meaning, expression, or sound — the acknowledgement that truth is rarely binary and that the important distinctions live at the margins.", note:"The internet has made 'nuance' a battlefield. 'This is more nuanced than you're making it' can be either an honest call to complexity or a rhetorical stalling tactic. The word has been weaponised by both sides of every argument.", tags:["Semantics","Epistemology","Rhetoric"] },
+            { id:16, stars:1, word:"Nuisance",            definition:"A person, thing, or circumstance causing inconvenience or annoyance — in law, an act that harms or obstructs the public.", note:"It sounds like nuance. It is its shadow. Where nuance asks for patience, nuisance exhausts it. The phonetic resemblance feels like a joke the language is telling on itself.", tags:["Semantics","Register","Affect"] },
+            { id:17, stars:2, word:"Run of the Mill",     definition:"Ordinary, unremarkable — describing something that meets the minimum standard but offers nothing exceptional. From textile mills, referring to ungraded cloth fresh off the production run.", note:"The industrial origin is worth holding. The mill produced without judgment; quality was assessed after. 'Run of the mill' is things before evaluation — the neutral, the unexamined, the default.", tags:["Idiom","Register","Etymology"] },
+            { id:18, stars:3, word:"Egregious",           definition:"Outstandingly bad; shockingly conspicuous in its badness. Originally — and ironically — meant 'remarkably good,' distinguished from the flock, before completely inverting its meaning.", note:"This word's history is a total semantic reversal. It once meant standing out in greatness. Now it means the opposite. The inversion is complete. It's a lesson in how shared use overwhelms original intent.", tags:["Semantics","Etymology","Rhetoric"] },
+            { id:19, stars:2, word:"Shoehorn",            definition:"To force something into a space or situation that is too small or unsuitable for it — a productive metaphor for any act of ill-fitting insertion or inappropriate compression.", note:"The image is wonderfully specific: the curved tool that deforms to assist entry. To shoehorn is to acknowledge the mismatch and proceed anyway. The metaphor is always slightly violent.", tags:["Metaphor","Pragmatics","Register"] },
+            { id:20, stars:3, word:"Type Shi",            definition:"Internet vernacular for something quintessentially characteristic of a type of person, aesthetic, or worldview — shorthand for 'this is exactly what that type of person does/says/likes.'", note:"What's linguistically interesting is the taxonomic move: it doesn't describe a thing, it classifies it by its specimen. It implies a whole typology of beings. The shorthand does enormous categorical work.", tags:["Vernacular","Digital","Pragmatics"] },
+            { id:21, stars:3, word:"Entitlement",         definition:"The belief that one is inherently deserving of privileges or special treatment — but also, formally, a legal right to something. The word has shifted from neutral legal usage to a charged moral accusation.", note:"The semantic drift here is worth studying. 'Entitlement' once described a legitimate claim. Now it almost always implies an illegitimate one. The word has become a verdict. Whoever deploys it has already won the argument.", tags:["Semantics","Ethics","Register"] }
+        ];
+
+        const STAR_ROTATIONS = [0, 15, -10];
+        function buildStars(count) {
+            return Array.from({ length: count }, (_, i) =>
+                `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(${STAR_ROTATIONS[i]||0}deg)">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"/>
+                </svg>`
+            ).join('');
+        }
+
+        function buildGrid() {
+            const grid = document.getElementById('words-grid');
+            document.getElementById('count-label').textContent = `${words.length} entries`;
+            words.forEach((w) => {
+                const card = document.createElement('article');
+                card.className = 'word-card';
+                card.dataset.word  = w.word.toLowerCase();
+                card.dataset.tags  = w.tags.join(',');
+                card.dataset.stars = w.stars;
+                card.onclick = () => openModal(w.id);
+                const visibleTags = w.tags.slice(0,2).map(t=>`<span class="card-tag">${t}</span>`).join('');
+                const overflow    = w.tags.length > 2 ? `<span class="card-tag">+${w.tags.length-2}</span>` : '';
+                card.innerHTML = `
+                    <span class="card-expand">↗</span>
+                    <div class="card-type-icon"><span class="icon-big">A</span><span class="icon-small">a</span></div>
+                    <div style="flex-grow:1;">
+                        <p class="card-word">${w.word}</p>
+                        <p class="card-definition line-clamp-3">${w.definition}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="star-rating">${buildStars(w.stars)}</div>
+                        <div class="flex items-center gap-1.5 flex-wrap justify-end flex-shrink-0">${visibleTags}${overflow}</div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        const overlay = document.getElementById('modal-overlay');
+        function resetAnimation(el) { if(!el) return; el.style.animation='none'; el.offsetHeight; el.style.animation=null; }
+
+        function openModal(id) {
+            const w = words.find(x => x.id === id);
+            if (!w) return;
+            document.getElementById('modal-word').textContent        = w.word;
+            document.getElementById('modal-definition').textContent  = w.definition;
+            document.getElementById('modal-note').textContent         = w.note;
+            document.getElementById('modal-stars').innerHTML          = buildStars(w.stars);
+            document.getElementById('sidebar-tags').innerHTML = w.tags.map(t =>
+                `<span class="card-tag" style="font-size:10px;padding:5px 11px;border-radius:8px;border:1px solid rgba(42,39,35,0.1);">${t}</span>`
+            ).join('');
+            resetAnimation(document.getElementById('modal-card'));
+            overlay.querySelectorAll('.modal-word-text,.modal-reveal').forEach(el=>resetAnimation(el));
+            resetAnimation(overlay.querySelector('.draw-line path'));
+            overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+        }
+
+        function closeModal(e)  { if (e && e.target !== overlay) return; doClose(); }
+        function closeModalDirect() { doClose(); }
+        function doClose() { overlay.style.opacity='0'; document.body.style.overflow=''; setTimeout(()=>overlay.classList.add('hidden'),320); }
+
+        document.addEventListener('keydown', e => {
+            if (e.key==='Escape') { if(!overlay.classList.contains('hidden')) doClose(); if(window.closeFilterModal) window.closeFilterModal(); }
+        });
+
+        buildGrid();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let filterState = { query:'', sort:'default', sortOrder:'desc', tags:[], minStars:1 };
+
+            document.getElementById('words-search').addEventListener('input', e => {
+                filterState.query = e.target.value.toLowerCase().trim(); applyFilters();
+            });
+
+            window.openFilterModal = function () {
+                const fm = document.getElementById('filter-modal');
+                fm.classList.remove('hidden'); document.body.style.overflow='hidden';
+                renderTagFilters(); updatePreviewCount();
+                const p = fm.querySelector('.swoosh-path');
+                if(p){ p.style.animation='none'; p.offsetHeight; p.style.animation=null; }
+            };
+            window.closeFilterModal = function () {
+                document.getElementById('filter-modal').classList.add('hidden');
+                if(overlay.classList.contains('hidden')) document.body.style.overflow='';
+            };
+
+            const allTags = [...new Set(words.flatMap(w=>w.tags))].sort();
+
+            function renderTagFilters() {
+                const container = document.getElementById('filter-tags-container');
+                container.innerHTML = allTags.map(tag => {
+                    const active = filterState.tags.includes(tag);
+                    return `<button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all
+                        ${active?'bg-[#2A4747] text-white shadow-md scale-105':'bg-parchment-100 text-ink/60 border border-ink/10 hover:bg-parchment-200'}">${tag}</button>`;
+                }).join('');
+                container.querySelectorAll('.tag-filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const t = btn.dataset.tag;
+                        filterState.tags = filterState.tags.includes(t) ? filterState.tags.filter(x=>x!==t) : [...filterState.tags,t];
+                        renderTagFilters(); updatePreviewCount();
+                    });
+                });
+            }
+
+            document.getElementById('toggle-all-tags').addEventListener('click', function () {
+                filterState.tags = filterState.tags.length===allTags.length ? [] : [...allTags];
+                renderTagFilters(); updatePreviewCount();
+                this.textContent = filterState.tags.length===allTags.length ? 'Clear All' : 'Select All';
+            });
+
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterState.sort = btn.dataset.sort;
+                    document.querySelectorAll('.sort-btn').forEach(b => {
+                        b.classList.remove('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
+                        b.classList.add('bg-white','text-ink/70','border-ink/20');
+                    });
+                    btn.classList.remove('bg-white','text-ink/70','border-ink/20');
+                    btn.classList.add('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
+                    updatePreviewCount();
+                });
+            });
+
+            document.getElementById('sort-direction-toggle').addEventListener('click', function () {
+                filterState.sortOrder = filterState.sortOrder==='desc' ? 'asc' : 'desc';
+                document.getElementById('sort-direction-label').textContent = filterState.sortOrder==='desc' ? 'Descending' : 'Ascending';
+                document.getElementById('sort-direction-icon').style.transform = filterState.sortOrder==='asc' ? 'rotate(180deg)' : '';
+                updatePreviewCount();
+            });
+
+            document.querySelectorAll('.star-filter').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const rating = parseInt(btn.dataset.rating);
+                    filterState.minStars = rating;
+                    document.querySelectorAll('.star-filter').forEach(s => {
+                        s.classList.toggle('text-gold', parseInt(s.dataset.rating)<=rating);
+                        s.classList.toggle('text-parchment-200', parseInt(s.dataset.rating)>rating);
+                    });
+                    const label = document.querySelector('.hand-label');
+                    if(label) label.textContent = `${rating}+ stars`;
+                    updatePreviewCount();
+                });
+            });
+
+            function cardMatchesFilters(card) {
+                const word  = card.dataset.word  || '';
+                const tags  = card.dataset.tags ? card.dataset.tags.split(',').map(t=>t.trim()) : [];
+                const stars = parseInt(card.dataset.stars) || 0;
+                return (!filterState.query || word.includes(filterState.query)) &&
+                       (filterState.tags.length===0 || filterState.tags.some(t=>tags.includes(t))) &&
+                       (stars >= filterState.minStars);
+            }
+
+            function applyFilters() {
+                const grid  = document.getElementById('words-grid');
+                const cards = Array.from(grid.querySelectorAll('.word-card'));
+                cards.forEach(c => { c.style.display = cardMatchesFilters(c) ? '' : 'none'; });
+                const visible = cards.filter(c=>c.style.display!=='none');
+                const isDesc  = filterState.sortOrder==='desc';
+                if (filterState.sort!=='default') {
+                    visible.sort((a,b) => {
+                        if (filterState.sort==='alphabetical') { const cmp=a.dataset.word.localeCompare(b.dataset.word); return isDesc?-cmp:cmp; }
+                        if (filterState.sort==='most-stars')   { const cmp=parseInt(a.dataset.stars)-parseInt(b.dataset.stars); return isDesc?-cmp:cmp; }
+                        return 0;
+                    });
+                    visible.forEach(c=>grid.appendChild(c));
+                }
+                document.getElementById('count-label').textContent =
+                    visible.length===words.length ? `${words.length} entries` : `${visible.length} of ${words.length} entries`;
+            }
+
+            function updatePreviewCount() {
+                const count = Array.from(document.querySelectorAll('.word-card')).filter(c=>cardMatchesFilters(c)).length;
+                document.getElementById('filter-result-count').textContent = `${count} words`;
+            }
+
+            window.applyFilterSystem = function () { applyFilters(); window.closeFilterModal(); };
+
+            window.clearAllFilters = function () {
+                filterState = { query:'', sort:'default', sortOrder:'desc', tags:[], minStars:1 };
+                document.getElementById('words-search').value = '';
+                renderTagFilters(); updatePreviewCount();
+                document.querySelectorAll('.sort-btn').forEach((b,i) => {
+                    b.classList.remove('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
+                    b.classList.add('bg-white','text-ink/70','border-ink/20');
+                    if(i===0){ b.classList.add('bg-[#7BA08A]','text-white','shadow-lg'); b.classList.remove('bg-white','text-ink/70','border-ink/20'); }
+                });
+                document.querySelectorAll('.star-filter').forEach(s => {
+                    s.classList.toggle('text-gold', parseInt(s.dataset.rating)<=1);
+                    s.classList.toggle('text-parchment-200', parseInt(s.dataset.rating)>1);
+                });
+                document.querySelectorAll('.word-card').forEach(c=>{ c.style.display=''; });
+                document.getElementById('count-label').textContent = `${words.length} entries`;
+            };
+        });
+    </script>
+
+    <!-- FLOATING BAR -->
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-parchment-200 rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50">
+        <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="document.getElementById('words-search').focus()">
+            <svg class="w-4 h-4 text-parchment-400 group-hover:text-ink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="words-search" placeholder="Search words" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-ink placeholder:text-parchment-400 w-32 transition-all focus:w-48">
+        </div>
+        <div class="w-px h-6 bg-parchment-200 mx-1"></div>
+        <button onclick="openFilterModal()" class="bg-[#7BA08A] hover:bg-[#6a9079] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter &amp; Sort</button>
+    </div>
+
+    <!-- FILTER MODAL -->
+    <div id="filter-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6 bg-parchment-100/40 backdrop-blur-md">
+        <div class="relative w-full max-w-[630px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh]"
+             style="background-image:url('https://www.transparenttextures.com/patterns/natural-paper.png'),linear-gradient(white,white);">
+
+            <div class="px-7 pt-7 pb-4 border-b border-ink/10 flex justify-between items-start bg-white/60 backdrop-blur-md flex-shrink-0">
+                <div>
+                    <div class="font-hand text-xl text-parchment-400 -rotate-2 origin-left mb-1 opacity-80">Refine the lexicon</div>
+                    <h2 class="text-3xl font-serif font-medium text-ink relative inline-block">
+                        Filter &amp; Sort
+                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-1 text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                            <path d="M2 7C25 2 75 -1 98 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
+                        </svg>
+                    </h2>
+                </div>
+                <button onclick="closeFilterModal()" class="w-8 h-8 rounded-full bg-parchment-50 border border-ink/15 flex items-center justify-center text-ink/50 hover:text-ink hover:bg-parchment-100 transition-all mt-1 group">
+                    <svg class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="px-7 py-6 overflow-y-auto flex-grow space-y-8" style="max-height:500px;">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Sort Order</h3>
+                        </div>
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-parchment-50 border border-ink/15 text-[10px] font-bold uppercase tracking-wider text-ink/60 hover:text-[#7BA08A] hover:border-[#7BA08A]/30 transition-all group">
+                            <span id="sort-direction-label">Descending</span>
+                            <svg id="sort-direction-icon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-sort="default"      class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#7BA08A] transition-all">Default</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-ink/70 font-sans text-sm font-medium rounded-full border border-ink/20 hover:border-ink hover:text-ink transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="most-stars"   class="sort-btn px-4 py-2 bg-white text-ink/70 font-sans text-sm font-medium rounded-full border border-ink/20 hover:border-ink hover:text-ink transition-all shadow-sm">Most Stars</button>
+                    </div>
+                </div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent"></div>
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Filter by Field</h3>
+                        </div>
+                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-[#7BA08A]/70 hover:text-[#7BA08A] transition-colors">Select All</button>
+                    </div>
+                    <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
+                </div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent"></div>
+                <div class="pb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-ink/50">Minimum Stars</h3>
+                        </div>
+                        <span class="font-hand text-lg text-[#7BA08A] hand-label">1+ stars</span>
+                    </div>
+                    <div class="flex gap-2 p-3 bg-white border border-ink/10 rounded-xl w-fit" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter text-gold hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="2" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                        <button data-rating="3" class="star-filter text-parchment-200 hover:scale-110 transition-transform"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-ink/10 bg-parchment-50 flex items-center justify-between flex-shrink-0">
+                <button onclick="clearAllFilters()" class="font-sans text-sm font-medium text-ink/50 hover:text-ink transition-colors underline underline-offset-4 decoration-parchment-300">Clear Filters</button>
+                <button onclick="applyFilterSystem()" class="bg-ink hover:bg-black text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                    <span>Apply Filters</span>
+                    <span id="filter-result-count" class="font-hand text-lg text-white/80 pt-0.5">-- words</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
