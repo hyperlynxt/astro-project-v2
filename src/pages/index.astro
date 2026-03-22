@@ -159,6 +159,17 @@ import '../styles/global.css';
             text-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
 
+        /* Specialized Hover Colors */
+        .quotes-hover:hover .node-circle {
+            background-color: #7BA08A !important;
+            box-shadow: 0 0 25px #7BA08A, 0 0 50px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .concepts-hover:hover .node-circle {
+            background-color: #8B2626 !important;
+            box-shadow: 0 0 25px #8B2626, 0 0 50px rgba(0, 0, 0, 0.2) !important;
+        }
+
         @keyframes breathe {
             0%, 100% {
                 transform: translate(-50%, -50%) scale(0.8);
@@ -239,19 +250,21 @@ import '../styles/global.css';
 
         <a href="#" class="chapter-node fade-in-node"
             style="top: 12%; left: 70%; translate: -50% 0; animation-delay: 0.4s;">
-            <div class="node-circle"></div>
-            <span class="chapter-label">Part I</span>
-            <span class="chapter-title">Notes</span>
+            <div class="node-circle" style="margin-bottom: 0;"></div>
+            <div style="position: absolute; left: 100%; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 0.75rem; width: max-content;">
+                <span class="chapter-label" style="opacity: 0.6;">Part I</span>
+                <span class="chapter-title" style="margin-top: 0.25rem;">Notes</span>
+            </div>
         </a>
 
-        <a href="/astro-project-v2/quotes" class="chapter-node fade-in-node"
+        <a href="/astro-project-v2/quotes" class="chapter-node fade-in-node quotes-hover"
             style="top: 29%; left: 83%; animation-delay: 0.6s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part II</span>
             <span class="chapter-title">Quotes & Words I Love</span>
         </a>
 
-        <a href="/astro-project-v2/concepts" class="chapter-node fade-in-node"
+        <a href="/astro-project-v2/concepts" class="chapter-node fade-in-node concepts-hover"
             style="top: 70%; left: 78%; animation-delay: 0.8s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part III</span>
