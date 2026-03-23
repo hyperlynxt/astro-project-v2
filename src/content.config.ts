@@ -60,4 +60,22 @@ const linguisticTreats = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats };
+const notes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
+  schema: z.object({
+    title: z.string(),
+    body: z.string().optional(),
+    rating: z.number().min(0).max(3).optional(),
+    date: z.date(),
+    status: z.string().optional(),
+    note_type: z.string().optional(),
+    primary_discipline: z.string().optional(),
+    sub_discipline: z.string().optional(),
+    analytical_lens: z.string().optional(),
+    concepts_used: z.union([z.array(z.string()), z.string()]).optional(),
+    vocabulary: z.union([z.array(z.string()), z.string()]).optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes, linguisticTreats, notes };
