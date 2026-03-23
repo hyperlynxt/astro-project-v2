@@ -1,0 +1,1069 @@
+---
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const notes = await getCollection('notes');
+notes.sort((a, b) => {
+  const ratingA = a.data.rating || 0;
+  const ratingB = b.data.rating || 0;
+  if (ratingB !== ratingA) return ratingB - ratingA;
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Field Notes — Notes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        /* ── Base ── */
+        body {
+            background-color: #FDFCF9;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+            color: #2A2724;
+        }
+        /* ── Theme accent — pastel purple ── */
+        :root {
+            --accent:       #9B7CC8;   /* main purple */
+            --accent-light: #C4A8E8;   /* hover / star */
+            --accent-pale:  #EDE6F8;   /* soft background chips */
+            --accent-dark:  #7A5BA8;   /* deeper hover */
+        }
+
+        /* ── Nav ── */
+        .glass-nav { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+        /* ── Grid ── */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+        @media (min-width: 768px)  { .notes-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (min-width: 1280px) { .notes-grid { grid-template-columns: repeat(3,1fr); } }
+
+        /* ── Card ── */
+        .note-card {
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 24px;
+            padding: 2.2rem 2.2rem 1.8rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(42,39,35,0.10);
+            box-shadow: 0 2px 12px rgba(42,39,35,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 260px;
+        }
+        .note-card:hover {
+            background: #F8F4FD;
+            border-color: #C4A8E8;
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px -10px rgba(155,124,200,0.18);
+        }
+        .note-card:hover .card-title     { color: var(--accent); }
+        .note-card:hover .card-draft-icon { color: var(--accent); }
+
+        .card-expand {
+            position: absolute; top: 1.1rem; right: 1.1rem;
+            opacity: 0; transform: scale(0.85);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            color: rgba(42,39,35,0.28); font-size: 0.75rem; line-height: 1;
+        }
+        .note-card:hover .card-expand { opacity: 1; transform: scale(1); }
+
+        /* Draft icon (pencil-on-paper) */
+        .card-draft-icon {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        .card-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.45rem;
+            font-weight: 500;
+            line-height: 1.3;
+            color: #2A2724;
+            margin-bottom: 0.65rem;
+            transition: color 0.3s ease;
+        }
+        .card-body {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.01rem;
+            line-height: 1.65;
+            color: rgba(42,39,35,0.50);
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        /* ── Card footer ── */
+        .card-footer {
+            margin-top: 1.4rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(42,39,35,0.06);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .card-tag {
+            background: var(--accent-pale);
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .card-tag-neutral {
+            background: rgba(42,39,35,0.05);
+            color: rgba(42,39,35,0.50);
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .card-status-raw      { background: #FFF3E0; color: #B06A00; }
+        .card-status-refine   { background: var(--accent-pale); color: var(--accent); }
+        .card-status-meta     { background: #E8F5E9; color: #2E7D32; }
+
+        .dot-rating { display: flex; gap: 5px; align-items: center; }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent-pale);
+            border: 1.5px solid var(--accent-light);
+            transition: background 0.2s;
+        }
+        .dot.filled { background: var(--accent); border-color: var(--accent); }
+
+        /* ── Animations ── */
+        @keyframes cardIn     { from { opacity:0; transform: translateY(28px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes textReveal { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+        @keyframes sidebarIn  { to { opacity:1; transform:translateY(0); } }
+        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
+
+        .modal-card       { background-color:#FDFCF9; background-image:url("https://www.transparenttextures.com/patterns/natural-paper.png"); animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .modal-title-text { opacity:0; animation: textReveal 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards; }
+        .modal-reveal     { opacity:0; animation: textReveal 0.5s cubic-bezier(0.16,1,0.3,1) 0.28s forwards; }
+        .draw-line path   { stroke-dasharray:600; stroke-dashoffset:600; animation: drawStroke 1.1s cubic-bezier(0.22,1,0.36,1) 0.18s forwards; }
+        .sidebar-block    { opacity:0; transform:translateY(12px); animation: sidebarIn 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .sidebar-block:nth-child(1){ animation-delay:.20s; }
+        .sidebar-block:nth-child(2){ animation-delay:.32s; }
+        .sidebar-block:nth-child(3){ animation-delay:.44s; }
+
+        .swoosh-path { stroke-dasharray:100; stroke-dashoffset:100; }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+        .hand-underline-sm { position:relative; display:inline-block; }
+
+        /* ── Modal ── */
+        #modal-overlay { background: rgba(155,124,200,0.18); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .ink-stain {
+            background-color: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png"), radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, rgba(253,252,249,0) 60%);
+            background-position: 0px 0px, 40px 60px, 0 0;
+            background-repeat: repeat, repeat, no-repeat;
+        }
+        .modal-section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(42,39,35,0.35);
+            margin-bottom: 0.5rem;
+        }
+        .modal-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-pale);
+            color: var(--accent-dark);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
+        }
+        .modal-pill-neutral {
+            background: rgba(42,39,35,0.05);
+            color: rgba(42,39,35,0.55);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
+            display: inline-flex;
+        }
+        .modal-body-prose {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.2rem;
+            line-height: 1.85;
+            color: rgba(42,39,35,0.82);
+        }
+        .concept-chip {
+            background: rgba(155,124,200,0.08);
+            border: 1px solid rgba(155,124,200,0.25);
+            color: var(--accent-dark);
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem;
+            padding: 6px 14px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .concept-chip:hover { background: rgba(155,124,200,0.15); border-color: var(--accent-light); }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(155,124,200,0.4); }
+
+        /* ── Star filter ── */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
+        .star-filter.active { color: var(--accent) !important; opacity: 1 !important; }
+        .star-filter.active svg { color: var(--accent) !important; }
+        .star-filter.active svg path { fill: var(--accent) !important; fill-opacity: 0.7 !important; stroke: var(--accent) !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.45 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.12 !important; stroke: #A39985 !important; }
+        .star-filter:hover { transform: scale(1.12); }
+
+        /* ── Bottom bar ── */
+        #bottom-bar { transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease; }
+        #bottom-bar.hidden-bar { transform: translateY(120%); opacity: 0; pointer-events: none; }
+
+        .modal-scrollbar::-webkit-scrollbar { width: 4px; }
+        .modal-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-[#9B7CC8] selection:text-white">
+
+    <!-- ─────────────── NAV ─────────────── -->
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
+        <div class="flex items-center gap-10">
+            <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
+            <div class="h-8 w-px bg-[#E8E2D2]"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="/astro-project-v2/concepts" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Concepts</a>
+                <a href="/astro-project-v2/linguistic-treats" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Linguistic Treats</a>
+                <a href="/astro-project-v2/notes" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#9B7CC8] shadow-[0_0_8px_rgba(155,124,200,0.55)]"></span>
+                    <span class="font-serif text-xl text-[#2A2724]">Notes</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#9B7CC8] tracking-tight translate-y-1">hyperlynxt | teo</div>
+    </header>
+
+    <!-- ─────────────── HERO ─────────────── -->
+    <section class="w-full bg-gradient-to-b from-[#F5F2EB] to-transparent pt-20 pb-16 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="font-['Reenie_Beanie'] text-2xl text-[#8C8070] mb-2 block">thoughts mid-formation</span>
+            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-[#2A2724] mb-8">
+                Raw
+                <span class="italic hand-underline-sm inline-block">
+                    Notes
+                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                    </svg>
+                </span>
+            </h2>
+            <p class="font-serif italic text-lg md:text-xl text-[#8C8070] max-w-2xl mx-auto leading-relaxed">
+                Drafts, half-arguments, questions without answers. The working material before it becomes something else.
+            </p>
+        </div>
+    </section>
+
+    <!-- ─────────────── TOOLBAR ─────────────── -->
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+        <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">The Draft Pile</span>
+        <span id="count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{notes.length} notes</span>
+    </div>
+
+    <!-- ─────────────── GRID ─────────────── -->
+    <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-36">
+        <div class="notes-grid" id="notes-grid">
+            {notes.map((entry) => {
+                const statusClass =
+                    entry.data.status === 'Raw'      ? 'card-status-raw'  :
+                    entry.data.status === 'Refine'   ? 'card-status-refine' :
+                    'card-status-meta';
+
+                const dotsHtml = [1,2,3].map(i =>
+                    `<span class="dot${i <= (entry.data.rating||0) ? ' filled' : ''}"></span>`
+                ).join('');
+
+                const visibleTags = (entry.data.tags || []).slice(0, 2);
+
+                return (
+                    <article
+                        class="note-card"
+                        data-id={entry.id}
+                        data-title={entry.data.title}
+                        data-body={entry.data.body || ''}
+                        data-rating={entry.data.rating || 0}
+                        data-date={entry.data.date}
+                        data-status={entry.data.status || ''}
+                        data-notetype={entry.data.note_type || ''}
+                        data-discipline={entry.data.primary_discipline || ''}
+                        data-subdiscipline={entry.data.sub_discipline || ''}
+                        data-lens={entry.data.analytical_lens || ''}
+                        data-concepts={Array.isArray(entry.data.concepts_used) ? entry.data.concepts_used.join('||') : (entry.data.concepts_used || '')}
+                        data-vocabulary={Array.isArray(entry.data.vocabulary) ? entry.data.vocabulary.join('||') : (entry.data.vocabulary || '')}
+                        data-tags={(entry.data.tags || []).join(',')}
+                    >
+                        <!-- expand hint -->
+                        <span class="card-expand">↗</span>
+
+                        <!-- Draft icon -->
+                        <div class="card-draft-icon">
+                            <!-- Pencil-on-paper SVG -->
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="card-title">{entry.data.title}</h3>
+
+                        <!-- Body preview -->
+                        {entry.data.body && (
+                            <p class="card-body">{entry.data.body}</p>
+                        )}
+
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <div class="flex flex-wrap gap-1.5 items-center">
+                                <span class={`card-tag ${statusClass}`}>{entry.data.status || 'Raw'}</span>
+                                {entry.data.note_type && (
+                                    <span class="card-tag-neutral">{entry.data.note_type}</span>
+                                )}
+                                {visibleTags.map(tag => (
+                                    <span class="card-tag-neutral">{tag}</span>
+                                ))}
+                            </div>
+                            <!-- Dot rating -->
+                            <div class="dot-rating" set:html={dotsHtml}></div>
+                        </div>
+                    </article>
+                );
+            })}
+        </div>
+    </main>
+
+    <!-- ─────────────── BOTTOM BAR ─────────────── -->
+    <div id="bottom-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl border" style="background: rgba(253,252,249,0.92); backdrop-filter: blur(16px); border-color: rgba(155,124,200,0.18);">
+        <!-- Search -->
+        <div class="relative flex items-center">
+            <svg class="absolute left-3 w-3.5 h-3.5 text-[#2A2724]/30 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input
+                id="notes-search"
+                type="text"
+                placeholder="Search notes..."
+                class="pl-8 pr-4 py-1.5 w-[200px] text-sm font-sans rounded-full border focus:outline-none transition-all"
+                style="background: rgba(42,39,35,0.04); border-color: rgba(155,124,200,0.18); color: #2A2724;"
+            />
+        </div>
+
+        <div class="h-5 w-px" style="background: rgba(42,39,35,0.12);"></div>
+
+        <!-- Filter button -->
+        <button id="open-filter-btn" class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-sans font-medium transition-all hover:-translate-y-[1px]" style="color: rgba(42,39,35,0.6); border: 1px solid rgba(155,124,200,0.2);">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            Filter
+        </button>
+    </div>
+
+    <!-- ─────────────── NOTE MODAL ─────────────── -->
+    <div id="note-modal" style="display:none;" class="fixed inset-0 z-[100] items-center justify-center p-6 md:p-10" style="background: rgba(42,39,35,0.3); backdrop-filter: blur(8px);">
+        <div class="w-full max-w-[1200px] h-[90vh] bg-white rounded-[40px] shadow-[0_40px_100px_rgba(155,124,200,0.18)] overflow-hidden border border-white/60 relative ring-1 ring-[#C4A8E8]/20 modal-card">
+            <!-- Close -->
+            <div class="absolute top-0 right-0 p-7 z-[60]">
+                <button id="close-modal-btn" class="w-11 h-11 rounded-full bg-white/80 backdrop-blur-md border border-[#D5CCB6] shadow-sm hover:bg-[#F8F4FD] flex items-center justify-center text-[#2A2724] transition-all group">
+                    <svg class="w-4.5 h-4.5 opacity-60 group-hover:opacity-100 group-hover:rotate-90 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Two-column layout -->
+            <div class="h-full flex overflow-hidden ink-stain">
+
+                <!-- LEFT: main content -->
+                <div class="flex-1 overflow-y-auto modal-scrollbar px-10 md:px-16 lg:px-20 pt-14 pb-24 relative">
+                    <!-- Background letter watermark -->
+                    <div id="modal-bg-letter" class="absolute top-8 right-10 text-[22rem] font-serif font-bold text-[#2A2724]/[0.018] leading-none pointer-events-none select-none -z-10 -rotate-3"></div>
+
+                    <!-- Title + rating -->
+                    <div class="mb-8">
+                        <div class="flex items-start gap-4 mb-3">
+                            <div id="modal-dot-rating" class="dot-rating mt-3 flex-shrink-0"></div>
+                            <h1 id="modal-title" class="font-serif text-4xl md:text-5xl lg:text-[3.6rem] font-medium text-[#2A2724] leading-[1.08] tracking-tight italic modal-title-text relative">
+                                <!-- filled by JS -->
+                                <svg id="modal-title-underline" class="absolute h-[12px] text-[#9B7CC8] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:none;">
+                                    <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
+                                </svg>
+                            </h1>
+                        </div>
+                        <!-- Status + date row -->
+                        <div class="flex items-center gap-3 ml-12 flex-wrap">
+                            <span id="modal-status" class="modal-pill"></span>
+                            <span id="modal-notetype" class="modal-pill-neutral hidden"></span>
+                            <span id="modal-date" class="font-['Reenie_Beanie'] text-xl text-[#A39985] translate-y-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Divider line -->
+                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/40 via-[#C4A8E8]/10 to-transparent mb-8"></div>
+
+                    <!-- Body text -->
+                    <div id="modal-body" class="modal-body-prose modal-reveal mb-12"></div>
+
+                    <!-- Concepts used -->
+                    <div id="modal-concepts-section" class="mb-8 hidden">
+                        <p class="modal-section-label">!! Concepts Used</p>
+                        <div id="modal-concepts" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <!-- Vocabulary -->
+                    <div id="modal-vocab-section" class="mb-8 hidden">
+                        <p class="modal-section-label">Vocabulary</p>
+                        <div id="modal-vocab" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div id="modal-tags-section" class="mb-4 hidden">
+                        <p class="modal-section-label">Tags</p>
+                        <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: metadata sidebar -->
+                <div class="w-[280px] flex-shrink-0 border-l px-7 py-12 overflow-y-auto modal-scrollbar space-y-7 bg-[#FDFCF9]/70" style="border-color: rgba(155,124,200,0.12);">
+
+                    <!-- Discipline -->
+                    <div class="sidebar-block">
+                        <p class="modal-section-label">Primary Discipline</p>
+                        <p id="sidebar-discipline" class="font-serif text-[1.05rem] text-[#2A2724]/80 leading-snug"></p>
+                    </div>
+
+                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
+
+                    <!-- Sub-discipline -->
+                    <div id="sidebar-subdiscipline-block" class="sidebar-block hidden">
+                        <p class="modal-section-label">Sub-discipline</p>
+                        <p id="sidebar-subdiscipline" class="font-serif text-[1.05rem] text-[#2A2724]/75 leading-snug"></p>
+                    </div>
+
+                    <div id="sidebar-sub-divider" class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent hidden"></div>
+
+                    <!-- Analytical Lens -->
+                    <div id="sidebar-lens-block" class="sidebar-block hidden">
+                        <p class="modal-section-label">Analytical Lens</p>
+                        <p id="sidebar-lens" class="font-serif italic text-[#9B7CC8] text-[1.05rem] leading-snug"></p>
+                    </div>
+
+                    <div id="sidebar-lens-divider" class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent hidden"></div>
+
+                    <!-- Rating visual -->
+                    <div class="sidebar-block">
+                        <p class="modal-section-label">Rating</p>
+                        <div id="sidebar-dots" class="dot-rating mt-1"></div>
+                    </div>
+
+                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
+
+                    <!-- Status -->
+                    <div class="sidebar-block">
+                        <p class="modal-section-label">Status</p>
+                        <div class="flex flex-col gap-1.5 mt-1" id="sidebar-status-pipeline">
+                            <!-- JS fills steps -->
+                        </div>
+                    </div>
+
+                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
+
+                    <!-- Date -->
+                    <div class="sidebar-block">
+                        <p class="modal-section-label">Date</p>
+                        <p id="sidebar-date" class="font-['Reenie_Beanie'] text-[1.4rem] text-[#A39985] leading-tight translate-y-0.5"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ─────────────── FILTER MODAL ─────────────── -->
+    <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] items-center justify-center p-6 bg-[#F5F2EB]/40 backdrop-blur-md">
+        <div class="relative z-20 w-full max-w-[620px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] ink-stain">
+            <!-- Header -->
+            <div class="px-7 pt-9 pb-6 border-b border-[#C4A8E8]/15 flex flex-col items-center justify-center bg-white/50 backdrop-blur-md flex-shrink-0 relative">
+                <div class="text-center w-full">
+                    <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
+                        Filter & Sort
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                            <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
+                        </svg>
+                    </h2>
+                </div>
+                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#D5CCB6]/20 flex items-center justify-center text-[#2A2724]/50 hover:text-[#9B7CC8] hover:bg-[#F8F4FD] transition-all group">
+                    <svg class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="px-7 py-6 overflow-y-auto modal-scrollbar flex-grow space-y-7">
+
+                <!-- Sort -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Sort By</h3>
+                        </div>
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#D5CCB6]/20 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#9B7CC8] transition-all">
+                            <span id="sort-direction-label">Descending</span>
+                            <svg id="sort-direction-icon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-sort="default" class="sort-btn px-4 py-2 bg-[#9B7CC8] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#9B7CC8] transition-all">Default</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="rating" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Rating</button>
+                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Date</button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+
+                <!-- Min Rating -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Rating</h3>
+                        </div>
+                        <span id="min-rating-label" class="font-['Reenie_Beanie'] text-lg text-[#9B7CC8]">0+ dots</span>
+                    </div>
+                    <div class="flex gap-4 p-3.5 bg-white border border-[#C4A8E8]/20 rounded-2xl w-fit" id="filter-rating-dots">
+                        <button data-rating="0" class="star-filter active active:scale-95">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.6"></circle>
+                            </svg>
+                        </button>
+                        <button data-rating="1" class="star-filter active:scale-95">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.6"></circle>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter active:scale-95">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.6"></circle>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter active:scale-95">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.6"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+
+                <!-- Status filter -->
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Status</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="filter-status-container">
+                        {['Raw','Refine','Metastasis / Converted'].map(s => (
+                            <button data-status={s} class="status-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{s}</button>
+                        ))}
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+
+                <!-- Note type filter -->
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Note Type</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="filter-type-container">
+                        {['Question','Observation','Synthesis','Analysis','Argument','Interpersonal'].map(t => (
+                            <button data-notetype={t} class="type-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{t}</button>
+                        ))}
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+
+                <!-- Discipline filter -->
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Discipline</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="filter-discipline-container">
+                        {['Sociology','Psychology','Linguistics','Cognitive Science'].map(d => (
+                            <button data-discipline={d} class="discipline-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{d}</button>
+                        ))}
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+
+                <!-- Tags -->
+                <div class="pb-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Tags</h3>
+                    </div>
+                    <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Footer actions -->
+            <div class="px-7 pb-6 pt-4 border-t border-[#C4A8E8]/10 flex items-center justify-between bg-white/60 flex-shrink-0">
+                <div class="flex items-center gap-2 text-sm font-sans text-[#2A2724]/50">
+                    <span id="filter-result-count" class="font-medium text-[#9B7CC8]">{notes.length} notes</span>
+                    <span>match</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="clear-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-[#2A2724]/60 border border-[#D5CCB6]/30 hover:border-[#C4A8E8] hover:text-[#9B7CC8] transition-all">Clear</button>
+                    <button id="apply-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-white transition-all hover:-translate-y-[1px]" style="background: #9B7CC8; box-shadow: 0 4px 14px rgba(155,124,200,0.35);">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─────────────── SCRIPTS ─────────────── -->
+    <script>
+        const cards       = document.querySelectorAll('.note-card');
+        const notesGrid   = document.getElementById('notes-grid');
+        const noteModal   = document.getElementById('note-modal');
+        const filterModal = document.getElementById('filter-modal');
+        const bottomBar   = document.getElementById('bottom-bar');
+
+        // ── Filter state ──
+        let filterState = {
+            query:       '',
+            sort:        'default',
+            sortOrder:   'desc',
+            minRating:   0,
+            statuses:    [],
+            noteTypes:   [],
+            disciplines: [],
+            tags:        [],
+        };
+
+        // ── Bottom bar toggle ──
+        function toggleBottomBar(show) {
+            bottomBar.classList.toggle('hidden-bar', !show);
+        }
+
+        // ── Open note modal ──
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const title       = card.dataset.title   || '';
+                const body        = card.dataset.body    || '';
+                const rating      = parseInt(card.dataset.rating) || 0;
+                const date        = card.dataset.date    || '';
+                const status      = card.dataset.status  || '';
+                const noteType    = card.dataset.notetype || '';
+                const discipline  = card.dataset.discipline || '';
+                const subdiscipl  = card.dataset.subdiscipline || '';
+                const lens        = card.dataset.lens    || '';
+                const conceptsRaw = card.dataset.concepts || '';
+                const vocabRaw    = card.dataset.vocabulary || '';
+                const tagsRaw     = card.dataset.tags    || '';
+
+                // Title
+                const titleEl = document.getElementById('modal-title');
+                titleEl.childNodes[0]?.nodeType === Node.TEXT_NODE
+                    ? (titleEl.firstChild.textContent = title)
+                    : titleEl.insertBefore(document.createTextNode(title), titleEl.firstChild);
+                titleEl.firstChild.textContent = title;
+
+                // Underline animation
+                const underlineSvg = document.getElementById('modal-title-underline');
+                requestAnimationFrame(() => {
+                    const rect = titleEl.getBoundingClientRect();
+                    const parentRect = titleEl.parentElement.getBoundingClientRect();
+                    underlineSvg.style.width = (rect.width * 1.05) + 'px';
+                    underlineSvg.style.top   = (rect.bottom - parentRect.top - rect.height * 0.12) + 'px';
+                    underlineSvg.style.left  = (rect.left  - parentRect.left - rect.width  * 0.025) + 'px';
+                    underlineSvg.style.display = 'block';
+                    const path = underlineSvg.querySelector('path');
+                    path.style.animation = 'none'; void path.offsetWidth;
+                    path.style.animation = 'drawSwoosh 0.8s ease-out 0.4s forwards';
+                });
+
+                // Watermark letter
+                document.getElementById('modal-bg-letter').textContent = title.charAt(0).toUpperCase();
+
+                // Body
+                document.getElementById('modal-body').textContent = body;
+
+                // Dot rating (header)
+                const headerDots = document.getElementById('modal-dot-rating');
+                headerDots.innerHTML = [1,2,3].map(i =>
+                    `<span class="dot${i <= rating ? ' filled' : ''}"></span>`
+                ).join('');
+
+                // Sidebar dots
+                const sidebarDots = document.getElementById('sidebar-dots');
+                sidebarDots.innerHTML = [1,2,3].map(i =>
+                    `<span class="dot${i <= rating ? ' filled' : ''}"></span>`
+                ).join('');
+
+                // Status (header pill)
+                const statusEl = document.getElementById('modal-status');
+                statusEl.textContent = status;
+                statusEl.className = 'modal-pill ' + (
+                    status === 'Raw'    ? 'bg-[#FFF3E0] !text-[#B06A00]' :
+                    status === 'Refine' ? '' :
+                    'bg-[#E8F5E9] !text-[#2E7D32]'
+                );
+
+                // Status pipeline (sidebar)
+                const pipeline = ['Raw', 'Refine', 'Metastasis / Converted'];
+                const pipelineEl = document.getElementById('sidebar-status-pipeline');
+                pipelineEl.innerHTML = pipeline.map((step, i) => {
+                    const current = step.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(step.toLowerCase());
+                    const past    = pipeline.findIndex(s => s.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(s.toLowerCase())) > i;
+                    return `<div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full flex-shrink-0 ${current ? 'bg-[#9B7CC8]' : past ? 'bg-[#C4A8E8]' : 'bg-[#E8E2D2]'}"></span>
+                        <span class="font-serif text-[0.9rem] ${current ? 'text-[#9B7CC8] font-medium' : 'text-[#2A2724]/40'}">${step}</span>
+                    </div>`;
+                }).join('');
+
+                // Note type
+                const noteTypeEl = document.getElementById('modal-notetype');
+                if (noteType) { noteTypeEl.textContent = noteType; noteTypeEl.classList.remove('hidden'); }
+                else           noteTypeEl.classList.add('hidden');
+
+                // Date
+                const dateFormatted = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                document.getElementById('modal-date').textContent    = dateFormatted;
+                document.getElementById('sidebar-date').textContent  = dateFormatted;
+
+                // Discipline
+                document.getElementById('sidebar-discipline').textContent = discipline || '—';
+
+                // Sub-discipline
+                const subBlock   = document.getElementById('sidebar-subdiscipline-block');
+                const subDivider = document.getElementById('sidebar-sub-divider');
+                if (subdiscipl) {
+                    document.getElementById('sidebar-subdiscipline').textContent = subdiscipl;
+                    subBlock.classList.remove('hidden'); subDivider.classList.remove('hidden');
+                } else {
+                    subBlock.classList.add('hidden'); subDivider.classList.add('hidden');
+                }
+
+                // Analytical lens
+                const lensBlock   = document.getElementById('sidebar-lens-block');
+                const lensDivider = document.getElementById('sidebar-lens-divider');
+                if (lens) {
+                    document.getElementById('sidebar-lens').textContent = lens;
+                    lensBlock.classList.remove('hidden'); lensDivider.classList.remove('hidden');
+                } else {
+                    lensBlock.classList.add('hidden'); lensDivider.classList.add('hidden');
+                }
+
+                // Concepts used
+                const conceptsSec = document.getElementById('modal-concepts-section');
+                const conceptsEl  = document.getElementById('modal-concepts');
+                if (conceptsRaw) {
+                    const items = conceptsRaw.split('||').map(s => s.trim()).filter(Boolean);
+                    conceptsEl.innerHTML = items.map(c =>
+                        `<span class="concept-chip">${c}</span>`
+                    ).join('');
+                    conceptsSec.classList.remove('hidden');
+                } else {
+                    conceptsSec.classList.add('hidden');
+                }
+
+                // Vocabulary
+                const vocabSec = document.getElementById('modal-vocab-section');
+                const vocabEl  = document.getElementById('modal-vocab');
+                if (vocabRaw) {
+                    const items = vocabRaw.split('||').map(s => s.trim()).filter(Boolean);
+                    vocabEl.innerHTML = items.map(v =>
+                        `<span class="font-['EB_Garamond'] italic text-[#9B7CC8] text-[1.05rem] bg-[#EDE6F8]/60 px-3 py-1 rounded-lg">${v}</span>`
+                    ).join('');
+                    vocabSec.classList.remove('hidden');
+                } else {
+                    vocabSec.classList.add('hidden');
+                }
+
+                // Tags
+                const tagsSec = document.getElementById('modal-tags-section');
+                const tagsEl  = document.getElementById('modal-tags');
+                if (tagsRaw) {
+                    const items = tagsRaw.split(',').map(s => s.trim()).filter(Boolean);
+                    tagsEl.innerHTML = items.map(t =>
+                        `<span class="font-sans text-[9px] font-bold uppercase tracking-[0.1em] px-3 py-1 rounded-md" style="background:rgba(42,39,35,0.05);color:rgba(42,39,35,0.45);">${t}</span>`
+                    ).join('');
+                    tagsSec.classList.remove('hidden');
+                } else {
+                    tagsSec.classList.add('hidden');
+                }
+
+                noteModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                toggleBottomBar(false);
+                noteModal.querySelectorAll('.overflow-y-auto,.modal-scrollbar').forEach(el => el.scrollTop = 0);
+            });
+        });
+
+        function closeModal() {
+            noteModal.style.display = 'none';
+            if (filterModal.style.display !== 'flex') {
+                document.body.style.overflow = '';
+                toggleBottomBar(true);
+            }
+        }
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        noteModal.addEventListener('click', e => { if (e.target === noteModal) closeModal(); });
+
+        // ── Filter modal ──
+        function openFilterModal() {
+            filterModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            toggleBottomBar(false);
+            renderTagFilters();
+            updatePreviewCount();
+        }
+        function closeFilterModal() {
+            filterModal.style.display = 'none';
+            if (noteModal.style.display !== 'flex') {
+                document.body.style.overflow = '';
+                toggleBottomBar(true);
+            }
+        }
+        document.getElementById('open-filter-btn').addEventListener('click', openFilterModal);
+        document.getElementById('close-filter-btn').addEventListener('click', closeFilterModal);
+        document.getElementById('apply-filters-btn').addEventListener('click', () => { applyFilters(); closeFilterModal(); });
+        document.getElementById('clear-filters-btn').addEventListener('click', clearAllFilters);
+        filterModal.addEventListener('click', e => { if (e.target === filterModal) closeFilterModal(); });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { closeModal(); closeFilterModal(); }
+        });
+
+        // ── Sort buttons ──
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterState.sort = btn.dataset.sort;
+                document.querySelectorAll('.sort-btn').forEach(b => {
+                    b.classList.remove('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                    b.classList.add('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
+                });
+                btn.classList.remove('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
+                btn.classList.add('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                updatePreviewCount();
+            });
+        });
+
+        document.getElementById('sort-direction-toggle').addEventListener('click', function () {
+            filterState.sortOrder = filterState.sortOrder === 'desc' ? 'asc' : 'desc';
+            document.getElementById('sort-direction-label').textContent = filterState.sortOrder === 'desc' ? 'Descending' : 'Ascending';
+            document.getElementById('sort-direction-icon').style.transform = filterState.sortOrder === 'asc' ? 'rotate(180deg)' : '';
+            updatePreviewCount();
+        });
+
+        // ── Dot rating filter ──
+        document.querySelectorAll('#filter-rating-dots .star-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const rating = parseInt(btn.dataset.rating);
+                filterState.minRating = rating;
+                document.querySelectorAll('#filter-rating-dots .star-filter').forEach((s, idx) => {
+                    s.classList.toggle('active', idx <= rating);
+                });
+                document.getElementById('min-rating-label').textContent = `${rating}+ dots`;
+                updatePreviewCount();
+            });
+        });
+
+        // ── Status filter ──
+        document.querySelectorAll('.status-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const s = btn.dataset.status;
+                const idx = filterState.statuses.indexOf(s);
+                if (idx === -1) { filterState.statuses.push(s); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.statuses.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                updatePreviewCount();
+            });
+        });
+
+        // ── Note type filter ──
+        document.querySelectorAll('.type-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const t = btn.dataset.notetype;
+                const idx = filterState.noteTypes.indexOf(t);
+                if (idx === -1) { filterState.noteTypes.push(t); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.noteTypes.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                updatePreviewCount();
+            });
+        });
+
+        // ── Discipline filter ──
+        document.querySelectorAll('.discipline-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const d = btn.dataset.discipline;
+                const idx = filterState.disciplines.indexOf(d);
+                if (idx === -1) { filterState.disciplines.push(d); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.disciplines.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                updatePreviewCount();
+            });
+        });
+
+        // ── Tag filters (dynamic) ──
+        function renderTagFilters() {
+            const container = document.getElementById('filter-tags-container');
+            const allTags   = new Set();
+            cards.forEach(c => (c.dataset.tags || '').split(',').filter(Boolean).forEach(t => allTags.add(t.trim())));
+            container.innerHTML = '';
+            allTags.forEach(tag => {
+                const btn = document.createElement('button');
+                btn.textContent = tag;
+                btn.dataset.tag = tag;
+                const active = filterState.tags.includes(tag);
+                btn.className = `tag-dyn-btn px-4 py-2 font-sans text-sm font-medium rounded-full border transition-all shadow-sm ${active ? 'bg-[#9B7CC8] text-white border-[#9B7CC8]' : 'bg-white text-[#2A2724]/70 border-[#D5CCB6]/30 hover:border-[#C4A8E8]'}`;
+                btn.addEventListener('click', () => {
+                    const idx = filterState.tags.indexOf(tag);
+                    if (idx === -1) { filterState.tags.push(tag); btn.classList.add('bg-[#9B7CC8]','text-white','border-[#9B7CC8]'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                    else            { filterState.tags.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white','border-[#9B7CC8]'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                    updatePreviewCount();
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        // ── Match logic ──
+        function cardMatches(card) {
+            const title      = (card.dataset.title      || '').toLowerCase();
+            const body       = (card.dataset.body       || '').toLowerCase();
+            const rating     = parseInt(card.dataset.rating) || 0;
+            const status     = (card.dataset.status     || '').toLowerCase();
+            const noteType   = (card.dataset.notetype   || '').toLowerCase();
+            const discipline = (card.dataset.discipline || '').toLowerCase();
+            const tags       = (card.dataset.tags       || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+
+            const q = filterState.query;
+            if (q && !title.includes(q) && !body.includes(q)) return false;
+            if (rating < filterState.minRating) return false;
+            if (filterState.statuses.length   && !filterState.statuses.some(s => status.includes(s.toLowerCase()))) return false;
+            if (filterState.noteTypes.length  && !filterState.noteTypes.some(t => noteType.includes(t.toLowerCase()))) return false;
+            if (filterState.disciplines.length && !filterState.disciplines.some(d => discipline.includes(d.toLowerCase()))) return false;
+            if (filterState.tags.length       && !filterState.tags.some(t => tags.includes(t.toLowerCase()))) return false;
+            return true;
+        }
+
+        function updatePreviewCount() {
+            const count = Array.from(cards).filter(c => cardMatches(c)).length;
+            document.getElementById('filter-result-count').textContent = `${count} notes`;
+        }
+
+        const originalOrder = Array.from(cards);
+        function applyFilters() {
+            const arr = Array.from(cards);
+            arr.forEach(c => { c.style.display = cardMatches(c) ? '' : 'none'; });
+            const visible  = arr.filter(c => c.style.display !== 'none');
+            const isDesc   = filterState.sortOrder === 'desc';
+
+            const sortTarget = filterState.sort === 'default'
+                ? originalOrder.filter(c => visible.includes(c))
+                : visible;
+
+            if (filterState.sort !== 'default') {
+                sortTarget.sort((a, b) => {
+                    if (filterState.sort === 'alphabetical') {
+                        const cmp = a.dataset.title.localeCompare(b.dataset.title);
+                        return isDesc ? -cmp : cmp;
+                    }
+                    if (filterState.sort === 'rating') {
+                        const cmp = parseInt(a.dataset.rating) - parseInt(b.dataset.rating);
+                        return isDesc ? -cmp : cmp;
+                    }
+                    if (filterState.sort === 'date') {
+                        const cmp = new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+                        return isDesc ? -cmp : cmp;
+                    }
+                    return 0;
+                });
+            }
+
+            sortTarget.forEach(c => notesGrid.appendChild(c));
+
+            const total = cards.length;
+            document.getElementById('count-label').textContent =
+                visible.length === total ? `${total} notes` : `${visible.length} of ${total} notes`;
+        }
+
+        function clearAllFilters() {
+            filterState = { query:'', sort:'default', sortOrder:'desc', minRating:0, statuses:[], noteTypes:[], disciplines:[], tags:[] };
+            document.getElementById('notes-search').value = '';
+            // reset sort buttons
+            document.querySelectorAll('.sort-btn').forEach((b,i) => {
+                b.classList.remove('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                b.classList.add('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
+                if (i === 0) { b.classList.add('bg-[#9B7CC8]','text-white','shadow-lg'); b.classList.remove('bg-white','text-[#2A2724]/70'); }
+            });
+            document.querySelectorAll('#filter-rating-dots .star-filter').forEach((s,i) => s.classList.toggle('active', i === 0));
+            document.getElementById('min-rating-label').textContent = '0+ dots';
+            document.querySelectorAll('.status-filter-btn,.type-filter-btn,.discipline-filter-btn').forEach(b => {
+                b.classList.remove('bg-[#9B7CC8]','text-white');
+                b.classList.add('bg-white','text-[#2A2724]/70');
+            });
+            cards.forEach(c => { c.style.display = ''; });
+            document.getElementById('count-label').textContent = `${cards.length} notes`;
+            renderTagFilters();
+            updatePreviewCount();
+        }
+
+        // ── Live search ──
+        document.getElementById('notes-search').addEventListener('input', e => {
+            filterState.query = e.target.value.toLowerCase().trim();
+            applyFilters();
+        });
+
+        updatePreviewCount();
+    </script>
+</body>
+</html>
