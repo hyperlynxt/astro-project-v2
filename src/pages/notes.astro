@@ -200,8 +200,6 @@ notes.sort((a, b) => {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: var(--accent-pale);
-            color: var(--accent-dark);
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             font-weight: 600;
@@ -210,6 +208,9 @@ notes.sort((a, b) => {
             padding: 5px 12px;
             border-radius: 100px;
         }
+        .modal-status-raw    { background: #FFF3E0; color: #B06A00; }
+        .modal-status-refine { background: var(--accent-pale); color: var(--accent); }
+        .modal-status-meta   { background: #E8F5E9; color: #2E7D32; }
         .modal-pill-neutral {
             background: rgba(42,39,35,0.05);
             color: rgba(42,39,35,0.55);
@@ -736,9 +737,9 @@ notes.sort((a, b) => {
                 const statusEl = document.getElementById('modal-status');
                 statusEl.textContent = status;
                 statusEl.className = 'modal-pill ' + (
-                    status === 'Raw'    ? 'bg-[#FFF3E0] !text-[#B06A00]' :
-                    status === 'Refine' ? '' :
-                    'bg-[#E8F5E9] !text-[#2E7D32]'
+                    status === 'Raw'    ? 'modal-status-raw' :
+                    status === 'Refine' ? 'modal-status-refine' :
+                    'modal-status-meta'
                 );
 
                 // Status pipeline (sidebar)
@@ -747,9 +748,19 @@ notes.sort((a, b) => {
                 pipelineEl.innerHTML = pipeline.map((step, i) => {
                     const current = step.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(step.toLowerCase());
                     const past    = pipeline.findIndex(s => s.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(s.toLowerCase())) > i;
+                    
+                    let dotColor = 'bg-[#E8E2D2]';
+                    if (current) {
+                        if (status === 'Raw') dotColor = 'bg-[#B06A00]';
+                        else if (status === 'Refine') dotColor = 'bg-[#9B7CC8]';
+                        else dotColor = 'bg-[#2E7D32]';
+                    } else if (past) {
+                        dotColor = 'bg-[#C4A8E8]';
+                    }
+
                     return `<div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full flex-shrink-0 ${current ? 'bg-[#9B7CC8]' : past ? 'bg-[#C4A8E8]' : 'bg-[#E8E2D2]'}"></span>
-                        <span class="font-serif text-[0.9rem] ${current ? 'text-[#9B7CC8] font-medium' : 'text-[#2A2724]/40'}">${step}</span>
+                        <span class="w-2 h-2 rounded-full flex-shrink-0 ${dotColor}"></span>
+                        <span class="font-serif text-[0.9rem] ${current ? (status === 'Raw' ? 'text-[#B06A00] font-medium' : status === 'Refine' ? 'text-[#9B7CC8] font-medium' : 'text-[#2E7D32] font-medium') : 'text-[#2A2724]/40'}">${step}</span>
                     </div>`;
                 }).join('');
 
