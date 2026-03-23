@@ -3,7 +3,12 @@ import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
 const words = await getCollection('linguisticTreats');
-words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime());
+words.sort((a, b) => {
+  const starsA = a.data.stars || 0;
+  const starsB = b.data.stars || 0;
+  if (starsB !== starsA) return starsB - starsA;
+  return new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime();
+});
 ---
 
 <html lang="en">
@@ -436,19 +441,25 @@ words.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.dat
             document.getElementById('filter-result-count').textContent = `${count} words`;
         }
 
+        const originalOrder = Array.from(cards);
         function applyFilters() {
             const cardsArr = Array.from(cards);
             cardsArr.forEach(c => { c.style.display = cardMatchesFilters(c) ? '' : 'none'; });
             const visible = cardsArr.filter(c => c.style.display !== 'none');
             const isDesc = filterState.sortOrder === 'desc';
+            
+            const sortTarget = filterState.sort === 'default' ? originalOrder.filter(c => visible.includes(c)) : visible;
+            
             if (filterState.sort !== 'default') {
-                visible.sort((a, b) => {
+                sortTarget.sort((a, b) => {
                     if (filterState.sort === 'alphabetical') { const cmp = a.dataset.word.localeCompare(b.dataset.word); return isDesc ? -cmp : cmp; }
                     if (filterState.sort === 'most-stars')   { const cmp = parseInt(a.dataset.stars) - parseInt(b.dataset.stars); return isDesc ? -cmp : cmp; }
                     return 0;
                 });
-                visible.forEach(c => wordsGrid.appendChild(c));
             }
+            
+            sortTarget.forEach(c => wordsGrid.appendChild(c));
+            
             const total = cards.length;
             document.getElementById('count-label').textContent =
                 visible.length === total ? `${total} entries` : `${visible.length} of ${total} entries`;
