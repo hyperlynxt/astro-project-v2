@@ -383,26 +383,13 @@ notes.sort((a, b) => {
     </main>
 
     <!-- ─────────────── BOTTOM BAR ─────────────── -->
-    <div id="bottom-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl border" style="background: rgba(253,252,249,0.92); backdrop-filter: blur(16px); border-color: rgba(155,124,200,0.18);">
-        <!-- Search -->
-        <div class="relative flex items-center">
-            <svg class="absolute left-3 w-3.5 h-3.5 text-[#2A2724]/30 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input
-                id="notes-search"
-                type="text"
-                placeholder="Search notes..."
-                class="pl-8 pr-4 py-1.5 w-[200px] text-sm font-sans rounded-full border focus:outline-none transition-all"
-                style="background: rgba(42,39,35,0.04); border-color: rgba(155,124,200,0.18); color: #2A2724;"
-            />
+    <div id="bottom-bar" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50">
+        <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="const input = document.getElementById('notes-search'); if(input) input.focus()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-[#9B7CC8] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="notes-search" placeholder="Search notes" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
         </div>
-
-        <div class="h-5 w-px" style="background: rgba(42,39,35,0.12);"></div>
-
-        <!-- Filter button -->
-        <button id="open-filter-btn" class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-sans font-medium transition-all hover:-translate-y-[1px]" style="color: rgba(42,39,35,0.6); border: 1px solid rgba(155,124,200,0.2);">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-            Filter
-        </button>
+        <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
+        <button id="open-filter-btn" class="bg-[#9B7CC8] hover:bg-[#7A5BA8] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
     </div>
 
     <!-- ─────────────── NOTE MODAL ─────────────── -->
