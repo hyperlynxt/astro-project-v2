@@ -230,6 +230,7 @@ notes.sort((a, b) => {
             color: rgba(42,39,35,0.82);
         }
         .concept-chip {
+            display: inline-block;
             background: rgba(155,124,200,0.08);
             border: 1px solid rgba(155,124,200,0.25);
             color: var(--accent-dark);
@@ -707,7 +708,7 @@ notes.sort((a, b) => {
                     const rect = titleEl.getBoundingClientRect();
                     const parentRect = titleEl.parentElement.getBoundingClientRect();
                     underlineSvg.style.width = (rect.width * 1.05) + 'px';
-                    underlineSvg.style.top   = (rect.bottom - parentRect.top - rect.height * 0.12) + 'px';
+                    underlineSvg.style.top   = (rect.bottom - parentRect.top + 2) + 'px';
                     underlineSvg.style.left  = (rect.left  - parentRect.left - rect.width  * 0.025) + 'px';
                     underlineSvg.style.display = 'block';
                     const path = underlineSvg.querySelector('path');
@@ -801,9 +802,11 @@ notes.sort((a, b) => {
                 const conceptsSec = document.getElementById('modal-concepts-section');
                 const conceptsEl  = document.getElementById('modal-concepts');
                 if (conceptsRaw) {
-                    const items = conceptsRaw.split('||').map(s => s.trim()).filter(Boolean);
+                    // Support both || and comma delimiters
+                    const delimiter = conceptsRaw.includes('||') ? '||' : ',';
+                    const items = conceptsRaw.split(delimiter).map(s => s.trim()).filter(Boolean);
                     conceptsEl.innerHTML = items.map(c =>
-                        `<span class="concept-chip">${c}</span>`
+                        `<span class="font-['EB_Garamond'] text-[#7A5BA8] text-[0.95rem] bg-[#9B7CC8]/10 border border-[#9B7CC8]/25 px-3 py-1.5 rounded-xl transition-all hover:bg-[#9B7CC8]/20">${c}</span>`
                     ).join('');
                     conceptsSec.classList.remove('hidden');
                 } else {
@@ -814,7 +817,9 @@ notes.sort((a, b) => {
                 const vocabSec = document.getElementById('modal-vocab-section');
                 const vocabEl  = document.getElementById('modal-vocab');
                 if (vocabRaw) {
-                    const items = vocabRaw.split('||').map(s => s.trim()).filter(Boolean);
+                    // Support both || and comma delimiters
+                    const delimiter = vocabRaw.includes('||') ? '||' : ',';
+                    const items = vocabRaw.split(delimiter).map(s => s.trim()).filter(Boolean);
                     vocabEl.innerHTML = items.map(v =>
                         `<span class="font-['EB_Garamond'] italic text-[#9B7CC8] text-[1.05rem] bg-[#EDE6F8]/60 px-3 py-1 rounded-lg">${v}</span>`
                     ).join('');
