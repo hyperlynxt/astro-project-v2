@@ -299,6 +299,8 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
                     data-date={essay.data.date_published.toISOString()}
                     data-status={essay.data.status}
                     data-tags={essay.data.tags.join(',')}
+                    data-discipline={essay.data.disciplines_touched.join(',')}
+                    data-lens={essay.data.analytical_lens}
                 >
                     <span class="card-expand">↗</span>
                     <div class="card-number">Essay #{essay.data.essay_number.toString().padStart(3, '0')}</div>
@@ -353,6 +355,18 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
                         ))}
                     </div>
                 </div>
+                <div>
+                    <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Disciplines</h3>
+                    <div class="flex flex-wrap gap-2" id="filter-disciplines">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Analytical Lens</h3>
+                    <div class="flex flex-wrap gap-2" id="filter-lens">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
             </div>
             <div class="filter-footer" style="padding: 1.5rem 2rem; border-top: 1px solid rgba(123,160,138,0.1); display: flex; justify-content: space-between; align-items: center;">
                 <span id="filter-count" class="font-serif italic text-ink/40 text-sm"></span>
@@ -370,14 +384,82 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         const closeFilterBtn = document.getElementById('close-filter-btn');
         const applyFilterBtn = document.getElementById('apply-filter');
         const sortBtns = document.querySelectorAll('.sort-btn');
-        const statusBtns = document.querySelectorAll('.status-btn');
 
         let currentSort = 'number';
-        let currentFilters = new Set();
+        let currentFilters = {
+            status: new Set(),
+            discipline: new Set(),
+            lens: new Set()
+        };
+
+        // Initialize Dynamic Filters
+        function initFilters() {
+            const statusCont = document.getElementById('filter-status');
+            const discCont = document.getElementById('filter-disciplines');
+            const lensCont = document.getElementById('filter-lens');
+
+            const statuses = new Set();
+            const disciplines = new Set();
+            const lenses = new Set();
+
+            cards.forEach(c => {
+                statuses.add(c.dataset.status);
+                c.dataset.discipline.split(',').filter(Boolean).forEach(d => disciplines.add(d.trim()));
+                lenses.add(c.dataset.lens);
+            });
+
+            renderFilterButtons(statusCont, statuses, 'status');
+            renderFilterButtons(discCont, disciplines, 'discipline');
+            renderFilterButtons(lensCont, lenses, 'lens');
+        }
+
+        function renderFilterButtons(container, items, category) {
+            container.innerHTML = '';
+            Array.from(items).sort().forEach(item => {
+                const btn = document.createElement('button');
+                btn.textContent = item;
+                btn.className = 'px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 transition-all hover:border-[#7BA08A]/50';
+                btn.onclick = () => {
+                    if (currentFilters[category].has(item)) {
+                        currentFilters[category].delete(item);
+                        btn.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg', 'border-[#7BA08A]');
+                        btn.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                    } else {
+                        currentFilters[category].add(item);
+                        btn.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg', 'border-[#7BA08A]');
+                        btn.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                    }
+                    updateFilterCount();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function updateFilterCount() {
+            const count = Array.from(cards).filter(c => cardMatches(c)).length;
+            document.getElementById('filter-count').textContent = `${count} matches found`;
+        }
+
+        function cardMatches(c) {
+            const sMatch = currentFilters.status.size === 0 || currentFilters.status.has(c.dataset.status);
+            const lMatch = currentFilters.lens.size === 0 || currentFilters.lens.has(c.dataset.lens);
+            
+            let dMatch = currentFilters.discipline.size === 0;
+            if (!dMatch) {
+                const cardDiscs = c.dataset.discipline.split(',').map(d => d.trim());
+                dMatch = Array.from(currentFilters.discipline).some(d => cardDiscs.includes(d));
+            }
+
+            const q = searchInput.value.toLowerCase();
+            const qMatch = !q || c.dataset.title.toLowerCase().includes(q) || c.dataset.tags.toLowerCase().includes(q);
+
+            return sMatch && lMatch && dMatch && qMatch;
+        }
 
         openFilterBtn.addEventListener('click', () => {
             filterModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            updateFilterCount();
         });
 
         closeFilterBtn.addEventListener('click', () => {
@@ -397,34 +479,12 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             });
         });
 
-        statusBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const s = btn.dataset.status;
-                if (currentFilters.has(s)) {
-                    currentFilters.delete(s);
-                    btn.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg');
-                    btn.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
-                } else {
-                    currentFilters.add(s);
-                    btn.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg');
-                    btn.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
-                }
-            });
-        });
-
         applyFilterBtn.addEventListener('click', () => {
             const essaysGrid = document.getElementById('essays-grid');
-            let visibleCards = Array.from(cards);
-
-            // Filter
-            if (currentFilters.size > 0) {
-                visibleCards.forEach(c => {
-                    const show = currentFilters.has(c.dataset.status);
-                    c.style.display = show ? 'flex' : 'none';
-                });
-            } else {
-                visibleCards.forEach(c => c.style.display = 'flex');
-            }
+            
+            cards.forEach(c => {
+                c.style.display = cardMatches(c) ? 'flex' : 'none';
+            });
 
             // Sort
             const sorted = Array.from(cards).sort((a, b) => {
@@ -442,15 +502,13 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         });
 
         // Search logic
-        searchInput.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase();
+        searchInput.addEventListener('input', () => {
             cards.forEach(c => {
-                const match = c.dataset.title.toLowerCase().includes(q) || c.dataset.tags.toLowerCase().includes(q);
-                c.style.display = match ? 'flex' : 'none';
+                c.style.display = cardMatches(c) ? 'flex' : 'none';
             });
         });
 
-        // Hide bar on scroll removed to keep it visible as requested
+        initFilters();
     </script>
 </body>
 </html>
