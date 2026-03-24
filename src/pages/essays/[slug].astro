@@ -201,7 +201,11 @@ const items = [
                 color: #7BA08A;
                 font-weight: 600;
             }
-            .essay-body h2, .essay-body h3 {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .essay-body h2, .essay-body h3 {
                 font-family: 'EB Garamond', serif;
                 font-size: 1.7rem;
                 font-weight: 500;
@@ -263,12 +267,15 @@ const items = [
                         <span class="sidebar-label text-[#7BA08A]">Sections</span>
                     </div>
                     <div class="flex flex-col">
-                        {essay.data.sections.map((section, i) => (
-                            <div class="flex items-center gap-3 px-4 py-3 border-b border-[#F5F2EB] last:border-0 hover:bg-[#7BA08A]/5 transition-colors group">
-                                <span class="font-['Reenie_Beanie'] text-[1rem] leading-none text-[#a8c5a0]">{(i + 1).toString().padStart(2, '0')}</span>
-                                <span class="font-serif text-[0.9rem] text-gray-700">{section}</span>
-                            </div>
-                        ))}
+                        {essay.data.sections.map((section, i) => {
+                            const sectionId = section.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                            return (
+                                <a href={`#${sectionId}`} class="flex items-center gap-3 px-4 py-3 border-b border-[#F5F2EB] last:border-0 hover:bg-[#7BA08A]/5 transition-colors group">
+                                    <span class="font-['Reenie_Beanie'] text-[1rem] leading-none text-[#a8c5a0]">{(i + 1).toString().padStart(2, '0')}</span>
+                                    <span class="font-serif text-[0.9rem] text-gray-700">{section}</span>
+                                </a>
+                            );
+                        })}
                     </div>
                 </div>
             )}
@@ -292,13 +299,26 @@ const items = [
         </div>
     </footer>
 
-    <script>
+    <script define:vars={{ sections: essay.data.sections || [] }}>
+        // Reading Progress
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const docHeight = document.body.scrollHeight - window.innerHeight;
             const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
             const bar = document.getElementById('read-progress');
             if (bar) bar.style.width = progress + '%';
+        });
+
+        // Dynamic Anchor IDs
+        const headings = document.querySelectorAll('.essay-body h2, .essay-body h3');
+        headings.forEach(h => {
+            // Remove Roman Numeral prefixes (e.g., "I. ", "II. ") for matching
+            const text = h.textContent.replace(/^[IVXLC]+\.\s*/, '').trim();
+            const matchedSection = sections.find(s => s.trim() === text);
+            if (matchedSection) {
+                const id = matchedSection.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                h.id = id;
+            }
         });
     </script>
 </body>
