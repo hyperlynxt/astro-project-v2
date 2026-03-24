@@ -60,6 +60,24 @@ const linguisticTreats = defineCollection({
   }),
 });
 
+const essays = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/essays' }),
+  schema: z.object({
+    essay_number: z.number(),
+    title: z.string(),
+    date_published: z.date(),
+    status: z.enum(['Draft', 'Open Loop', 'Published', 'Closed']),
+    sections: z.array(z.string()).optional(),
+    concepts_used: z.array(z.string()).optional(),
+    notes_used: z.array(z.string()).optional(),
+    disciplines_touched: z.array(z.string()),
+    analytical_lens: z.string(),
+    tags: z.array(z.string()),
+    references: z.array(z.string()).optional(),
+    follow_up_research: z.string().optional(),
+  }),
+});
+
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
   schema: z.object({
@@ -77,4 +95,4 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, notes };
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes };

@@ -1,0 +1,524 @@
+---
+import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+
+const essays = await getCollection('essays');
+essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Field Notes — Essays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style is:global>
+        /* ── Base ── */
+        body {
+            background-color: #FDFCF9;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+            color: #2A2724;
+        }
+        /* ── Theme accent — greenish ── */
+        :root {
+            --accent:       #7BA08A;   /* main green */
+            --accent-light: #A1C2AE;   /* hover / soft */
+            --accent-pale:  #E7F1EB;   /* soft background chips */
+            --accent-dark:  #5B7B68;   /* deeper hover */
+        }
+
+        .glass-nav { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+        .essays-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+        @media (min-width: 768px)  { .essays-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (min-width: 1280px) { .essays-grid { grid-template-columns: repeat(3,1fr); } }
+
+        .essay-card {
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 24px;
+            padding: 2.2rem 2.2rem 1.8rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(42,39,35,0.10);
+            box-shadow: 0 2px 12px rgba(42,39,35,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 260px;
+        }
+        .essay-card:hover {
+            background: #F1F8F4;
+            border-color: #A1C2AE;
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px -10px rgba(123,160,138,0.18);
+        }
+        .essay-card:hover .card-title { color: var(--accent); }
+
+        .card-expand {
+            position: absolute; top: 1.1rem; right: 1.1rem;
+            opacity: 0; transform: scale(0.85);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            color: rgba(42,39,35,0.28); font-size: 0.75rem; line-height: 1;
+        }
+        .essay-card:hover .card-expand { opacity: 1; transform: scale(1); }
+
+        .card-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem; font-weight: 700;
+            color: var(--accent);
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .card-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            line-height: 1.2;
+            color: #2A2724;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+        .card-meta {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(42,39,35,0.50);
+            font-style: italic;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(42,39,35,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .card-tag {
+            background: var(--accent-pale);
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .card-status {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .status-published { background: #E8F5E9; color: #2E7D32; }
+        .status-draft     { background: #FFF3E0; color: #B06A00; }
+        .status-openloop  { background: var(--accent-pale); color: var(--accent); }
+        .status-closed    { background: #F5F5F5; color: #616161; }
+
+        /* ── Modal ── */
+        #essay-modal {
+            position: fixed; inset: 0; z-index: 100;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 2rem;
+            background: rgba(42,39,35,0.32);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+        }
+        .modal-inner {
+            width: 100%; max-width: 820px;
+            max-height: 90vh;
+            background: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                radial-gradient(circle at 10% 90%, rgba(123,160,138,0.04) 0%, transparent 60%);
+            border-radius: 36px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 40px 100px rgba(123,160,138,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .modal-scroll { overflow-y: auto; flex: 1; padding: 3rem 4rem 3rem; }
+        .modal-close {
+            position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(42,39,35,0.1);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: rgba(42,39,35,0.4);
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--accent-pale); color: var(--accent); transform: rotate(90deg); }
+
+        .modal-eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem; font-weight: 700;
+            color: var(--accent); letter-spacing: 0.2em;
+            text-transform: uppercase; margin-bottom: 0.75rem;
+        }
+        .modal-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 3.2rem; font-weight: 500;
+            line-height: 1.1; color: #2A2724;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-divider {
+            width: 100%; height: 1px;
+            background: linear-gradient(90deg, rgba(161,194,174,0.4), rgba(161,194,174,0.1), transparent);
+            margin-bottom: 2rem;
+        }
+
+        .modal-content {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.25rem; line-height: 1.8;
+            color: rgba(42,39,35,0.85);
+            margin-bottom: 3rem;
+        }
+
+        /* Properties Panel Styles */
+        #props-overlay {
+            position: absolute; inset: 0; z-index: 20;
+            display: flex; align-items: flex-end; justify-content: stretch;
+            background: rgba(42,39,35,0.18); backdrop-filter: blur(6px);
+            border-radius: 36px; overflow: hidden; opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        #props-overlay.open { opacity: 1; pointer-events: all; }
+        .props-panel {
+            width: 100%; background: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                radial-gradient(circle at 95% 5%, rgba(123,160,138,0.07) 0%, transparent 55%);
+            border-radius: 28px 28px 36px 36px; border-top: 1px solid rgba(123,160,138,0.18);
+            box-shadow: 0 -12px 48px rgba(42,39,35,0.14);
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            max-height: 85%; display: flex; flex-direction: column; overflow: hidden;
+        }
+        #props-overlay.open .props-panel { transform: translateY(0); }
+        .props-header { padding: 1.5rem 2rem 1.1rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .props-body { overflow-y: auto; padding: 1.2rem 2rem 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .prop-row { padding: 0.9rem 0.6rem; border-bottom: 1px solid rgba(42,39,35,0.05); }
+        .prop-row.full-width { grid-column: 1 / -1; }
+        .prop-label { font-family: 'Inter', sans-serif; font-size: 8.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(42,39,35,0.30); margin-bottom: 0.4rem; }
+        .prop-value { font-family: 'EB Garamond', serif; font-size: 1rem; color: rgba(42,39,35,0.78); line-height: 1.35; }
+        .prop-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+        .prop-chip { font-family: 'Inter', sans-serif; font-size: 8.5px; font-weight: 700; padding: 3px 9px; border-radius: 5px; text-transform: uppercase; }
+        .prop-chip-accent { background: var(--accent-pale); color: var(--accent); }
+        .prop-chip-neutral { background: rgba(42,39,35,0.06); color: rgba(42,39,35,0.48); }
+
+        .properties-btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: rgba(42,39,35,0.45); background: transparent;
+            border: 1.5px solid rgba(42,39,35,0.12); border-radius: 100px;
+            padding: 7px 16px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .properties-btn:hover { color: var(--accent); border-color: var(--accent-light); background: var(--accent-pale); }
+
+        /* ── Filter Modal ── */
+        #filter-modal {
+            position: fixed; inset: 0; z-index: 100;
+            display: none; align-items: center; justify-content: center;
+            padding: 2rem; background: rgba(245,242,235,0.45); backdrop-filter: blur(12px);
+        }
+        .filter-panel {
+            width: 100%; max-width: 620px; background: #fff;
+            border-radius: 28px; box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .filter-header { padding: 2rem; border-bottom: 1px solid rgba(123,160,138,0.1); text-align: center; position: relative; }
+        .filter-body { padding: 2rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 2rem; }
+        .filter-footer { padding: 1.5rem 2rem; border-top: 1px solid rgba(123,160,138,0.1); display: flex; justify-content: space-between; align-items: center; }
+
+        .swoosh-path { stroke-dasharray:100; stroke-dashoffset:100; }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        #bottom-bar { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+        #bottom-bar.hidden-bar { transform: translate(-50%, 150%); opacity: 0; }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-[#7BA08A] selection:text-white pb-32">
+
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
+        <div class="flex items-center gap-10">
+            <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
+            <div class="h-8 w-px bg-[#E8E2D2]"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="/astro-project-v2/notes/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Notes</a>
+                <a href="/astro-project-v2/essays/" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#7BA08A] shadow-[0_0_8px_rgba(123,160,138,0.55)]"></span>
+                    <span class="font-serif text-xl text-[#2A2724]">Essays</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#7BA08A] tracking-tight translate-y-1">hyperlynxt | teo</div>
+    </header>
+
+    <section class="max-w-4xl mx-auto text-center pt-24 pb-20 px-6">
+        <span class="font-['Reenie_Beanie'] text-2xl text-[#8C8070] mb-2 block">Long-form arguments</span>
+        <h2 class="font-serif text-6xl md:text-8xl leading-tight text-[#2A2724] mb-8">
+            Extended <span class="italic relative inline-block">
+                Essays
+                <svg class="absolute w-[115%] h-[15px] -bottom-2 -left-[7.5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                    <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                </svg>
+            </span>
+        </h2>
+    </section>
+
+    <main class="max-w-[1400px] mx-auto px-6 md:px-10">
+        <div class="essays-grid" id="essays-grid">
+            {essays.map((essay) => (
+                <article 
+                    class="essay-card"
+                    data-id={essay.id}
+                    data-number={essay.data.essay_number}
+                    data-title={essay.data.title}
+                    data-date={essay.data.date_published.toISOString()}
+                    data-status={essay.data.status}
+                    data-disciplines={essay.data.disciplines_touched.join(',')}
+                    data-lens={essay.data.analytical_lens}
+                    data-tags={essay.data.tags.join(',')}
+                    data-sections={essay.data.sections?.join('||') || ''}
+                    data-concepts={essay.data.concepts_used?.join('||') || ''}
+                    data-notes={essay.data.notes_used?.join('||') || ''}
+                    data-refs={essay.data.references?.join('||') || ''}
+                    data-followup={essay.data.follow_up_research || ''}
+                >
+                    <span class="card-expand">↗</span>
+                    <div class="card-number">#{essay.data.essay_number.toString().padStart(2, '0')}</div>
+                    <h3 class="card-title">{essay.data.title}</h3>
+                    <div class="card-meta">{essay.data.analytical_lens} — {essay.data.date_published.toLocaleDateString()}</div>
+                    
+                    <div class="card-footer">
+                        <span class={`card-status status-${essay.data.status.toLowerCase().replace(/\s/g, '')}`}>{essay.data.status}</span>
+                        <div class="flex gap-1.5">
+                            {essay.data.tags.slice(0, 2).map(tag => (
+                                <span class="card-tag">{tag}</span>
+                            ))}
+                        </div>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </main>
+
+    <!-- Bottom Bar -->
+    <div id="bottom-bar" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50">
+        <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="document.getElementById('essay-search').focus()">
+            <svg class="w-4 h-4 text-[#A39985] group-hover:text-[#7BA08A] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="essay-search" placeholder="Search essays" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
+        </div>
+        <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
+        <button id="open-filter-btn" class="bg-[#7BA08A] hover:bg-[#6f917c] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="essay-modal">
+        <div class="modal-inner">
+            <button class="modal-close" id="close-modal">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <div class="modal-scroll">
+                <div class="modal-eyebrow" id="modal-eyebrow"></div>
+                <h1 class="modal-title" id="modal-title"></h1>
+                <div class="modal-divider"></div>
+                <div class="modal-content" id="modal-content">
+                    <p>The core thesis and extended exploration of this essay would go here. This long-form piece synthesizes the various notes and concepts listed in the properties panel below.</p>
+                </div>
+                <div class="flex justify-between items-center mt-12 pt-6 border-t border-rgba(123,160,138,0.1)">
+                    <span class="font-['Reenie_Beanie'] text-xl text-[#A39985]" id="modal-footer-date"></span>
+                    <button class="properties-btn" id="open-props-btn">
+                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                        </svg>
+                        Properties
+                    </button>
+                </div>
+            </div>
+
+            <!-- Properties Overlay -->
+            <div id="props-overlay">
+                <div class="props-panel">
+                    <div class="props-header">
+                        <div>
+                            <p class="props-eyebrow" id="props-eyebrow">Essay properties</p>
+                            <p class="props-title" id="props-title"></p>
+                        </div>
+                        <button class="modal-close" id="close-props-btn" style="position:static;">
+                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div class="props-body" id="props-body">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filter-modal">
+        <div class="filter-panel">
+            <div class="filter-header">
+                <h2 class="text-3xl font-serif font-medium text-[#2A2724]">Filter & Sort</h2>
+                <button id="close-filter-btn" class="modal-close" style="top:1.5rem; right:1.5rem;">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="filter-body">
+                <div>
+                    <h3 class="meta-item-label">Sort Order</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-sort="number" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg">By Number</button>
+                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30">By Date</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="meta-item-label">Status</h3>
+                    <div class="flex flex-wrap gap-2" id="filter-status">
+                        {['Published', 'Draft', 'Open Loop', 'Closed'].map(s => (
+                            <button data-status={s} class="status-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30">{s}</button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div class="filter-footer">
+                <span id="filter-count" class="font-serif italic text-ink/40"></span>
+                <button id="apply-filter" class="bg-[#7BA08A] text-white px-6 py-2 rounded-full font-sans text-sm font-bold shadow-lg">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.essay-card');
+        const modal = document.getElementById('essay-modal');
+        const closeModal = document.getElementById('close-modal');
+        const searchInput = document.getElementById('essay-search');
+        const bottomBar = document.getElementById('bottom-bar');
+        const propsOverlay = document.getElementById('props-overlay');
+        const openPropsBtn = document.getElementById('open-props-btn');
+        const closePropsBtn = document.getElementById('close-props-btn');
+
+        const filterModal = document.getElementById('filter-modal');
+        const openFilterBtn = document.getElementById('open-filter-btn');
+        const closeFilterBtn = document.getElementById('close-filter-btn');
+
+        // Modal Content
+        const mT = document.getElementById('modal-title');
+        const mE = document.getElementById('modal-eyebrow');
+        const mD = document.getElementById('modal-footer-date');
+        const pT = document.getElementById('props-title');
+        const pB = document.getElementById('props-body');
+
+        let currentData = null;
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                currentData = card.dataset;
+                mT.textContent = currentData.title;
+                mE.textContent = `Essay No. ${currentData.number.padStart(2, '0')}`;
+                mD.textContent = new Date(currentData.date).toLocaleDateString();
+                pT.textContent = currentData.title;
+                
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const buildProps = (d) => {
+            pB.innerHTML = '';
+            const rows = [
+                { label: 'Status', value: d.status, type: 'status' },
+                { label: 'Date Published', value: new Date(d.date).toLocaleDateString() },
+                { label: 'Analytical Lens', value: d.lens, italic: true },
+                { label: 'Disciplines', value: d.disciplines, list: true },
+                { label: 'Sections', value: d.sections, list: true, sep: '||', full: true },
+                { label: 'Concepts Used', value: d.concepts, list: true, sep: '||', full: true },
+                { label: 'Notes Used', value: d.notes, list: true, sep: '||', full: true },
+                { label: 'Tags', value: d.tags, list: true, full: true },
+                { label: 'References', value: d.refs, list: true, sep: '||', full: true },
+                { label: 'Follow-up Research', value: d.followup, full: true }
+            ].filter(r => r.value && r.value !== '');
+
+            rows.forEach(r => {
+                const div = document.createElement('div');
+                div.className = `prop-row ${r.full ? 'full-width' : ''}`;
+                let valHtml = '';
+                if (r.list) {
+                    valHtml = `<div class="prop-chips">${r.value.split(r.sep || ',').map(i => `<span class="prop-chip prop-chip-neutral">${i.trim()}</span>`).join('')}</div>`;
+                } else if (r.type === 'status') {
+                    valHtml = `<span class="prop-chip prop-chip-accent">${r.value}</span>`;
+                } else {
+                    valHtml = `<span class="prop-value ${r.italic ? 'italic' : ''}">${r.value}</span>`;
+                }
+                div.innerHTML = `<p class="prop-label">${r.label}</p>${valHtml}`;
+                pB.appendChild(div);
+            });
+        };
+
+        openPropsBtn.addEventListener('click', () => {
+            buildProps(currentData);
+            propsOverlay.classList.add('open');
+        });
+
+        closePropsBtn.addEventListener('click', () => propsOverlay.classList.remove('open'));
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            propsOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+
+        openFilterBtn.addEventListener('click', () => {
+            filterModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeFilterBtn.addEventListener('click', () => {
+            filterModal.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        // Search logic
+        searchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            cards.forEach(c => {
+                const match = c.dataset.title.toLowerCase().includes(q) || c.dataset.tags.toLowerCase().includes(q);
+                c.style.display = match ? 'block' : 'none';
+            });
+        });
+
+        // Hide bar on scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const current = window.pageYOffset;
+            if (current > lastScroll && current > 100) bottomBar.classList.add('hidden-bar');
+            else bottomBar.classList.remove('hidden-bar');
+            lastScroll = current;
+        });
+    </script>
+</body>
+</html>
