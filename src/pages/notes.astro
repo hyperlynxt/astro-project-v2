@@ -612,7 +612,7 @@ notes.sort((a, b) => {
                     `<span class="dot${i <= (entry.data.rating||0) ? ' filled' : ''}"></span>`
                 ).join('');
 
-                const visibleTags = (entry.data.tags || []).slice(0, 2);
+
 
                 return (
                     <article
@@ -656,12 +656,8 @@ notes.sort((a, b) => {
                                 {entry.data.note_type && (
                                     <span class="card-tag-neutral">{entry.data.note_type}</span>
                                 )}
-                                {visibleTags.map(tag => (
-                                    <span class="card-tag-neutral">{tag}</span>
-                                ))}
                             </div>
-                            <!-- Dot rating -->
-                            <div class="dot-rating" set:html={dotsHtml}></div>
+
                         </div>
                     </article>
                 );
