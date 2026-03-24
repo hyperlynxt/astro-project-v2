@@ -341,7 +341,13 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             </div>
             <div class="filter-body" style="padding: 2rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 2rem;">
                 <div>
-                    <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Sort Order</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted">Sort Order</h3>
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#D5CCB6]/30 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#7BA08A] transition-all group">
+                            <span id="sort-direction-label">Descending</span>
+                            <svg id="sort-direction-icon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                        </button>
+                    </div>
                     <div class="flex flex-wrap gap-2">
                         <button data-sort="number" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg transition-all">By Number</button>
                         <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 transition-all">By Date</button>
@@ -384,13 +390,21 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         const closeFilterBtn = document.getElementById('close-filter-btn');
         const applyFilterBtn = document.getElementById('apply-filter');
         const sortBtns = document.querySelectorAll('.sort-btn');
+        const sortOrderBtn = document.getElementById('sort-direction-toggle');
+        const sortOrderLabel = document.getElementById('sort-direction-label');
 
         let currentSort = 'number';
+        let currentSortOrder = 'desc';
         let currentFilters = {
             status: new Set(),
             discipline: new Set(),
             lens: new Set()
         };
+
+        sortOrderBtn.addEventListener('click', () => {
+            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+            sortOrderLabel.textContent = currentSortOrder === 'desc' ? 'Descending' : 'Ascending';
+        });
 
         // Initialize Dynamic Filters
         function initFilters() {
@@ -488,11 +502,13 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
 
             // Sort
             const sorted = Array.from(cards).sort((a, b) => {
+                let res = 0;
                 if (currentSort === 'number') {
-                    return parseInt(b.dataset.number) - parseInt(a.dataset.number);
+                    res = parseInt(b.dataset.number) - parseInt(a.dataset.number);
                 } else {
-                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                    res = new Date(b.dataset.date) - new Date(a.dataset.date);
                 }
+                return currentSortOrder === 'desc' ? res : -res;
             });
 
             sorted.forEach(c => essaysGrid.appendChild(c));
