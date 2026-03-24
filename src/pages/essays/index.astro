@@ -76,12 +76,12 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         .essay-card:hover .card-expand { opacity: 1; transform: scale(1); }
 
         .card-number {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--accent);
-            opacity: 0.6;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.1em;
+            font-family: 'Reenie Beanie', cursive;
+            font-size: 1.8rem;
+            color: #a8c5a0;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.025em;
+            line-height: 1;
         }
 
         .card-title {
@@ -308,7 +308,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
                     data-followup={essay.data.follow_up_research || ''}
                 >
                     <span class="card-expand">↗</span>
-                    <div class="card-number">#{essay.data.essay_number.toString().padStart(2, '0')}</div>
+                    <div class="card-number">Essay #{essay.data.essay_number.toString().padStart(3, '0')}</div>
                     <h3 class="card-title">{essay.data.title}</h3>
                     <div class="card-meta">{essay.data.analytical_lens} — {essay.data.date_published.toLocaleDateString()}</div>
                     
