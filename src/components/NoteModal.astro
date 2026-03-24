@@ -272,18 +272,23 @@
                 },
                 { label: 'Rating',   html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
                 { label: 'Date',     html: `<span class="prop-value handwriting">${fmtDate(d.date)}</span>` },
-                { label: 'Note Type', html: d.notetype ? `<span class="prop-chip prop-chip-neutral">${d.notetype}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Analytical Lens', html: d.lens ? `<span class="prop-value italic-accent">${d.lens}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Discipline', html: d.discipline ? `<span class="prop-value">${d.discipline}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Sub-discipline', html: d.subdiscipline ? `<span class="prop-value">${d.subdiscipline}</span>` : '<span class="prop-value">—</span>' },
-                d.tags ? {
+                { label: 'Note Type', html: (d.note_type || d.notetype) ? `<span class="prop-chip prop-chip-neutral">${d.note_type || d.notetype}</span>` : '<span class="prop-value">—</span>' },
+                { label: 'Analytical Lens', html: (d.analytical_lens || d.lens) ? `<span class="prop-value italic-accent">${d.analytical_lens || d.lens}</span>` : '<span class="prop-value">—</span>' },
+                { label: 'Discipline', html: (d.primary_discipline || d.discipline) ? `<span class="prop-value">${d.primary_discipline || d.discipline}</span>` : '<span class="prop-value">—</span>' },
+                { label: 'Sub-discipline', html: (d.sub_discipline || d.subdiscipline) ? `<span class="prop-value">${d.sub_discipline || d.subdiscipline}</span>` : '<span class="prop-value">—</span>' },
+                (d.tags) ? {
                     label: 'Tags',
-                    html: `<div class="prop-chips">${d.tags.split(',').map(t=>`<span class="prop-chip prop-chip-neutral">${t.trim()}</span>`).join(' ')}</div>`,
+                    html: `<div class="prop-chips">${(Array.isArray(d.tags) ? d.tags : d.tags.split(',')).map(t=>`<span class="prop-chip prop-chip-neutral">${t.trim()}</span>`).join(' ')}</div>`,
                     full: true
                 } : null,
-                d.concepts ? {
+                (d.concepts_used || d.concepts) ? {
                     label: 'Concepts Used',
-                    html: `<div class="prop-chips">${d.concepts.split('||').map(c=>`<span class="prop-concept-chip">${c.trim()}</span>`).join(' ')}</div>`,
+                    html: `<div class="prop-chips">${(function() {
+                        const raw = d.concepts_used || d.concepts;
+                        if (Array.isArray(raw)) return raw;
+                        if (typeof raw === 'string' && raw.includes('||')) return raw.split('||');
+                        return [raw];
+                    })().map(c=>`<span class="prop-concept-chip">${c.trim()}</span>`).join(' ')}</div>`,
                     full: true
                 } : null,
             ].filter(Boolean);
