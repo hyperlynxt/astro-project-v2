@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import '../../styles/global.css';
+import NoteModal from '../../components/NoteModal.astro';
+import ConceptModal from '../../components/ConceptModal.astro';
 
 export async function getStaticPaths() {
   const essays = await getCollection('essays');
@@ -13,35 +15,34 @@ export async function getStaticPaths() {
 const { essay } = Astro.props;
 const { Content: EssayContent } = await render(essay);
 
-// Fetch all collections to find matches
 const allConcepts = await getCollection('concepts');
 const allNotes = await getCollection('notes');
 
-// Find actual entries based on metadata strings
-const linkedConcepts = (essay.data.concepts_used || [])
-    .map(name => {
-        const found = allConcepts.find(c => c.data.title.toLowerCase() === name.toLowerCase());
-        return found ? { entry: found } : null;
-    })
-    .filter(Boolean);
+const rawConcepts = essay.data.concepts_used || [];
+const linkedConcepts = [];
+for (const name of rawConcepts) {
+    const matched = allConcepts.find(c => c.data.title.toLowerCase() === name.toLowerCase());
+    if (matched) linkedConcepts.push({ entry: matched });
+}
 
-const linkedNotes = (essay.data.notes_used || [])
-    .map(name => {
-        const found = allNotes.find(n => n.data.title.toLowerCase() === name.toLowerCase());
-        return found ? { entry: found } : null;
-    })
-    .filter(Boolean);
+const rawNotes = essay.data.notes_used || [];
+const linkedNotes = [];
+for (const name of rawNotes) {
+    const matched = allNotes.find(n => n.data.title.toLowerCase() === name.toLowerCase());
+    if (matched) linkedNotes.push({ entry: matched });
+}
 
-// Pre-render content for modals
-const renderedConcepts = await Promise.all(linkedConcepts.map(async (c) => {
+const renderedConcepts = [];
+for (const c of linkedConcepts) {
     const { Content } = await render(c.entry);
-    return { ...c, Content };
-}));
+    renderedConcepts.push({ entry: c.entry, Content });
+}
 
-const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
+const renderedNotes = [];
+for (const n of linkedNotes) {
     const { Content } = await render(n.entry);
-    return { ...n, Content };
-}));
+    renderedNotes.push({ entry: n.entry, Content });
+}
 ---
 
 <html lang="en">
@@ -149,285 +150,6 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
             transition: width 0.1s linear;
         }
     </style>
-
-    <style is:global>
-        /* ── Concept Modal Styles (from concepts.astro) ── */
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUpScale { from { opacity: 0; transform: translateY(40px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        .animate-modal-enter { opacity: 0; animation: slideUpScale 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards; }
-        .animate-content-enter { opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards; }
-        
-        .ink-stain {
-            background-color: #FDFCF9;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png"), radial-gradient(circle at 10% 90%, rgba(42,39,36,0.03) 0%, rgba(253,252,249,0) 60%);
-            background-position: 0px 0px, 40px 60px, 0 0;
-            background-repeat: repeat, repeat, no-repeat;
-        }
-        .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
-        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
-
-        #concept-modal .modal-scrollbar::-webkit-scrollbar { width: 4px; }
-        #concept-modal .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.15); border-radius: 10px; }
-
-        /* ── Note Modal Styles (from notes.astro) ── */
-        :root {
-            --accent: #7BA08A;
-            --accent-light: #A1C2AE;
-            --accent-dark: #4A6B62;
-            --accent-pale: #F1F8F4;
-            --paper: #FDFCF9;
-            --ink: #2A2724;
-        }
-
-        #note-modal {
-            position: fixed; inset: 0; z-index: 100;
-            display: none;
-            align-items: center; justify-content: center;
-            padding: 2rem;
-            background: rgba(42,39,35,0.32);
-            backdrop-filter: blur(9px);
-            -webkit-backdrop-filter: blur(9px);
-        }
-
-        .note-modal-inner {
-            width: 100%; max-width: 760px;
-            max-height: 90vh;
-            background-color: var(--paper, #FDFCF9);
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 10% 90%, rgba(123,160,138,0.04) 0%, transparent 60%);
-            background-position: 0 0, 0 0;
-            background-repeat: repeat, no-repeat;
-            border-radius: 36px;
-            border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 40px 100px rgba(123,160,138,0.18);
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .note-modal-scroll {
-            overflow-y: auto;
-            flex: 1;
-            padding: 3rem 3.5rem 2.5rem;
-        }
-        .note-modal-scroll > * { position: relative; z-index: 1; }
-
-        .modal-close {
-            position: absolute; top: 1.4rem; right: 1.4rem; z-index: 10;
-            width: 38px; height: 38px; border-radius: 50%;
-            background: rgba(255,255,255,0.85);
-            border: 1px solid rgba(42,39,35,0.12);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: rgba(42,39,35,0.45);
-            transition: all 0.2s;
-        }
-        .modal-close:hover { background: var(--accent-pale); color: var(--accent); border-color: var(--accent-light); }
-        .modal-close svg { transition: transform 0.3s; }
-        .modal-close:hover svg { transform: rotate(90deg); }
-
-        .modal-bg-letter {
-            position: absolute; top: 1rem; right: 2rem;
-            font-family: 'EB Garamond', serif;
-            font-size: 20rem; font-weight: 700;
-            color: rgba(42,39,35,0.018);
-            line-height: 1; pointer-events: none; user-select: none;
-            z-index: 0;
-        }
-
-        .modal-title-block { margin-bottom: 2rem; }
-        .modal-title {
-            font-family: 'EB Garamond', serif;
-            font-size: 3rem; font-weight: 500;
-            line-height: 1.1; color: var(--ink, #2A2724);
-        }
-
-        .modal-divider {
-            width: 100%; height: 1px;
-            background: linear-gradient(90deg, rgba(161,194,174,0.4), rgba(161,194,174,0.1), transparent);
-            margin-bottom: 2rem;
-        }
-
-        .modal-body-prose {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.2rem; line-height: 1.85;
-            color: rgba(42,39,35,0.82);
-            margin-bottom: 2.5rem;
-        }
-        .modal-body-prose strong, .modal-body-prose b {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .modal-footer-bar {
-            padding: 1rem 2.5rem 1.5rem;
-            border-top: 1px solid rgba(123,160,138,0.10);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(253,252,249,0.8);
-            backdrop-filter: blur(8px);
-            flex-shrink: 0;
-        }
-
-        .properties-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(42,39,35,0.45);
-            background: transparent;
-            border: 1.5px solid rgba(42,39,35,0.12);
-            border-radius: 100px;
-            padding: 7px 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .properties-btn:hover {
-            color: var(--accent);
-            border-color: var(--accent-light);
-            background: var(--accent-pale);
-        }
-
-        #props-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 120;
-            display: flex;
-            align-items: flex-end;
-            justify-content: stretch;
-            background: rgba(42,39,35,0.18);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border-radius: 36px;
-            overflow: hidden;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        #props-overlay.open { opacity: 1; pointer-events: all; }
-
-        .props-panel {
-            width: 100%;
-            background-color: var(--paper, #FDFCF9);
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            border-radius: 28px 28px 36px 36px;
-            border-top: 1px solid rgba(123,160,138,0.18);
-            box-shadow: 0 -12px 48px rgba(42,39,35,0.14);
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-            max-height: 82%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        #props-overlay.open .props-panel { transform: translateY(0); }
-
-        .props-band {
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-light), var(--accent), var(--accent-light));
-            opacity: 0.55;
-            border-radius: 28px 28px 0 0;
-            flex-shrink: 0;
-        }
-
-        .props-header {
-            padding: 0.6rem 1.8rem 1.1rem;
-            display: flex; align-items: center; justify-content: space-between;
-            flex-shrink: 0;
-        }
-        .props-eyebrow {
-            font-family: 'Inter', sans-serif;
-            font-size: 9px; font-weight: 700;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: rgba(42,39,35,0.28);
-            margin-bottom: 0.2rem;
-        }
-        .props-title {
-            font-family: 'EB Garamond', serif;
-            font-size: 1.35rem; font-weight: 500;
-            color: var(--ink, #2A2724); line-height: 1.2;
-        }
-
-        .props-close {
-            width: 30px; height: 30px; border-radius: 50%;
-            background: rgba(255,255,255,0.9);
-            border: 1px solid rgba(42,39,35,0.10);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: rgba(42,39,35,0.38);
-            transition: all 0.2s; flex-shrink: 0;
-        }
-
-        .props-body {
-            overflow-y: auto;
-            padding: 1.2rem 1.8rem 2rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-        }
-        .prop-row {
-            padding: 0.9rem 0.6rem;
-            border-bottom: 1px solid rgba(42,39,35,0.05);
-        }
-        .prop-row.full-width { grid-column: 1 / -1; }
-        .prop-row.row-span-2 { grid-row: span 2; border-bottom: none; }
-
-        .prop-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 8.5px; font-weight: 700;
-            letter-spacing: 0.13em; text-transform: uppercase;
-            color: rgba(42,39,35,0.30);
-            margin-bottom: 0.4rem;
-        }
-        .prop-value {
-            font-family: 'EB Garamond', serif;
-            font-size: 1rem; color: rgba(42,39,35,0.78);
-            line-height: 1.35;
-        }
-        .prop-value.italic-accent { color: var(--accent); font-style: italic; }
-        .prop-value.handwriting {
-            font-family: 'Reenie Beanie', cursive;
-            font-size: 1.2rem; color: #A39985; line-height: 1.2;
-        }
-
-        .dot-rating { display: flex; gap: 5px; align-items: center; }
-        .dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--accent-pale);
-            border: 1.5px solid var(--accent-light);
-        }
-        .dot.filled { background: var(--accent); border-color: var(--accent); }
-
-        .prop-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-        .prop-chip {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 8.5px; font-weight: 700;
-            letter-spacing: 0.09em; text-transform: uppercase;
-            padding: 4px 12px; border-radius: 8px;
-            border: 1px solid rgba(42,39,35,0.08);
-        }
-        .prop-chip-neutral { background: rgba(42,39,35,0.08); color: rgba(42,39,35,0.55); }
-        .prop-chip-accent  { background: var(--accent-pale); color: var(--accent); border-color: var(--accent-light); }
-        .prop-concept-chip {
-            display: inline-block;
-            background: rgba(123,160,138,0.08);
-            border: 1px solid rgba(123,160,138,0.22);
-            color: var(--accent-dark);
-            font-family: 'EB Garamond', serif;
-            font-size: 0.88rem;
-            padding: 4px 11px; border-radius: 9px;
-        }
-        .prop-pipeline-step { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem; }
-        .prop-pipeline-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .prop-pipeline-label { font-family: 'EB Garamond', serif; font-size: 0.9rem; }
-    </style>
 </head>
 <body class="min-h-screen flex flex-col font-serif selection:bg-[#E6DFD1]">
 
@@ -531,13 +253,14 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
                             const found = allConcepts.find(c => c.data.title.toLowerCase() === concept.toLowerCase());
                             return (
                                 <li>
-                                    <div 
-                                        class={`group flex items-baseline gap-3 text-gray-900 ${found ? 'cursor-pointer hover:text-[#7BA08A] transition-all open-concept-btn' : ''}`}
+                                    <button 
+                                        class={`group flex items-baseline gap-3 text-left w-full ${found ? 'cursor-pointer hover:text-[#7BA08A] transition-all open-concept-btn' : 'text-gray-400'}`}
                                         data-id={found?.id}
+                                        disabled={!found}
                                     >
-                                        <span class="font-['Reenie_Beanie'] text-[1.4rem] leading-none" style="color:#a8c5a0">{(i + 1).toString().padStart(2, '0')}</span>
+                                        <span class="font-['Reenie_Beanie'] text-[1.4rem] leading-none text-[#a8c5a0]">{(i + 1).toString().padStart(2, '0')}</span>
                                         <span class="font-serif text-[1.1rem]">{concept}</span>
-                                    </div>
+                                    </button>
                                 </li>
                             );
                         })}
@@ -556,7 +279,7 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
                                     class={`flex items-center gap-3 bg-white/60 border border-[#E6DFD1] rounded-full px-4 py-2 shadow-sm ${found ? 'cursor-pointer hover:border-[#7BA08A] transition-all open-note-btn' : ''}`}
                                     data-id={found?.id}
                                 >
-                                    <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background-color:#a8c5a0"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[#a8c5a0]"></span>
                                     <span class="font-serif text-[0.85rem] text-gray-600 leading-tight">{noteTitle}</span>
                                 </li>
                             );
@@ -612,137 +335,9 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
         </div>
     </footer>
 
-    <!-- Note Modal -->
-    <div id="note-modal" style="display:none;">
-        <div class="note-modal-inner modal-card">
-            <div class="modal-bg-letter" id="modal-note-bg-letter"></div>
-            <button class="modal-close" id="close-note-modal">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-            <div class="note-modal-scroll">
-                <div class="modal-title-block">
-                    <h1 class="modal-title modal-title-text" id="modal-note-title"></h1>
-                </div>
-                <div class="modal-divider"></div>
-                <div class="modal-body-prose modal-reveal" id="modal-note-body"></div>
-            </div>
-            <div class="modal-footer-bar">
-                <span class="modal-date" id="modal-note-date" style="font-size: 1.15rem; color: rgba(42, 39, 35, 0.65);"></span>
-                <button class="properties-btn" id="open-props-btn">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/>
-                        <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
-                    </svg>
-                    Properties
-                </button>
-            </div>
-            <div id="props-overlay">
-                <div class="props-panel">
-                    <div class="props-band"></div>
-                    <div class="props-handle"><div class="props-handle-bar"></div></div>
-                    <div class="props-header">
-                        <div class="props-header-left">
-                            <p class="props-eyebrow">Note properties</p>
-                            <p class="props-title" id="props-title"></p>
-                        </div>
-                        <button class="props-close" id="close-props-btn">
-                            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-                    <div class="props-header-divider"></div>
-                    <div class="props-body" id="props-body"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Concept Modal -->
-    <div id="concept-modal" style="display:none;" class="fixed inset-0 z-[100] bg-[#2A2724]/25 backdrop-blur-[5px] items-center justify-center p-6 md:p-10 animate-fade-in">
-        <div class="w-full max-w-[1240px] h-[92vh] bg-white rounded-[40px] shadow-[0_40px_100px_rgba(42,39,36,0.15)] overflow-hidden border border-white/60 animate-modal-enter relative ring-1 ring-[#D5CCB6]/30">
-            <div class="h-full flex flex-col relative bg-[#FDFCF9] ink-stain custom-scrollbar-modal overflow-y-auto z-10">
-                <div class="absolute top-0 right-0 p-8 flex justify-end z-[60] pointer-events-none">
-                    <button id="close-modal-btn" class="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-[#D5CCB6] shadow-sm hover:bg-white flex items-center justify-center text-[#2A2724] transition-all group pointer-events-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:rotate-90 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-                <div class="px-10 md:px-20 lg:px-24 pb-32 pt-8 relative animate-content-enter">
-                    <div id="modal-concept-bg-letter" class="absolute top-10 right-16 text-[32rem] font-serif font-bold text-[#2A2724]/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3"></div>
-                    <div class="mb-10">
-                        <h1 class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-[#2A2724] leading-[1.01] mb-6 tracking-tight relative">
-                            <span id="modal-concept-title" class="italic inline"></span>
-                            <svg id="modal-title-underline" class="absolute h-[12px] text-[#8B2626] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display: none;">
-                                <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
-                            </svg>
-                        </h1>
-                        <div class="relative">
-                            <div id="modal-stars" class="absolute flex flex-col gap-4 items-center text-[#8B2626] -left-5 md:-left-10 lg:-left-12 -translate-x-1/2 top-4 group"></div>
-                            <div class="flex flex-col">
-                                <div id="modal-ontology-attribution" class="font-serif italic text-[1.25rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
-                                    <div id="modal-discipline-container" class="flex items-baseline gap-2">
-                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Discipline</span>
-                                        <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                    </div>
-                                    <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
-                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Parent Framework</span>
-                                        <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                    </div>
-                                </div>
-                                <div id="modal-attribution" class="font-serif italic text-[1.35rem] mb-6 flex items-baseline gap-2" style="display:none;">
-                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">From the work of</span>
-                                    <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                </div>
-                                <div id="modal-tags-attribution" class="font-serif italic text-[1.25rem] mb-12 flex items-baseline gap-2" style="display:none;">
-                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
-                                    <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
-                            <p id="modal-summary"></p>
-                        </div>
-                    </div>
-                    <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[900px] z-10 relative mb-20"></div>
-                    <div id="modal-field-note-section" class="mb-12 max-w-[900px]" style="display:none;">
-                        <div style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;">Notes of Myself</div>
-                        <p id="modal-field-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724]/90"></p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px]">
-                        <div id="modal-related-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
-                             <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color:#8B2626;" fill="none" viewBox="0 0 24 24" stroke="#8B2626" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                                Related Concepts
-                             </h3>
-                             <div id="modal-related-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                             <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-4 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color:#8B2626;" fill="none" viewBox="0 0 24 24" stroke="#8B2626" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-                                Origin
-                             </h3>
-                             <p id="modal-origin" class="font-serif text-[1.1rem] leading-relaxed text-[#2A2724]/70 italic"></p>
-                        </div>
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                             <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color:#8B2626;" fill="none" viewBox="0 0 24 24" stroke="#8B2626" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                                Linked Insights
-                             </h3>
-                             <div class="flex items-baseline gap-4">
-                                 <div id="modal-concept-linked" class="text-6xl font-serif text-[#2A2724] tracking-tight"></div>
-                                 <div class="text-[12px] font-sans text-[#2A2724]/40 uppercase tracking-widest font-bold leading-tight">Total<br>Times Used</div>
-                             </div>
-                        </div>
-                        <div id="modal-notes-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
-                             <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color:#8B2626;" fill="none" viewBox="0 0 24 24" stroke="#8B2626" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                Notes of Used
-                             </h3>
-                             <div id="modal-notes-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Shared Modals -->
+    <NoteModal />
+    <ConceptModal />
 
     <!-- Hidden Content for Modals -->
     <div style="display:none;" aria-hidden="true">
@@ -758,12 +353,12 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
         ))}
     </div>
 
-    <script define:vars={{ 
+    <script id="essay-data" type="application/json" is:inline set:html={JSON.stringify({
         sections: essay.data.sections || [],
         concepts: renderedConcepts.map(c => ({
             id: c.entry.id,
             title: c.entry.data.title,
-            short: c.entry.data.short_description,
+            short: c.entry.data.short_description || c.entry.data.summary,
             discipline: c.entry.data.discipline,
             authors: (c.entry.data.authors || []).join(', '),
             origin: c.entry.data.origin,
@@ -786,246 +381,52 @@ const renderedNotes = await Promise.all(linkedNotes.map(async (n) => {
             concepts: (n.entry.data.concepts_used || []).join('||'),
             tags: (n.entry.data.tags || []).join(',')
         }))
-    }}>
-        // ──────── Helpers ────────
-        function dots(n) {
-            let h = '';
-            for(let i=1; i<=3; i++) h += `<span class="dot${i <= n ? ' filled' : ''}"></span>`;
-            return h;
-        }
-        function fmtDate(dStr) {
-            const d = new Date(dStr);
-            return d.toLocaleDateString('en-US', { month:'long', year:'numeric' });
-        }
+    })} />
 
+    <script>
+        const data = JSON.parse(document.getElementById('essay-data').textContent);
+        const sections = data.sections;
+        const concepts = data.concepts;
+        const notes = data.notes;
         // ──────── Reading Progress ────────
         window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.body.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
             const bar = document.getElementById('read-progress');
-            if (bar) bar.style.width = progress + '%';
+            if (bar) bar.style.width = scrolled + "%";
         });
 
         // ──────── Dynamic Anchor IDs ────────
         const headings = document.querySelectorAll('.essay-body h2, .essay-body h3');
         headings.forEach(h => {
             const text = h.textContent.replace(/^[IVXLC]+\.\s*/, '').trim();
-            const matchedSection = sections.find(s => s.trim() === text);
-            if (matchedSection) {
-                const id = matchedSection.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            if (sections.includes(text)) {
+                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
                 h.id = id;
             }
         });
 
-        // ──────── Modal Elements ────────
-        const noteModal   = document.getElementById('note-modal');
-        const conceptModal = document.getElementById('concept-modal');
-        const propsOverlay = document.getElementById('props-overlay');
+        // ──────── Sidebar & Modal Handlers ────────
+        const sidebar = document.getElementById('sidebar');
+        function toggleSidebar() { if (sidebar) sidebar.classList.toggle('open'); }
 
-        function openNoteModal(id) {
-            const d = notes.find(n => n.id === id);
-            if (!d) return;
+        document.querySelectorAll('.open-note-btn').forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.dataset.id;
+                const contentEl = document.getElementById(`note-content-${id}`);
+                const contentHtml = contentEl ? contentEl.innerHTML : '';
+                window.openNoteModal(id, notes, contentHtml);
+            };
+        });
 
-            document.getElementById('modal-note-title').textContent = d.title;
-            document.getElementById('modal-note-bg-letter').textContent = d.title[0].toUpperCase();
-            document.getElementById('modal-note-date').textContent = fmtDate(d.date);
-            document.getElementById('modal-note-body').innerHTML = document.getElementById(`note-content-${id}`).innerHTML;
-            
-            document.getElementById('open-props-btn').onclick = () => buildPropsPanel(d);
-            
-            noteModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function buildPropsPanel(d) {
-            const body = document.getElementById('props-body');
-            body.innerHTML = '';
-            document.getElementById('props-title').textContent = d.title;
-
-            const pipeline = ['Raw', 'Refine', 'Metastasis / Converted'];
-            const statusIdx = pipeline.indexOf(d.status);
-
-            const rows = [
-                {
-                    label: 'Status',
-                    html: `<div class="prop-pipeline">
-                        ${pipeline.map((step, i) => {
-                            const isCurrent = i === statusIdx;
-                            const isPast    = i < statusIdx;
-                            let dotStyle    = 'background:rgba(42,39,35,0.15);';
-                            let labelCls    = 'color:rgba(42,39,35,0.35);';
-                            if (isCurrent) {
-                                if (d.status==='Raw')    { dotStyle='background:#B06A00;'; labelCls='color:#B06A00;font-weight:500;'; }
-                                else if (d.status==='Refine') { dotStyle='background:var(--accent);'; labelCls='color:var(--accent);font-weight:500;'; }
-                                else                          { dotStyle='background:#2E7D32;'; labelCls='color:#2E7D32;font-weight:500;'; }
-                            } else if (isPast) {
-                                dotStyle='background:var(--accent-light);';
-                            }
-                            return `<div class="prop-pipeline-step">
-                                <span class="prop-pipeline-dot" style="${dotStyle}"></span>
-                                <span class="prop-pipeline-label" style="${labelCls}">${step}</span>
-                            </div>`;
-                        }).join('')}
-                    </div>`,
-                    span2: true
-                },
-                { label: 'Rating',   html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
-                { label: 'Date',     html: `<span class="prop-value handwriting">${fmtDate(d.date)}</span>` },
-                { label: 'Note Type', html: d.notetype ? `<span class="prop-chip prop-chip-neutral">${d.notetype}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Analytical Lens', html: d.lens ? `<span class="prop-value italic-accent">${d.lens}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Discipline', html: d.discipline ? `<span class="prop-value">${d.discipline}</span>` : '<span class="prop-value">—</span>' },
-                { label: 'Sub-discipline', html: d.subdiscipline ? `<span class="prop-value">${d.subdiscipline}</span>` : '<span class="prop-value">—</span>' },
-                d.tags ? {
-                    label: 'Tags',
-                    html: `<div class="prop-chips">${d.tags.split(',').map(t=>`<span class="prop-chip prop-chip-neutral">${t.trim()}</span>`).join(' ')}</div>`,
-                    full: true
-                } : null,
-                d.concepts ? {
-                    label: 'Concepts Used',
-                    html: `<div class="prop-chips">${d.concepts.split('||').map(c=>`<span class="prop-concept-chip">${c.trim()}</span>`).join(' ')}</div>`,
-                    full: true
-                } : null,
-            ].filter(Boolean);
-
-            rows.forEach(row => {
-                const div = document.createElement('div');
-                div.className = 'prop-row';
-                if (row.full) div.classList.add('full-width');
-                if (row.span2) div.classList.add('row-span-2');
-                div.innerHTML = `<p class="prop-label">${row.label}</p><div>${row.html}</div>`;
-                body.appendChild(div);
-            });
-
-            propsOverlay.classList.add('open');
-        }
-
-        function openConceptModal(id) {
-            const d = concepts.find(c => c.id === id);
-            if (!d) return;
-
-            const setElTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || ''; };
-            const setElHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val || ''; };
-            const toggleSec = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
-            const toggleSecFlex = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'flex' : 'none'; };
-
-            setElTxt('modal-concept-title', d.title);
-            setElTxt('modal-concept-bg-letter', d.title[0].toUpperCase());
-            setElTxt('modal-summary', d.short);
-            setElHtml('modal-detailed-desc', document.getElementById(`concept-content-${id}`).innerHTML);
-            setElTxt('modal-origin', d.origin);
-            setElTxt('modal-concept-linked', d.linked);
-
-            // Discipline & Framework
-            let displayDiscipline = d.discipline;
-            let displayFramework = '';
-            if (d.discipline && d.discipline.includes('/')) {
-                const parts = d.discipline.split('/');
-                displayDiscipline = parts[0].trim();
-                displayFramework = parts[1].trim();
-            }
-
-            toggleSec('modal-ontology-attribution', false);
-            toggleSec('modal-discipline-container', false);
-            toggleSec('modal-framework-container', false);
-
-            if (displayDiscipline || displayFramework) {
-                toggleSecFlex('modal-ontology-attribution', true);
-                if (displayDiscipline) {
-                    setElTxt('modal-discipline-text', displayDiscipline);
-                    toggleSecFlex('modal-discipline-container', true);
-                }
-                if (displayFramework) {
-                    setElTxt('modal-framework-text', displayFramework);
-                    toggleSecFlex('modal-framework-container', true);
-                }
-            }
-
-            if (d.authors) {
-                setElTxt('modal-authors-list', d.authors);
-                toggleSecFlex('modal-attribution', true);
-            } else toggleSecFlex('modal-attribution', false);
-
-            if (d.tags) {
-                setElTxt('modal-tags-list', d.tags);
-                toggleSecFlex('modal-tags-attribution', true);
-            } else toggleSecFlex('modal-tags-attribution', false);
-
-            // Stars
-            const rotations = ['', 'transform: rotate(15deg);', 'transform: rotate(-10deg);', 'transform: rotate(5deg);', 'transform: rotate(-15deg);'];
-            const starsHtml = Array.from({length: d.rating}).map((_, i) =>
-                `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="${rotations[i] || ''}">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
-                </svg>`
-            ).join('');
-            setElHtml('modal-stars', starsHtml);
-
-            if (d.fieldnote) { setElTxt('modal-field-note', d.fieldnote); toggleSec('modal-field-note-section', true); }
-            else toggleSec('modal-field-note-section', false);
-
-            if (d.notesofused) {
-                const items = d.notesofused.split(',').filter(n => n.trim());
-                setElHtml('modal-notes-items', items.map(name => `
-                    <div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#7C6B9E]/40 hover:shadow-sm transition-all">
-                        <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#7C6B9E] font-medium transition-colors">${name.trim()}</p>
-                    </div>`).join(''));
-                toggleSec('modal-notes-section', true);
-            } else toggleSec('modal-notes-section', false);
-
-            if (d.related) {
-                const items = d.related.split(',').filter(r => r.trim());
-                setElHtml('modal-related-items', items.map(name => `
-                    <div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all">
-                        <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors">${name.trim()}</p>
-                    </div>`).join(''));
-                toggleSec('modal-related-section', true);
-            } else toggleSec('modal-related-section', false);
-
-            // Underline animation
-            const titleEl = document.getElementById('modal-concept-title');
-            const underline = document.getElementById('modal-title-underline');
-            requestAnimationFrame(() => {
-                const rects = titleEl.getClientRects();
-                const containerRect = titleEl.parentElement.getBoundingClientRect();
-                if (rects.length > 0) {
-                    const firstRect = rects[0];
-                    underline.style.width = (firstRect.width * 1.05) + 'px';
-                    underline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
-                    underline.style.left = (firstRect.left - containerRect.left - (firstRect.width * 0.025)) + 'px';
-                    underline.style.display = 'block';
-                    const path = underline.querySelector('path');
-                    path.style.animation = 'none'; void path.offsetWidth;
-                    path.style.animation = 'drawSwoosh 0.8s ease-out 0.4s forwards';
-                }
-            });
-
-            conceptModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // ──────── Listeners ────────
-        document.querySelectorAll('.open-note-btn').forEach(btn => btn.onclick = () => openNoteModal(btn.dataset.id));
-        document.querySelectorAll('.open-concept-btn').forEach(btn => btn.onclick = () => openConceptModal(btn.dataset.id));
-
-        const hideModals = () => {
-            noteModal.style.display = 'none';
-            conceptModal.style.display = 'none';
-            propsOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-        };
-
-        document.getElementById('close-note-modal').onclick = hideModals;
-        document.getElementById('close-modal-btn').onclick = hideModals;
-        document.getElementById('close-props-btn').onclick = () => propsOverlay.classList.remove('open');
-
-        [noteModal, conceptModal].forEach(m => m.onclick = (e) => { if(e.target === m) hideModals(); });
-        propsOverlay.onclick = (e) => { if(e.target === propsOverlay) propsOverlay.classList.remove('open'); };
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (propsOverlay.classList.contains('open')) propsOverlay.classList.remove('open');
-                else hideModals();
-            }
+        document.querySelectorAll('.open-concept-btn').forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.dataset.id;
+                const contentEl = document.getElementById(`concept-content-${id}`);
+                const contentHtml = contentEl ? contentEl.innerHTML : '';
+                window.openConceptModal(id, concepts, contentHtml);
+            };
         });
     </script>
 </body>

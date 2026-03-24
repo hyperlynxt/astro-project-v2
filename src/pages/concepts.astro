@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import '../styles/global.css';
+import ConceptModal from '../components/ConceptModal.astro';
 
 const concepts = await getCollection('concepts');
+// ... existing sort logic ...
 concepts.sort((a, b) => {
   const ratingA = a.data.rating || 0;
   const ratingB = b.data.rating || 0;
@@ -83,30 +85,6 @@ const renderedConcepts = await Promise.all(
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.12); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
         ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 39, 36, 0.25); }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUpScale { from { opacity: 0; transform: translateY(40px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideUpStagger { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        .animate-modal-enter { opacity: 0; animation: slideUpScale 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards; }
-        .animate-content-enter { opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards; }
-        .animate-sidebar-item { opacity: 0; animation: slideUpStagger 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .stagger-1 { animation-delay: 0.2s; } .stagger-2 { animation-delay: 0.28s; } .stagger-3 { animation-delay: 0.36s; }
-        .stagger-4 { animation-delay: 0.44s; } .stagger-5 { animation-delay: 0.52s; } .stagger-6 { animation-delay: 0.6s; } .stagger-7 { animation-delay: 0.68s; }
-        .ink-stain {
-            background-color: #FDFCF9;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png"), radial-gradient(circle at 10% 90%, rgba(42,39,36,0.03) 0%, rgba(253,252,249,0) 60%);
-            background-position: 0px 0px, 40px 60px, 0 0;
-            background-repeat: repeat, repeat, no-repeat;
-        }
-        .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
-        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
-        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
-        .hatched-pattern { background-image: repeating-linear-gradient(45deg, #2A2724 0, #2A2724 1px, transparent 0, transparent 8px); }
-        .custom-scrollbar-modal::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.15); border-radius: 10px; }
-        .modal-scrollbar::-webkit-scrollbar { width: 4px; }
-        .modal-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.15); border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-[#8B2626] selection:text-white flex flex-col">
@@ -174,15 +152,24 @@ const renderedConcepts = await Promise.all(
                                 <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
                                 <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.short_description}</p>
                             </div>
-                            <div class="pt-4 border-t border-[#F5F2EB] mt-auto flex justify-between items-center">
-                                <div class="star-rating">
-                                    {Array.from({ length: entry.data.rating }).map((_, i) => (
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform: rotate(15deg);" : i === 2 ? "transform: rotate(-10deg);" : i === 3 ? "transform: rotate(5deg);" : i === 4 ? "transform: rotate(-15deg);" : ""}>
-                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
-                                        </svg>
-                                    ))}
+                            <div class="pt-5 border-t border-[#F5F2EB]/80 mt-auto">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="star-rating">
+                                        {Array.from({ length: entry.data.rating || 0 }).map((_, i) => (
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style={i === 1 ? "transform: rotate(15deg);" : i === 2 ? "transform: rotate(-10deg);" : i === 3 ? "transform: rotate(5deg);" : i === 4 ? "transform: rotate(-15deg);" : ""}>
+                                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.3"></path>
+                                            </svg>
+                                        ))}
+                                    </div>
+                                    <div class="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#8B2626]"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                        <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#2A2724]">{entry.data.linked_notes || 0}</span>
+                                    </div>
                                 </div>
-                                <span class="font-['Reenie_Beanie'] text-[26px] text-[#8B2626] translate-y-1">{entry.data.linked_notes} times used</span>
+                                <div class="flex items-center gap-2 group/origin transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#8B2626]/40 group-hover/origin:text-[#8B2626] transition-colors"><path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                                    <span class="font-serif italic text-sm text-[#8C8070] group-hover/origin:text-[#2A2724] transition-colors truncate">{entry.data.origin}</span>
+                                </div>
                             </div>
                         </article>
                     </div>
@@ -203,124 +190,22 @@ const renderedConcepts = await Promise.all(
         .star-filter:hover { transform: scale(1.1); }
     </style>
 
+
+    <ConceptModal />
+
+    <!-- Data for JS -->
+    <script id="concepts-data" type="application/json" is:inline set:html={JSON.stringify(concepts.map(c => ({
+            id: c.id,
+            ...c.data,
+            date_added: c.data.date_added?.toISOString()
+        })))} />
     <div style="display:none;" aria-hidden="true">
         {renderedConcepts.map(({ entry, Content }) => (
-            <div id={`content-${entry.id}`} class="concept-body prose font-serif text-xl leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[850px]">
-                <Content />
-            </div>
+            <div id={`concept-content-${entry.id}`}><Content /></div>
         ))}
     </div>
-    </main>
 
-    <!-- Concept Modal -->
-    <div id="concept-modal" style="display:none;" class="fixed inset-0 z-[100] bg-[#2A2724]/25 backdrop-blur-[5px] items-center justify-center p-6 md:p-10 animate-fade-in">
-        <div class="w-full max-w-[1240px] h-[92vh] bg-white rounded-[40px] shadow-[0_40px_100px_rgba(42,39,36,0.15)] overflow-hidden border border-white/60 animate-modal-enter relative ring-1 ring-[#D5CCB6]/30">
-            <!-- Content Area -->
-            <div class="h-full flex flex-col relative bg-[#FDFCF9] ink-stain custom-scrollbar-modal overflow-y-auto z-10">
-                <!-- Close Button -->
-                <div class="absolute top-0 right-0 p-8 flex justify-end z-[60] pointer-events-none">
-                    <button id="close-modal-btn" class="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-[#D5CCB6] shadow-sm hover:bg-white flex items-center justify-center text-[#2A2724] transition-all group pointer-events-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:rotate-90 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-
-                <div class="px-10 md:px-20 lg:px-24 pb-32 pt-8 relative animate-content-enter">
-                    <div id="modal-bg-letter" class="absolute top-10 right-16 text-[32rem] font-serif font-bold text-[#2A2724]/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3"></div>
-                    <div class="mb-10">
-                        <h1 class="font-serif text-5xl md:text-6xl lg:text-[5.5rem] font-medium text-[#2A2724] leading-[1.01] mb-6 tracking-tight relative">
-                            <span id="modal-title" class="italic inline"></span>
-                            <svg id="modal-title-underline" class="absolute h-[12px] text-[#8B2626] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display: none;">
-                                <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
-                            </svg>
-                        </h1>
-                        <div class="relative">
-                            <div id="modal-stars" class="absolute flex flex-col gap-4 items-center text-[#8B2626] -left-5 md:-left-10 lg:-left-12 -translate-x-1/2 top-4 group"></div>
-    
-                            <div class="flex flex-col">
-                                <!-- Header Ontology Section -->
-                                <div id="modal-ontology-attribution" class="font-serif italic text-[1.25rem] mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2" style="display:none;">
-                                    <div id="modal-discipline-container" class="flex items-baseline gap-2">
-                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Discipline</span>
-                                        <span id="modal-discipline-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                    </div>
-                                    <div id="modal-framework-container" class="flex items-baseline gap-2" style="display:none;">
-                                        <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Parent Framework</span>
-                                        <span id="modal-framework-text" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                    </div>
-                                </div>
-    
-                                <div id="modal-attribution" class="font-serif italic text-[1.35rem] mb-6 flex items-baseline gap-2" style="display:none;">
-                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">From the work of</span>
-                                    <span id="modal-authors-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                </div>
-                                <div id="modal-tags-attribution" class="font-serif italic text-[1.25rem] mb-12 flex items-baseline gap-2" style="display:none;">
-                                    <span style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
-                                    <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;font-style:italic;"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
-                            <p id="modal-summary"></p>
-                        </div>
-                    </div>
-
-                    <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[900px] z-10 relative mb-20"></div>
-
-                    <!-- Notes of Myself Section (Replaces Field Note Container) -->
-                    <div id="modal-field-note-section" class="mb-12 max-w-[900px]" style="display:none;">
-                        <div style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;">Notes of Myself</div>
-                        <p id="modal-field-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724]/90"></p>
-                    </div>
-
-                    <!-- Metadata Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px]">
-                        <!-- Ontology -->
-
-                        <!-- Related Concepts -->
-                        <div id="modal-related-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                                Related Concepts
-                            </h3>
-                            <div id="modal-related-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
-
-                        <!-- Origin -->
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-4 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-                                Origin
-                            </h3>
-                            <p id="modal-origin" class="font-serif text-[1.1rem] leading-relaxed text-[#2A2724]/70 italic"></p>
-                        </div>
-
-                        <!-- Utility & Usage -->
-                        <div class="bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                                Linked Insights
-                            </h3>
-                            <div class="flex items-baseline gap-4">
-                                <div id="modal-linked" class="text-6xl font-serif text-[#2A2724] tracking-tight"></div>
-                                <div class="text-[12px] font-sans text-[#2A2724]/40 uppercase tracking-widest font-bold leading-tight">Total<br>Times Used</div>
-                            </div>
-                        </div>
-
-                        <!-- Notes of Used -->
-                        <div id="modal-notes-section" class="md:col-span-2 bg-white rounded-3xl border border-[#D5CCB6]/40 p-8 shadow-sm" style="display:none;">
-                            <h3 class="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#2A2724]/40 mb-5 flex items-center gap-2.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8B2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                Notes of Used
-                            </h3>
-                            <div id="modal-notes-items" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- ─────────────── SCRIPTS ─────────────── -->
     <!-- Filter Modal -->
     <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] items-center justify-center p-6 bg-[#F5F2EB]/40 backdrop-blur-md">
         <div class="relative z-20 w-full max-w-[630px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] ink-stain">
@@ -425,19 +310,22 @@ const renderedConcepts = await Promise.all(
     </div>
 
     <!-- Bottom Bar -->
-    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50">
-        <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="document.getElementById('concept-search').focus()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-seal transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" id="concept-search" placeholder="Search concepts" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
+    <div class="fixed bottom-10 left-0 right-0 flex justify-center pointer-events-none z-50">
+        <div class="bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center pointer-events-auto">
+            <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="document.getElementById('concept-search').focus()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-seal transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="concept-search" placeholder="Search concepts" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
+            </div>
+            <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
+            <button id="filter-btn" class="bg-seal hover:bg-seal/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
         </div>
-        <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
-        <button id="filter-btn" class="bg-seal hover:bg-seal/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
     </div>
 
-    <script is:inline>
+    <script>
+        // Data and DOM
+        const conceptsJSON = JSON.parse(document.getElementById('concepts-data').textContent);
         const searchInput = document.getElementById('concept-search');
         const cards = document.querySelectorAll('.catalog-card');
-        const conceptModal = document.getElementById('concept-modal');
         const filterModal = document.getElementById('filter-modal');
         const filterResultCount = document.getElementById('filter-result-count');
         const filterSortButtons = document.querySelectorAll('.sort-btn');
@@ -451,7 +339,7 @@ const renderedConcepts = await Promise.all(
         document.getElementById('close-filter-btn').addEventListener('click', closeFilterModal);
         document.getElementById('apply-filter-btn').addEventListener('click', applyFilterSystem);
         document.getElementById('clear-filter-btn').addEventListener('click', clearAllFilters);
-        document.getElementById('close-modal-btn').addEventListener('click', hideModal);
+        // close-modal-btn is now in the shared component
 
         let currentFilterState = {
             query: '',
@@ -610,7 +498,7 @@ const renderedConcepts = await Promise.all(
 
         function closeFilterModal() {
             filterModal.style.display = 'none';
-            if (conceptModal.style.display !== 'flex') document.body.style.overflow = '';
+            document.body.style.overflow = '';
         }
 
         function applyFilterSystem() {
@@ -664,174 +552,34 @@ const renderedConcepts = await Promise.all(
             applyFilterSystem();
         });
 
-        // Card click → open modal
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                const title = card.getAttribute('data-title');
-                const description = card.getAttribute('data-description');
-                const discipline = card.getAttribute('data-discipline');
-                const tags = card.getAttribute('data-tags');
-                const origin = card.getAttribute('data-origin');
-                const rating = parseInt(card.getAttribute('data-rating')) || 0;
-                const linked = card.getAttribute('data-linked');
-                const fieldNote = card.getAttribute('data-fieldnote');
-                const notesOfUsed = card.getAttribute('data-notesofused') || '';
-                const related = card.getAttribute('data-related') || '';
-
-                // Metadata population
-                const setElTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || ''; };
-                const setElHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val || ''; };
-                const toggleSec = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
-                const toggleSecFlex = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'flex' : 'none'; };
-
-                setElTxt('modal-title', title);
-                setElTxt('modal-bg-letter', title.charAt(0));
-                setElTxt('modal-summary', card.getAttribute('data-short'));
+        // Delegated Card Click Listener
+        document.addEventListener('click', e => {
+            const card = e.target.closest('.catalog-card');
+            if (card) {
+                const id = card.getAttribute('data-id');
+                const contentEl = document.getElementById(`concept-content-${id}`);
+                const bodyHtml = contentEl ? contentEl.innerHTML : '';
                 
-                const bodyContent = document.getElementById(`content-${card.getAttribute('data-id')}`);
-                setElHtml('modal-detailed-desc', bodyContent ? bodyContent.innerHTML : `<p>${description}</p>`);
-                
-                setElTxt('modal-origin', origin);
-                setElTxt('modal-linked', linked);
-
-                // Extract discipline and framework
-                let displayDiscipline = discipline;
-                let displayFramework = '';
-                if (discipline && discipline.includes('/')) {
-                    const parts = discipline.split('/');
-                    displayDiscipline = parts[0].trim();
-                    displayFramework = parts[1].trim();
-                }
-
-                // Ontology header section
-                const discTxt = document.getElementById('modal-discipline-text');
-                const frameTxt = document.getElementById('modal-framework-text');
-                const ontSec = document.getElementById('modal-ontology-attribution');
-                const frameCont = document.getElementById('modal-framework-container');
-                const discCont = document.getElementById('modal-discipline-container');
-                
-                if (ontSec) ontSec.style.display = 'none';
-                if (discCont) discCont.style.display = 'none';
-                if (frameCont) frameCont.style.display = 'none';
-
-                if (displayDiscipline || displayFramework) {
-                    if (ontSec) ontSec.style.display = 'flex';
-                    if (displayDiscipline) {
-                        if (discTxt) discTxt.textContent = displayDiscipline;
-                        if (discCont) discCont.style.display = 'flex';
-                    }
-                    if (displayFramework) {
-                        if (frameTxt) frameTxt.textContent = displayFramework;
-                        if (frameCont) frameCont.style.display = 'flex';
-                    }
-                }
-
-                // Tags header section
-                if (tags) {
-                    setElTxt('modal-tags-list', tags.split(',').map(t => t.trim()).join(', '));
-                    toggleSecFlex('modal-tags-attribution', true);
+                if (window.openConceptModal) {
+                    window.openConceptModal(id, conceptsJSON, bodyHtml);
                 } else {
-                    toggleSecFlex('modal-tags-attribution', false);
+                    console.warn('openConceptModal not ready, retrying...');
+                    setTimeout(() => window.openConceptModal && window.openConceptModal(id, conceptsJSON, bodyHtml), 100);
                 }
-
-                // Stars
-                const rotations = ['', 'transform: rotate(15deg);', 'transform: rotate(-10deg);', 'transform: rotate(5deg);', 'transform: rotate(-15deg);'];
-                const starsHtml = Array.from({length: rating}).map((_, i) =>
-                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="${rotations[i] || ''}">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
-                    </svg>`
-                ).join('');
-                setElHtml('modal-stars', starsHtml);
-
-                // Field note (Notes of Myself)
-                if (fieldNote) {
-                    setElTxt('modal-field-note', fieldNote);
-                    toggleSec('modal-field-note-section', true);
-                } else {
-                    toggleSec('modal-field-note-section', false);
-                }
-
-                // Notes of used
-                if (notesOfUsed) {
-                    const notes = notesOfUsed.split(',').filter(n => n.trim());
-                    const nHtml = notes.map(name =>
-                        `<div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#7C6B9E]/40 hover:shadow-sm transition-all">
-    <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#7C6B9E] font-medium transition-colors">${name.trim()}</p>
-    <svg class="w-4 h-4 text-[#A39985] opacity-0 group-hover:opacity-100 group-hover:text-[#7C6B9E] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-</div>`
-                    ).join('');
-                    setElHtml('modal-notes-items', nHtml);
-                    toggleSec('modal-notes-section', true);
-                } else {
-                    toggleSec('modal-notes-section', false);
-                }
-
-                // Related concepts
-                if (related) {
-                    const rItems = related.split(',').filter(r => r.trim());
-                    const rHtml = rItems.map(name =>
-    `<div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all">
-        <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors">${name.trim()}</p>
-        <svg class="w-4 h-4 text-[#A39985] opacity-0 group-hover:opacity-100 group-hover:text-[#B08D57] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-    </div>`
-).join('');
-                    setElHtml('modal-related-items', rHtml);
-                    toggleSec('modal-related-section', true);
-                } else {
-                    toggleSec('modal-related-section', false);
-                }
-
-                // Attribution
-                const authors = card.getAttribute('data-authors') || '';
-                if (authors) {
-                    setElTxt('modal-authors-list', authors.split(',').map(a => a.trim()).join(', '));
-                    toggleSecFlex('modal-attribution', true);
-                } else {
-                    toggleSecFlex('modal-attribution', false);
-                }
-                // Underline animation
-                const modalTitleEl = document.getElementById('modal-title');
-                const modalTitleUnderline = document.getElementById('modal-title-underline');
-                requestAnimationFrame(() => {
-                    const rects = modalTitleEl.getClientRects();
-                    const containerRect = modalTitleEl.parentElement.getBoundingClientRect();
-                    if (rects.length > 0) {
-                        const firstRect = rects[0];
-                        modalTitleUnderline.style.width = (firstRect.width * 1.05) + 'px';
-                        modalTitleUnderline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
-                        modalTitleUnderline.style.left = (firstRect.left - containerRect.left - (firstRect.width * 0.025)) + 'px';
-                        modalTitleUnderline.style.display = 'block';
-                        const path = modalTitleUnderline.querySelector('path');
-                        path.style.animation = 'none';
-                        void path.offsetWidth;
-                        path.style.animation = 'drawSwoosh 0.8s ease-out 0.4s forwards';
-                    }
-                });
-
-		conceptModal.style.display = 'flex';
-		document.body.style.overflow = 'hidden';
-		requestAnimationFrame(() => {
-    		conceptModal.querySelectorAll('.overflow-y-auto').forEach(el => el.scrollTop = 0);
-		});
-            });
+            }
         });
 
-        function hideModal() {
-            conceptModal.style.display = 'none';
-            if (filterModal.style.display !== 'flex') document.body.style.overflow = '';
-        }
-
-        conceptModal.addEventListener('click', (e) => { if (e.target === conceptModal) hideModal(); });
-        filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeFilterModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeFilterModal(); hideModal(); } });
+        // Shared modal escape handler helper
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFilterModal();
+        });
 
         function layoutMasonryConcepts() {
             const grid = document.querySelector('.masonry-grid');
             if (!grid) return;
 
             const itemsArr = Array.from(grid.querySelectorAll('.masonry-item-wrapper')).filter(item => {
-                // More robust check for visibility
-                return item.style.display !== 'none' && (item.offsetWidth > 0 || item.offsetHeight > 0 || item.getClientRects().length > 0);
+                return item.style.display !== 'none' && item.getClientRects().length > 0;
             });
             
             const containerWidth = grid.offsetWidth;
@@ -865,10 +613,7 @@ const renderedConcepts = await Promise.all(
         // Initial run
         layoutMasonryConcepts();
 
-        // Initial run
-        layoutMasonryConcepts();
-
         updateFilterPreview();
     </script>
 </body>
-</html>
+</html>```
