@@ -4,7 +4,7 @@ short_description: "The phenomenon where different social contexts are blurred o
 discipline: "Sociology"
 tags: ["Identity", "Digital Culture", "Social Media"]
 origin: "danah boyd"
-rating: 5
+rating: 3
 linked_notes: 3
 date_added: 2024-03-24
 ---

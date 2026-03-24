@@ -4,7 +4,7 @@ short_description: "The paradoxical performance of 'being authentic' to an audie
 discipline: "Social Psychology"
 tags: ["Identity", "Digital Culture", "Sociology"]
 origin: "Online Performance Theory"
-rating: 4
+rating: 2
 linked_notes: 2
 date_added: 2024-03-24
 ---

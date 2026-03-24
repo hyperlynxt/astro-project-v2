@@ -4,7 +4,7 @@ short_description: "The distinct identity we create and maintain in digital spac
 discipline: "Sociology"
 tags: ["Identity", "Digital Culture", "Privacy"]
 origin: "Contemporary Media Studies"
-rating: 4
+rating: 1
 linked_notes: 5
 date_added: 2024-03-24
 ---
