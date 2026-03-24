@@ -191,10 +191,28 @@ const items = [
                 )}
             </header>
 
-            <div class="font-serif text-[1.3rem] leading-[1.8] text-gray-800 flex flex-col gap-[32px] fade-up shadow-sm bg-white/30 p-8 rounded-2xl border border-white/50">
+            <div class="font-serif text-[1.3rem] leading-[1.8] text-gray-800 flex flex-col gap-[32px] fade-up shadow-sm bg-white/30 p-8 rounded-2xl border border-white/50 essay-body">
                 <Content />
             </div>
         </article>
+
+        <style is:global>
+            .essay-body strong, .essay-body b {
+                color: #7BA08A;
+                font-weight: 600;
+            }
+            .essay-body h2, .essay-body h3 {
+                font-family: 'EB Garamond', serif;
+                font-size: 1.7rem;
+                font-weight: 500;
+                color: #111827; /* gray-900 */
+                margin-top: 48px;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #E6DFD1;
+                line-height: 1.2;
+            }
+        </style>
 
         <aside class="flex flex-col gap-[32px]">
             {essay.data.concepts_used && essay.data.concepts_used.length > 0 && (
