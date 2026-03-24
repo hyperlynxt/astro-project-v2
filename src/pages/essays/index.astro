@@ -399,6 +399,21 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         const closeFilterBtn = document.getElementById('close-filter-btn');
         const applyFilterBtn = document.getElementById('apply-filter');
         const clearFilterBtn = document.getElementById('clear-filter');
+
+        function closeFilter() {
+            filterModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        // Close on backdrop click
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) closeFilter();
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeFilter();
+        });
         const sortBtns = document.querySelectorAll('.sort-btn');
         const sortOrderBtn = document.getElementById('sort-direction-toggle');
         const sortOrderLabel = document.getElementById('sort-direction-label');
@@ -520,10 +535,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             updateFilterCount();
         });
 
-        closeFilterBtn.addEventListener('click', () => {
-            filterModal.style.display = 'none';
-            document.body.style.overflow = '';
-        });
+        closeFilterBtn.addEventListener('click', closeFilter);
 
         sortBtns.forEach(btn => {
             btn.addEventListener('click', () => {

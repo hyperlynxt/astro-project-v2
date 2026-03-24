@@ -884,8 +884,8 @@ notes.sort((a, b) => {
                     <span>match</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="clear-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-[#2A2724]/60 border border-[#D5CCB6]/30 hover:border-[#A1C2AE] hover:text-[#7BA08A] transition-all">Clear</button>
-                    <button id="apply-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-white transition-all hover:-translate-y-[1px]" style="background: #7BA08A; box-shadow: 0 4px 14px rgba(123,160,138,0.35);">Apply</button>
+                    <button id="clear-filters-btn" class="font-['Reenie_Beanie'] text-[1.4rem] font-medium text-[#7BA08A] hover:bg-[#7BA08A]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
+                    <button id="apply-filters-btn" class="px-6 py-2 rounded-full text-sm font-sans font-medium text-white transition-all hover:-translate-y-[1px] shadow-lg hover:bg-[#6f917c]" style="background: #7BA08A;">Apply Filters</button>
                 </div>
             </div>
         </div>
@@ -1070,6 +1070,10 @@ notes.sort((a, b) => {
         }
         document.getElementById('open-filter-btn').addEventListener('click', openFilterModal);
         document.getElementById('close-filter-btn').addEventListener('click', closeFilterModal);
+
+        filterModal.addEventListener('click', e => {
+            if (e.target === filterModal) closeFilterModal();
+        });
         document.getElementById('apply-filters-btn').addEventListener('click', () => { applyFilters(); closeFilterModal(); });
         document.getElementById('clear-filters-btn').addEventListener('click', clearAllFilters);
         filterModal.addEventListener('click', e => { if (e.target === filterModal) closeFilterModal(); });
@@ -1207,9 +1211,13 @@ notes.sort((a, b) => {
             const visible  = arr.filter(c => c.style.display !== 'none');
             const isDesc   = filterState.sortOrder === 'desc';
 
-            const sortTarget = filterState.sort === 'default'
+            let sortTarget = filterState.sort === 'default'
                 ? originalOrder.filter(c => visible.includes(c))
                 : visible;
+
+            if (filterState.sort === 'default' && !isDesc) {
+                sortTarget = [...sortTarget].reverse();
+            }
 
             if (filterState.sort !== 'default') {
                 sortTarget.sort((a, b) => {
@@ -1239,6 +1247,10 @@ notes.sort((a, b) => {
         function clearAllFilters() {
             filterState = { query:'', sort:'default', sortOrder:'desc', minRating:0, statuses:[], noteTypes:[], disciplines:[], tags:[] };
             document.getElementById('notes-search').value = '';
+            
+            // reset sort order UI
+            document.getElementById('sort-direction-label').textContent = 'Descending';
+            document.getElementById('sort-direction-icon').style.transform = '';
             // reset sort buttons
             document.querySelectorAll('.sort-btn').forEach((b,i) => {
                 b.classList.remove('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
