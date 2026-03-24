@@ -288,7 +288,13 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         </h2>
     </section>
 
-    <main class="max-w-[1400px] mx-auto px-6 md:px-10">
+    <!-- Divider Header -->
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-8 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+        <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">The Essay Archive</span>
+        <span id="essay-count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{essays.length} essays</span>
+    </div>
+
+    <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-32">
         <div class="essays-grid" id="essays-grid">
             {essays.map((essay) => (
                 <a 
@@ -375,8 +381,11 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
                 </div>
             </div>
             <div class="filter-footer" style="padding: 1.5rem 2rem; border-top: 1px solid rgba(123,160,138,0.1); display: flex; justify-content: space-between; align-items: center;">
-                <span id="filter-count" class="font-serif italic text-ink/40 text-sm"></span>
-                <button id="apply-filter" class="bg-[#7BA08A] text-white px-6 py-2 rounded-full font-sans text-sm font-bold shadow-lg hover:bg-[#6f917c] transition-all">Apply Filters</button>
+                <button id="clear-filter" class="font-['Reenie_Beanie'] text-[1.4rem] font-medium text-[#7BA08A] hover:bg-[#7BA08A]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
+                <div class="flex items-center gap-4">
+                    <span id="filter-count" class="font-serif italic text-ink/40 text-sm"></span>
+                    <button id="apply-filter" class="bg-[#7BA08A] text-white px-6 py-2 rounded-full font-sans text-sm font-bold shadow-lg hover:bg-[#6f917c] transition-all">Apply Filters</button>
+                </div>
             </div>
         </div>
     </div>
@@ -389,6 +398,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         const openFilterBtn = document.getElementById('open-filter-btn');
         const closeFilterBtn = document.getElementById('close-filter-btn');
         const applyFilterBtn = document.getElementById('apply-filter');
+        const clearFilterBtn = document.getElementById('clear-filter');
         const sortBtns = document.querySelectorAll('.sort-btn');
         const sortOrderBtn = document.getElementById('sort-direction-toggle');
         const sortOrderLabel = document.getElementById('sort-direction-label');
@@ -400,6 +410,29 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             discipline: new Set(),
             lens: new Set()
         };
+
+        clearFilterBtn.addEventListener('click', () => {
+            currentFilters.status.clear();
+            currentFilters.discipline.clear();
+            currentFilters.lens.clear();
+            searchInput.value = '';
+            currentSort = 'number';
+            currentSortOrder = 'desc';
+            
+            sortOrderLabel.textContent = 'Descending';
+            
+            sortBtns.forEach((b, i) => {
+                b.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                b.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                if (i === 0) {
+                    b.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                    b.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                }
+            });
+
+            initFilters();
+            updateFilterCount();
+        });
 
         sortOrderBtn.addEventListener('click', () => {
             currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
@@ -432,7 +465,8 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             Array.from(items).sort().forEach(item => {
                 const btn = document.createElement('button');
                 btn.textContent = item;
-                btn.className = 'px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 transition-all hover:border-[#7BA08A]/50';
+                const active = currentFilters[category].has(item);
+                btn.className = `px-4 py-2 font-sans text-sm font-medium rounded-full border transition-all hover:border-[#7BA08A]/50 ${active ? 'bg-[#7BA08A] text-white shadow-lg border-[#7BA08A]' : 'bg-white text-[#2A2724]/70 border-[#D5CCB6]/30'}`;
                 btn.onclick = () => {
                     if (currentFilters[category].has(item)) {
                         currentFilters[category].delete(item);
@@ -450,8 +484,18 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         }
 
         function updateFilterCount() {
-            const count = Array.from(cards).filter(c => cardMatches(c)).length;
+            const visible = Array.from(cards).filter(c => cardMatches(c));
+            const count = visible.length;
+            const total = cards.length;
+            
+            // Modal count
             document.getElementById('filter-count').textContent = `${count} matches found`;
+            
+            // Divider count
+            const label = document.getElementById('essay-count-label');
+            if (label) {
+                label.textContent = count === total ? `${total} essays` : `${count} of ${total} essays`;
+            }
         }
 
         function cardMatches(c) {
@@ -522,6 +566,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             cards.forEach(c => {
                 c.style.display = cardMatches(c) ? 'flex' : 'none';
             });
+            updateFilterCount();
         });
 
         initFilters();
