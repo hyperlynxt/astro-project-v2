@@ -450,14 +450,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             });
         });
 
-        // Hide bar on scroll
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const current = window.pageYOffset;
-            if (current > lastScroll && current > 100) bottomBar.classList.add('hidden-bar');
-            else bottomBar.classList.remove('hidden-bar');
-            lastScroll = current;
-        });
+        // Hide bar on scroll removed to keep it visible as requested
     </script>
 </body>
 </html>
