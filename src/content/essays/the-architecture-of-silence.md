@@ -4,7 +4,7 @@ title: "The Architecture of Silence"
 date_published: 2024-03-22
 status: "Draft"
 sections: ["The Pre-History of Noise", "The Erasure of Deep Listening", "The Aesthetic of Negative Space", "Reclaiming the Quiet"]
-concepts_used: ["Negative Space", "Deep Listening", "Acoustic Ecology"]
+concepts_used: []
 notes_used: ["Silence is not empty", "The pressure of quiet", "Noise as modern pollution"]
 disciplines_touched: ["Architecture", "Musicology", "Philosophy"]
 analytical_lens: "Architectural"
