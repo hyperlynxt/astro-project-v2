@@ -472,6 +472,10 @@ notes.sort((a, b) => {
         .prop-row.full-width {
             grid-column: 1 / -1;
         }
+        .prop-row.row-span-2 {
+            grid-row: span 2;
+            border-bottom: none;
+        }
         #props-overlay.open .prop-row { opacity: 1; transform: translateY(0); }
         #props-overlay.open .prop-row:nth-child(1)  { transition-delay: 0.08s; }
         #props-overlay.open .prop-row:nth-child(2)  { transition-delay: 0.12s; }
@@ -1019,14 +1023,19 @@ notes.sort((a, b) => {
                             </div>`;
                         }).join('')}
                     </div>`,
-                    full: true
+                    span2: true
                 },
-                { label: 'Rating', html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
-                { label: 'Date',   html: `<span class="prop-value handwriting">${fmtDate(d.date)}</span>` },
-                d.notetype   ? { label: 'Note Type',      html: `<span class="prop-chip prop-chip-neutral">${d.notetype}</span>` } : null,
-                d.discipline ? { label: 'Discipline',     html: `<span class="prop-value">${d.discipline}</span>` } : null,
-                d.subdiscipline ? { label: 'Sub-discipline', html: `<span class="prop-value">${d.subdiscipline}</span>` } : null,
-                d.lens       ? { label: 'Analytical Lens', html: `<span class="prop-value italic-accent">${d.lens}</span>` } : null,
+                { label: 'Rating',   html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
+                { label: 'Date',     html: `<span class="prop-value handwriting">${fmtDate(d.date)}</span>` },
+                
+                // Paired Row: Note Type & Analytical Lens
+                { label: 'Note Type', html: d.notetype ? `<span class="prop-chip prop-chip-neutral">${d.notetype}</span>` : '<span class="prop-value">—</span>' },
+                { label: 'Analytical Lens', html: d.lens ? `<span class="prop-value italic-accent">${d.lens}</span>` : '<span class="prop-value">—</span>' },
+
+                // Paired Row: Discipline & Sub-discipline
+                { label: 'Discipline', html: d.discipline ? `<span class="prop-value">${d.discipline}</span>` : '<span class="prop-value">—</span>' },
+                { label: 'Sub-discipline', html: d.subdiscipline ? `<span class="prop-value">${d.subdiscipline}</span>` : '<span class="prop-value">—</span>' },
+
                 d.tags ? {
                     label: 'Tags',
                     html: `<div class="prop-chips">${d.tags.split(',').map(t=>`<span class="prop-chip prop-chip-neutral">${t.trim()}</span>`).join('')}</div>`,
@@ -1046,7 +1055,9 @@ notes.sort((a, b) => {
 
             rows.forEach(row => {
                 const div = document.createElement('div');
-                div.className = 'prop-row' + (row.full ? ' full-width' : '');
+                div.className = 'prop-row';
+                if (row.full) div.classList.add('full-width');
+                if (row.span2) div.classList.add('row-span-2');
                 div.innerHTML = `<p class="prop-label">${row.label}</p><div>${row.html}</div>`;
                 body.appendChild(div);
             });
