@@ -19,7 +19,7 @@ notes.sort((a, b) => {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
-    <style>
+    <style is:global>
         /* ── Base ── */
         body {
             background-color: #FDFCF9;
@@ -179,55 +179,125 @@ notes.sort((a, b) => {
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
         .hand-underline-sm { position:relative; display:inline-block; }
 
-        /* ── Modal ── */
-        #modal-overlay { background: rgba(155,124,200,0.18); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .ink-stain {
-            background-color: #FDFCF9;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png"), radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, rgba(253,252,249,0) 60%);
-            background-position: 0px 0px, 40px 60px, 0 0;
-            background-repeat: repeat, repeat, no-repeat;
+        /* ─────────────────────────────────────
+           NOTE MODAL  (layer 1)
+        ───────────────────────────────────── */
+        #note-modal {
+            position: fixed; inset: 0; z-index: 100;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 2rem;
+            background: rgba(42,39,35,0.32);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
         }
-        .modal-section-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(42,39,35,0.35);
-            margin-bottom: 0.5rem;
+
+        .note-modal-inner {
+            width: 100%; max-width: 760px;
+            max-height: 90vh;
+            background-color: var(--paper, #FDFCF9);
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, transparent 60%);
+            background-position: 0 0, 0 0;
+            background-repeat: repeat, no-repeat;
+            border-radius: 36px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 40px 100px rgba(155,124,200,0.18);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* scrollable body */
+        .note-modal-scroll {
+            overflow-y: auto;
+            flex: 1;
+            padding: 3rem 3.5rem 2.5rem;
+        }
+
+        /* close btn */
+        .modal-close {
+            position: absolute; top: 1.4rem; right: 1.4rem; z-index: 10;
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            border: 1px solid rgba(42,39,35,0.12);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: rgba(42,39,35,0.45);
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--accent-pale); color: var(--accent); border-color: var(--accent-light); }
+        .modal-close svg { transition: transform 0.3s; }
+        .modal-close:hover svg { transform: rotate(90deg); }
+
+        /* bg letter watermark */
+        .modal-bg-letter {
+            position: absolute; top: 1rem; right: 2rem;
+            font-family: 'EB Garamond', serif;
+            font-size: 20rem; font-weight: 700;
+            color: rgba(42,39,35,0.018);
+            line-height: 1; pointer-events: none; user-select: none;
+            z-index: 0;
+        }
+
+        /* content above watermark */
+        .note-modal-scroll > * { position: relative; z-index: 1; }
+
+        /* title block */
+        .modal-title-block { margin-bottom: 2rem; }
+        .modal-dot-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.6rem; }
+        .modal-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 3rem; font-weight: 500;
+            line-height: 1.1; color: var(--ink, #2A2724);
         }
         .modal-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            display: inline-flex; align-items: center; gap: 5px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 5px 12px;
-            border-radius: 100px;
+            font-size: 0.7rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 100px;
+        }
+        .modal-pill-neutral {
+            background: rgba(42,39,35,0.05); color: rgba(42,39,35,0.55);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 100px;
+            display: inline-flex;
         }
         .modal-status-raw    { background: #FFF3E0; color: #B06A00; }
         .modal-status-refine { background: var(--accent-pale); color: var(--accent); }
         .modal-status-meta   { background: #E8F5E9; color: #2E7D32; }
-        .modal-pill-neutral {
-            background: rgba(42,39,35,0.05);
-            color: rgba(42,39,35,0.55);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 5px 12px;
-            border-radius: 100px;
-            display: inline-flex;
+
+        .modal-meta-row {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-left: 2.75rem; flex-wrap: wrap;
         }
+        .modal-date {
+            font-family: 'Reenie Beanie', cursive;
+            font-size: 1.3rem; color: #A39985;
+        }
+
+        .modal-divider {
+            width: 100%; height: 1px;
+            background: linear-gradient(90deg, rgba(196,168,232,0.4), rgba(196,168,232,0.1), transparent);
+            margin-bottom: 2rem;
+        }
+
         .modal-body-prose {
             font-family: 'EB Garamond', serif;
-            font-size: 1.2rem;
-            line-height: 1.85;
+            font-size: 1.2rem; line-height: 1.85;
             color: rgba(42,39,35,0.82);
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: rgba(42,39,35,0.35);
+            margin-bottom: 0.6rem;
         }
         .concept-chip {
             display: inline-block;
@@ -236,18 +306,234 @@ notes.sort((a, b) => {
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.95rem;
-            padding: 6px 14px;
-            border-radius: 12px;
-            transition: all 0.2s;
-            cursor: default;
+            padding: 6px 14px; border-radius: 12px;
         }
-        .concept-chip:hover { background: rgba(155,124,200,0.15); border-color: var(--accent-light); }
 
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar { width: 7px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background-color: rgba(155,124,200,0.4); }
+        /* ── Properties button (lives inside modal footer) ── */
+        .modal-footer-bar {
+            padding: 1rem 2.5rem 1.5rem;
+            border-top: 1px solid rgba(155,124,200,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background: rgba(253,252,249,0.8);
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
+        }
+
+        .properties-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(42,39,35,0.45);
+            background: transparent;
+            border: 1.5px solid rgba(42,39,35,0.12);
+            border-radius: 100px;
+            padding: 7px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .properties-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent-light);
+            background: var(--accent-pale);
+        }
+        .properties-btn svg { flex-shrink: 0; transition: transform 0.2s; }
+        .properties-btn:hover svg { transform: rotate(15deg); }
+
+        /* ─────────────────────────────────────
+           PROPERTIES MODAL  (layer 2 — nested)
+        ───────────────────────────────────── */
+        #props-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            align-items: flex-end;
+            justify-content: stretch;
+            background: rgba(42,39,35,0.18);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 36px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        #props-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* the panel slides up from the bottom */
+        .props-panel {
+            width: 100%;
+            background-color: var(--paper, #FDFCF9);
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                radial-gradient(circle at 95% 5%, rgba(155,124,200,0.07) 0%, transparent 55%);
+            background-position: 0 0, 0 0;
+            background-repeat: repeat, no-repeat;
+            border-radius: 28px 28px 36px 36px;
+            border-top: 1px solid rgba(155,124,200,0.18);
+            box-shadow: 0 -12px 48px rgba(42,39,35,0.14);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            max-height: 82%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #props-overlay.open .props-panel {
+            transform: translateY(0);
+        }
+
+        /* accent band */
+        .props-band {
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-light), var(--accent), var(--accent-light));
+            opacity: 0.55;
+            border-radius: 28px 28px 0 0;
+            flex-shrink: 0;
+        }
+
+        /* drag handle hint */
+        .props-handle {
+            display: flex; justify-content: center;
+            padding: 0.9rem 0 0.2rem;
+            flex-shrink: 0;
+        }
+        .props-handle-bar {
+            width: 36px; height: 4px;
+            background: rgba(42,39,35,0.12);
+            border-radius: 2px;
+        }
+
+        /* header */
+        .props-header {
+            padding: 0.5rem 1.8rem 1.1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .props-header-left {}
+        .props-eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: rgba(42,39,35,0.28);
+            margin-bottom: 0.2rem;
+        }
+        .props-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.35rem; font-weight: 500;
+            color: var(--ink, #2A2724); line-height: 1.2;
+        }
+
+        .props-close {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(42,39,35,0.10);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: rgba(42,39,35,0.38);
+            transition: all 0.2s; flex-shrink: 0;
+        }
+        .props-close:hover { background: var(--accent-pale); color: var(--accent); border-color: var(--accent-light); }
+
+        /* header divider */
+        .props-header-divider {
+            height: 1px; margin: 0 1.8rem;
+            background: linear-gradient(90deg, rgba(155,124,200,0.2), transparent);
+            flex-shrink: 0;
+        }
+
+        /* scrollable properties list */
+        .props-body {
+            overflow-y: auto;
+            padding: 1.2rem 1.8rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        .props-body::-webkit-scrollbar { width: 4px; }
+        .props-body::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
+
+        .prop-row {
+            padding: 0.9rem 0.6rem;
+            border-bottom: 1px solid rgba(42,39,35,0.05);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .prop-row.full-width {
+            grid-column: 1 / -1;
+        }
+        #props-overlay.open .prop-row { opacity: 1; transform: translateY(0); }
+        #props-overlay.open .prop-row:nth-child(1)  { transition-delay: 0.08s; }
+        #props-overlay.open .prop-row:nth-child(2)  { transition-delay: 0.12s; }
+        #props-overlay.open .prop-row:nth-child(3)  { transition-delay: 0.16s; }
+        #props-overlay.open .prop-row:nth-child(4)  { transition-delay: 0.20s; }
+        #props-overlay.open .prop-row:nth-child(5)  { transition-delay: 0.24s; }
+        #props-overlay.open .prop-row:nth-child(6)  { transition-delay: 0.28s; }
+        #props-overlay.open .prop-row:nth-child(7)  { transition-delay: 0.32s; }
+        #props-overlay.open .prop-row:nth-child(8)  { transition-delay: 0.36s; }
+        #props-overlay.open .prop-row:nth-child(9)  { transition-delay: 0.40s; }
+        #props-overlay.open .prop-row:nth-child(10) { transition-delay: 0.44s; }
+
+        .prop-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 8.5px; font-weight: 700;
+            letter-spacing: 0.13em; text-transform: uppercase;
+            color: rgba(42,39,35,0.30);
+            margin-bottom: 0.4rem;
+        }
+        .prop-value {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem; color: rgba(42,39,35,0.78);
+            line-height: 1.35;
+        }
+        .prop-value.italic-accent { color: var(--accent); font-style: italic; }
+        .prop-value.handwriting {
+            font-family: 'Reenie Beanie', cursive;
+            font-size: 1.2rem; color: #A39985; line-height: 1.2;
+        }
+
+        /* chips inside props */
+        .prop-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+        .prop-chip {
+            font-family: 'Inter', sans-serif;
+            font-size: 8.5px; font-weight: 700;
+            letter-spacing: 0.09em; text-transform: uppercase;
+            padding: 3px 9px; border-radius: 5px;
+        }
+        .prop-chip-accent   { background: var(--accent-pale); color: var(--accent); }
+        .prop-chip-raw      { background: #FFF3E0; color: #B06A00; }
+        .prop-chip-meta     { background: #E8F5E9; color: #2E7D32; }
+        .prop-chip-neutral  { background: rgba(42,39,35,0.06); color: rgba(42,39,35,0.48); }
+        .prop-concept-chip {
+            display: inline-block;
+            background: rgba(155,124,200,0.08);
+            border: 1px solid rgba(155,124,200,0.22);
+            color: var(--accent-dark);
+            font-family: 'EB Garamond', serif;
+            font-size: 0.88rem;
+            padding: 4px 11px; border-radius: 9px;
+        }
+
+        /* status pipeline */
+        .prop-pipeline { display: flex; flex-direction: column; gap: 0.4rem; }
+        .prop-pipeline-step { display: flex; align-items: center; gap: 0.5rem; }
+        .prop-pipeline-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .prop-pipeline-label { font-family: 'EB Garamond', serif; font-size: 0.9rem; }
+
+        /* scrollbar (main modal) */
+        .note-modal-scroll::-webkit-scrollbar { width: 5px; }
+        .note-modal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .note-modal-scroll::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
 
         /* ── Star filter ── */
         .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
@@ -391,122 +677,75 @@ notes.sort((a, b) => {
     </div>
 
     <!-- ─────────────── NOTE MODAL ─────────────── -->
-    <div id="note-modal" class="fixed inset-0 z-[100] items-center justify-center p-6 md:p-10" style="display:none; background: rgba(42,39,35,0.32); backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);">
-        <div class="w-full max-w-[1200px] h-[90vh] bg-white rounded-[40px] shadow-[0_40px_100px_rgba(155,124,200,0.18)] overflow-hidden border border-white/60 relative ring-1 ring-[#C4A8E8]/20 modal-card">
-            <!-- Close -->
-            <div class="absolute top-0 right-0 p-7 z-[60]">
-                <button id="close-modal-btn" class="w-11 h-11 rounded-full bg-white/80 backdrop-blur-md border border-[#D5CCB6] shadow-sm hover:bg-[#F8F4FD] flex items-center justify-center text-[#2A2724] transition-all group">
-                    <svg class="w-4.5 h-4.5 opacity-60 group-hover:opacity-100 group-hover:rotate-90 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <!-- ─────────────── NOTE MODAL ─────────────── -->
+    <div id="note-modal" style="display:none;">
+        <div class="note-modal-inner modal-card">
+
+            <!-- bg watermark -->
+            <div class="modal-bg-letter" id="modal-bg-letter"></div>
+
+            <!-- close -->
+            <button class="modal-close" id="close-note-modal">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <!-- scrollable content -->
+            <div class="note-modal-scroll">
+
+                <!-- Title block -->
+                <div class="modal-title-block">
+                    <h1 class="modal-title modal-title-text" id="modal-title"></h1>
+                    <div class="modal-meta-row" style="margin-left:0; margin-top:0.5rem;">
+                        <span class="modal-date" id="modal-date"></span>
+                    </div>
+                </div>
+
+                <div class="modal-divider"></div>
+
+                <!-- Body -->
+                <div class="modal-body-prose modal-reveal" id="modal-body"></div>
+
+            </div><!-- /scroll -->
+
+            <!-- Footer with Properties button -->
+            <div class="modal-footer-bar">
+                <button class="properties-btn" id="open-props-btn">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/>
+                        <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                    </svg>
+                    Properties
                 </button>
             </div>
 
-            <!-- Two-column layout -->
-            <div class="h-full flex overflow-hidden ink-stain">
+            <!-- ═══════════════════════════════
+                 PROPERTIES PANEL  (layer 2)
+            ════════════════════════════════ -->
+            <div id="props-overlay">
+                <div class="props-panel">
+                    <div class="props-band"></div>
+                    <div class="props-handle"><div class="props-handle-bar"></div></div>
 
-                <!-- LEFT: main content -->
-                <div class="flex-1 overflow-y-auto modal-scrollbar px-10 md:px-16 lg:px-20 pt-14 pb-24 relative">
-                    <!-- Background letter watermark -->
-                    <div id="modal-bg-letter" class="absolute top-8 right-10 text-[22rem] font-serif font-bold text-[#2A2724]/[0.018] leading-none pointer-events-none select-none -z-10 -rotate-3"></div>
-
-                    <!-- Title + rating -->
-                    <div class="mb-8">
-                        <div class="flex items-start gap-4 mb-3">
-                            <div id="modal-dot-rating" class="dot-rating mt-3 flex-shrink-0"></div>
-                            <h1 id="modal-title" class="font-serif text-4xl md:text-5xl lg:text-[3.6rem] font-medium text-[#2A2724] leading-[1.08] tracking-tight modal-title-text relative">
-                                <!-- filled by JS -->
-                                <svg id="modal-title-underline" class="absolute h-[12px] text-[#9B7CC8] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:none;">
-                                    <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
-                                </svg>
-                            </h1>
+                    <div class="props-header">
+                        <div class="props-header-left">
+                            <p class="props-eyebrow">Note properties</p>
+                            <p class="props-title" id="props-title"></p>
                         </div>
-                        <!-- Status + date row -->
-                        <div class="flex items-center gap-3 ml-12 flex-wrap">
-                            <span id="modal-status" class="modal-pill"></span>
-                            <span id="modal-notetype" class="modal-pill-neutral hidden"></span>
-                            <span id="modal-date" class="font-['Reenie_Beanie'] text-xl text-[#A39985] translate-y-1"></span>
-                        </div>
+                        <button class="props-close" id="close-props-btn">
+                            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
                     </div>
 
-                    <!-- Divider line -->
-                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/40 via-[#C4A8E8]/10 to-transparent mb-8"></div>
+                    <div class="props-header-divider"></div>
 
-                    <!-- Body text -->
-                    <div id="modal-body" class="modal-body-prose modal-reveal mb-12"></div>
-
-                    <!-- Concepts used -->
-                    <div id="modal-concepts-section" class="mb-8 hidden">
-                        <p class="modal-section-label">!! Concepts Used</p>
-                        <div id="modal-concepts" class="flex flex-wrap gap-2"></div>
-                    </div>
-
-                    <!-- Vocabulary -->
-                    <div id="modal-vocab-section" class="mb-8 hidden">
-                        <p class="modal-section-label">Vocabulary</p>
-                        <div id="modal-vocab" class="flex flex-wrap gap-2"></div>
-                    </div>
-
-                    <!-- Tags -->
-                    <div id="modal-tags-section" class="mb-4 hidden">
-                        <p class="modal-section-label">Tags</p>
-                        <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+                    <div class="props-body" id="props-body">
+                        <!-- filled by JS -->
                     </div>
                 </div>
-
-                <!-- RIGHT: metadata sidebar -->
-                <div class="w-[280px] flex-shrink-0 border-l px-7 py-12 overflow-y-auto modal-scrollbar space-y-7 bg-[#FDFCF9]/70" style="border-color: rgba(155,124,200,0.12);">
-
-                    <!-- Discipline -->
-                    <div class="sidebar-block">
-                        <p class="modal-section-label">Primary Discipline</p>
-                        <p id="sidebar-discipline" class="font-serif text-[1.05rem] text-[#2A2724]/80 leading-snug"></p>
-                    </div>
-
-                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
-
-                    <!-- Sub-discipline -->
-                    <div id="sidebar-subdiscipline-block" class="sidebar-block hidden">
-                        <p class="modal-section-label">Sub-discipline</p>
-                        <p id="sidebar-subdiscipline" class="font-serif text-[1.05rem] text-[#2A2724]/75 leading-snug"></p>
-                    </div>
-
-                    <div id="sidebar-sub-divider" class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent hidden"></div>
-
-                    <!-- Analytical Lens -->
-                    <div id="sidebar-lens-block" class="sidebar-block hidden">
-                        <p class="modal-section-label">Analytical Lens</p>
-                        <p id="sidebar-lens" class="font-serif italic text-[#9B7CC8] text-[1.05rem] leading-snug"></p>
-                    </div>
-
-                    <div id="sidebar-lens-divider" class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent hidden"></div>
-
-                    <!-- Rating visual -->
-                    <div class="sidebar-block">
-                        <p class="modal-section-label">Rating</p>
-                        <div id="sidebar-dots" class="dot-rating mt-1"></div>
-                    </div>
-
-                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
-
-                    <!-- Status -->
-                    <div class="sidebar-block">
-                        <p class="modal-section-label">Status</p>
-                        <div class="flex flex-col gap-1.5 mt-1" id="sidebar-status-pipeline">
-                            <!-- JS fills steps -->
-                        </div>
-                    </div>
-
-                    <div class="w-full h-px bg-gradient-to-r from-[#C4A8E8]/25 to-transparent"></div>
-
-                    <!-- Date -->
-                    <div class="sidebar-block">
-                        <p class="modal-section-label">Date</p>
-                        <p id="sidebar-date" class="font-['Reenie_Beanie'] text-[1.4rem] text-[#A39985] leading-tight translate-y-0.5"></p>
-                    </div>
-                </div>
-
             </div>
-        </div>
-    </div>
+
+        </div><!-- /note-modal-inner -->
+    </div><!-- /note-modal -->
 
     <!-- ─────────────── FILTER MODAL ─────────────── -->
     <div id="filter-modal" class="fixed inset-0 z-[60] items-center justify-center p-6" style="display:none; background: rgba(245,242,235,0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
@@ -679,184 +918,139 @@ notes.sort((a, b) => {
             bottomBar.classList.toggle('hidden-bar', !show);
         }
 
+        /* ── helpers ── */
+        function dots(n) {
+            return [1,2,3].map(i => `<span class="dot${i<=n?' filled':''}"></span>`).join('');
+        }
+        function fmtDate(str) {
+            if (!str) return '—';
+            return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
         // ── Open note modal ──
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                const title       = card.dataset.title   || '';
-                const body        = card.dataset.body    || '';
-                const rating      = parseInt(card.dataset.rating) || 0;
-                const date        = card.dataset.date    || '';
-                const status      = card.dataset.status  || '';
-                const noteType    = card.dataset.notetype || '';
-                const discipline  = card.dataset.discipline || '';
-                const subdiscipl  = card.dataset.subdiscipline || '';
-                const lens        = card.dataset.lens    || '';
-                const conceptsRaw = card.dataset.concepts || '';
-                const vocabRaw    = card.dataset.vocabulary || '';
-                const tagsRaw     = card.dataset.tags    || '';
+                const d = card.dataset;
 
-                // Title
-                const titleEl = document.getElementById('modal-title');
-                titleEl.childNodes[0]?.nodeType === Node.TEXT_NODE
-                    ? (titleEl.firstChild.textContent = title)
-                    : titleEl.insertBefore(document.createTextNode(title), titleEl.firstChild);
-                titleEl.firstChild.textContent = title;
+                // watermark
+                document.getElementById('modal-bg-letter').textContent = (d.title||'')[0].toUpperCase();
 
-                // Underline animation
-                const underlineSvg = document.getElementById('modal-title-underline');
-                requestAnimationFrame(() => {
-                    const rect = titleEl.getBoundingClientRect();
-                    const parentRect = titleEl.parentElement.getBoundingClientRect();
-                    underlineSvg.style.width = (rect.width * 1.05) + 'px';
-                    underlineSvg.style.top   = (rect.bottom - parentRect.top + 2) + 'px';
-                    underlineSvg.style.left  = (rect.left  - parentRect.left - rect.width  * 0.025) + 'px';
-                    underlineSvg.style.display = 'block';
-                    const path = underlineSvg.querySelector('path');
-                    path.style.animation = 'none'; void path.offsetWidth;
-                    path.style.animation = 'drawSwoosh 0.8s ease-out 0.4s forwards';
-                });
+                // title
+                document.getElementById('modal-title').textContent = d.title || '';
 
-                // Watermark letter
-                document.getElementById('modal-bg-letter').textContent = title.charAt(0).toUpperCase();
+                // date
+                document.getElementById('modal-date').textContent = fmtDate(d.date);
 
-                // Body
-                document.getElementById('modal-body').textContent = body;
+                // body
+                document.getElementById('modal-body').textContent = d.body || '';
 
-                // Dot rating (header)
-                const headerDots = document.getElementById('modal-dot-rating');
-                headerDots.innerHTML = [1,2,3].map(i =>
-                    `<span class="dot${i <= rating ? ' filled' : ''}"></span>`
-                ).join('');
+                // store data on props button for quick access
+                document.getElementById('open-props-btn').dataset.cardData = JSON.stringify(d);
 
-                // Sidebar dots
-                const sidebarDots = document.getElementById('sidebar-dots');
-                sidebarDots.innerHTML = [1,2,3].map(i =>
-                    `<span class="dot${i <= rating ? ' filled' : ''}"></span>`
-                ).join('');
-
-                // Status (header pill)
-                const statusEl = document.getElementById('modal-status');
-                statusEl.textContent = status;
-                statusEl.className = 'modal-pill ' + (
-                    status === 'Raw'    ? 'modal-status-raw' :
-                    status === 'Refine' ? 'modal-status-refine' :
-                    'modal-status-meta'
-                );
-
-                // Status pipeline (sidebar)
-                const pipeline = ['Raw', 'Refine', 'Metastasis / Converted'];
-                const pipelineEl = document.getElementById('sidebar-status-pipeline');
-                pipelineEl.innerHTML = pipeline.map((step, i) => {
-                    const current = step.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(step.toLowerCase());
-                    const past    = pipeline.findIndex(s => s.toLowerCase().includes(status.toLowerCase()) || status.toLowerCase().includes(s.toLowerCase())) > i;
-                    
-                    let dotColor = 'bg-[#E8E2D2]';
-                    if (current) {
-                        if (status === 'Raw') dotColor = 'bg-[#B06A00]';
-                        else if (status === 'Refine') dotColor = 'bg-[#9B7CC8]';
-                        else dotColor = 'bg-[#2E7D32]';
-                    } else if (past) {
-                        dotColor = 'bg-[#C4A8E8]';
-                    }
-
-                    return `<div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full flex-shrink-0 ${dotColor}"></span>
-                        <span class="font-serif text-[0.9rem] ${current ? (status === 'Raw' ? 'text-[#B06A00] font-medium' : status === 'Refine' ? 'text-[#9B7CC8] font-medium' : 'text-[#2E7D32] font-medium') : 'text-[#2A2724]/40'}">${step}</span>
-                    </div>`;
-                }).join('');
-
-                // Note type
-                const noteTypeEl = document.getElementById('modal-notetype');
-                if (noteType) { noteTypeEl.textContent = noteType; noteTypeEl.classList.remove('hidden'); }
-                else           noteTypeEl.classList.add('hidden');
-
-                // Date
-                const dateFormatted = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                document.getElementById('modal-date').textContent    = dateFormatted;
-                document.getElementById('sidebar-date').textContent  = dateFormatted;
-
-                // Discipline
-                document.getElementById('sidebar-discipline').textContent = discipline || '—';
-
-                // Sub-discipline
-                const subBlock   = document.getElementById('sidebar-subdiscipline-block');
-                const subDivider = document.getElementById('sidebar-sub-divider');
-                if (subdiscipl) {
-                    document.getElementById('sidebar-subdiscipline').textContent = subdiscipl;
-                    subBlock.classList.remove('hidden'); subDivider.classList.remove('hidden');
-                } else {
-                    subBlock.classList.add('hidden'); subDivider.classList.add('hidden');
-                }
-
-                // Analytical lens
-                const lensBlock   = document.getElementById('sidebar-lens-block');
-                const lensDivider = document.getElementById('sidebar-lens-divider');
-                if (lens) {
-                    document.getElementById('sidebar-lens').textContent = lens;
-                    lensBlock.classList.remove('hidden'); lensDivider.classList.remove('hidden');
-                } else {
-                    lensBlock.classList.add('hidden'); lensDivider.classList.add('hidden');
-                }
-
-                // Concepts used
-                const conceptsSec = document.getElementById('modal-concepts-section');
-                const conceptsEl  = document.getElementById('modal-concepts');
-                if (conceptsRaw) {
-                    // Support both || and comma delimiters
-                    const delimiter = conceptsRaw.includes('||') ? '||' : ',';
-                    const items = conceptsRaw.split(delimiter).map(s => s.trim()).filter(Boolean);
-                    conceptsEl.innerHTML = items.map(c =>
-                        `<span class="font-['EB_Garamond'] text-[#7A5BA8] text-[0.95rem] bg-[#9B7CC8]/10 border border-[#9B7CC8]/25 px-3 py-1.5 rounded-xl transition-all hover:bg-[#9B7CC8]/20">${c}</span>`
-                    ).join('');
-                    conceptsSec.classList.remove('hidden');
-                } else {
-                    conceptsSec.classList.add('hidden');
-                }
-
-                // Vocabulary
-                const vocabSec = document.getElementById('modal-vocab-section');
-                const vocabEl  = document.getElementById('modal-vocab');
-                if (vocabRaw) {
-                    // Support both || and comma delimiters
-                    const delimiter = vocabRaw.includes('||') ? '||' : ',';
-                    const items = vocabRaw.split(delimiter).map(s => s.trim()).filter(Boolean);
-                    vocabEl.innerHTML = items.map(v =>
-                        `<span class="font-['EB_Garamond'] italic text-[#9B7CC8] text-[1.05rem] bg-[#EDE6F8]/60 px-3 py-1 rounded-lg">${v}</span>`
-                    ).join('');
-                    vocabSec.classList.remove('hidden');
-                } else {
-                    vocabSec.classList.add('hidden');
-                }
-
-                // Tags
-                const tagsSec = document.getElementById('modal-tags-section');
-                const tagsEl  = document.getElementById('modal-tags');
-                if (tagsRaw) {
-                    const items = tagsRaw.split(',').map(s => s.trim()).filter(Boolean);
-                    tagsEl.innerHTML = items.map(t =>
-                        `<span class="font-sans text-[9px] font-bold uppercase tracking-[0.1em] px-3 py-1 rounded-md" style="background:rgba(42,39,35,0.05);color:rgba(42,39,35,0.45);">${t}</span>`
-                    ).join('');
-                    tagsSec.classList.remove('hidden');
-                } else {
-                    tagsSec.classList.add('hidden');
-                }
+                // reset props panel
+                document.getElementById('props-overlay').classList.remove('open');
 
                 noteModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
                 toggleBottomBar(false);
-                noteModal.querySelectorAll('.overflow-y-auto,.modal-scrollbar').forEach(el => el.scrollTop = 0);
+                document.querySelector('.note-modal-scroll').scrollTop = 0;
             });
         });
 
         function closeModal() {
+            document.getElementById('props-overlay').classList.remove('open');
             noteModal.style.display = 'none';
             if (filterModal.style.display !== 'flex') {
                 document.body.style.overflow = '';
                 toggleBottomBar(true);
             }
         }
-        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        document.getElementById('close-note-modal').addEventListener('click', closeModal);
         noteModal.addEventListener('click', e => { if (e.target === noteModal) closeModal(); });
+
+        /* ── Properties panel ── */
+        document.getElementById('open-props-btn').addEventListener('click', () => {
+            const raw = document.getElementById('open-props-btn').dataset.cardData;
+            if (!raw) return;
+            const d = JSON.parse(raw);
+            buildPropsPanel(d);
+            document.getElementById('props-overlay').classList.add('open');
+        });
+
+        document.getElementById('close-props-btn').addEventListener('click', () => {
+            document.getElementById('props-overlay').classList.remove('open');
+        });
+
+        // click backdrop of props overlay closes it
+        document.getElementById('props-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('props-overlay')) {
+                document.getElementById('props-overlay').classList.remove('open');
+            }
+        });
+
+        function buildPropsPanel(d) {
+            document.getElementById('props-title').textContent = d.title || '—';
+
+            const body = document.getElementById('props-body');
+            body.innerHTML = '';
+
+            const pipeline = ['Raw', 'Refine', 'Metastasis / Converted'];
+            const statusIdx = pipeline.findIndex(s => s.toLowerCase().includes((d.status||'').toLowerCase()));
+
+            const rows = [
+                {
+                    label: 'Status',
+                    html: `<div class="prop-pipeline">
+                        ${pipeline.map((step, i) => {
+                            const isCurrent = i === statusIdx;
+                            const isPast    = i < statusIdx;
+                            let dotStyle    = 'background:rgba(42,39,35,0.15);';
+                            let labelCls    = 'color:rgba(42,39,35,0.35);';
+                            if (isCurrent) {
+                                if (d.status==='Raw')    { dotStyle='background:#B06A00;'; labelCls='color:#B06A00;font-weight:500;'; }
+                                else if (d.status==='Refine') { dotStyle='background:var(--accent);'; labelCls='color:var(--accent);font-weight:500;'; }
+                                else                          { dotStyle='background:#2E7D32;'; labelCls='color:#2E7D32;font-weight:500;'; }
+                            } else if (isPast) {
+                                dotStyle='background:var(--accent-light);';
+                            }
+                            return `<div class="prop-pipeline-step">
+                                <span class="prop-pipeline-dot" style="${dotStyle}"></span>
+                                <span class="prop-pipeline-label" style="${labelCls}">${step}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>`,
+                    full: true
+                },
+                { label: 'Rating', html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
+                { label: 'Date',   html: `<span class="prop-value handwriting">${fmtDate(d.date)}</span>` },
+                d.notetype   ? { label: 'Note Type',      html: `<span class="prop-chip prop-chip-neutral">${d.notetype}</span>` } : null,
+                d.discipline ? { label: 'Discipline',     html: `<span class="prop-value">${d.discipline}</span>` } : null,
+                d.subdiscipline ? { label: 'Sub-discipline', html: `<span class="prop-value">${d.subdiscipline}</span>` } : null,
+                d.lens       ? { label: 'Analytical Lens', html: `<span class="prop-value italic-accent">${d.lens}</span>` } : null,
+                d.tags ? {
+                    label: 'Tags',
+                    html: `<div class="prop-chips">${d.tags.split(',').map(t=>`<span class="prop-chip prop-chip-neutral">${t.trim()}</span>`).join('')}</div>`,
+                    full: true
+                } : null,
+                d.concepts ? {
+                    label: 'Concepts',
+                    html: `<div class="prop-chips">${d.concepts.split('||').map(c=>`<span class="prop-concept-chip">${c.trim()}</span>`).join('')}</div>`,
+                    full: true
+                } : null,
+                d.vocabulary ? {
+                    label: 'Vocabulary',
+                    html: `<div class="prop-chips">${d.vocabulary.split('||').map(v=>`<span class="prop-concept-chip" style="font-style:italic;color:var(--accent);">${v.trim()}</span>`).join('')}</div>`,
+                    full: true
+                } : null,
+            ].filter(Boolean);
+
+            rows.forEach(row => {
+                const div = document.createElement('div');
+                div.className = 'prop-row' + (row.full ? ' full-width' : '');
+                div.innerHTML = `<p class="prop-label">${row.label}</p><div>${row.html}</div>`;
+                body.appendChild(div);
+            });
+        }
 
         // ── Filter modal ──
         function openFilterModal() {
@@ -880,7 +1074,15 @@ notes.sort((a, b) => {
         filterModal.addEventListener('click', e => { if (e.target === filterModal) closeFilterModal(); });
 
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeModal(); closeFilterModal(); }
+            if (e.key === 'Escape') {
+                const propsOpen = document.getElementById('props-overlay').classList.contains('open');
+                if (propsOpen) {
+                    document.getElementById('props-overlay').classList.remove('open');
+                } else {
+                    closeModal();
+                    closeFilterModal();
+                }
+            }
         });
 
         // ── Sort buttons ──
