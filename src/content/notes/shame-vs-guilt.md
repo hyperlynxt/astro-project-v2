@@ -9,7 +9,6 @@ primary_discipline: "Sociology"
 sub_discipline: "Social Psychology"
 analytical_lens: "Structural"
 concepts_used: "dramaturgical theory||stigma||emotion regulation"
-vocabulary: "stigmatized identity||social control||impression management"
 tags: ["shame", "guilt", "Goffman", "emotion"]
 ---
 Guilt points inward toward an act; shame points outward toward an audience, real or imagined. Goffman's dramaturgical lens explains why shame is the more potent social control — it threatens the entire performed identity, not just a discrete behavior.

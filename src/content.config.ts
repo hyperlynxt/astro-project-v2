@@ -73,7 +73,6 @@ const notes = defineCollection({
     sub_discipline: z.string().optional(),
     analytical_lens: z.string().optional(),
     concepts_used: z.union([z.array(z.string()), z.string()]).optional(),
-    vocabulary: z.union([z.array(z.string()), z.string()]).optional(),
     tags: z.array(z.string()).optional(),
   }),
 });

@@ -9,7 +9,6 @@ primary_discipline: "Cognitive Science"
 sub_discipline: "Philosophy of Mind"
 analytical_lens: "Phenomenological"
 concepts_used: "phenomenal self-model||core consciousness||narrative self"
-vocabulary: "post-hoc||phenomenal transparency||temporal binding"
 tags: ["self", "consciousness", "narrative"]
 ---
 Metzinger's no-self thesis and Damasio's core consciousness pull in different directions but share a kernel: the 'I' that narrates is a post-hoc assembly. The lag is interesting — what fills the gap?

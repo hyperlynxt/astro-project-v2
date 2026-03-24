@@ -9,7 +9,6 @@ primary_discipline: "Linguistics"
 sub_discipline: "Cognitive Linguistics"
 analytical_lens: "Metaphor Theory"
 concepts_used: ["Spatial Metaphor", "Embodied Cognition"]
-vocabulary: ["Schema", "Mapping"]
 tags: ["metaphor", "cognition", "space"]
 ---
 

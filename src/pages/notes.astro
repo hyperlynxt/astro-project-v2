@@ -628,7 +628,6 @@ notes.sort((a, b) => {
                         data-subdiscipline={entry.data.sub_discipline || ''}
                         data-lens={entry.data.analytical_lens || ''}
                         data-concepts={Array.isArray(entry.data.concepts_used) ? entry.data.concepts_used.join('||') : (entry.data.concepts_used || '')}
-                        data-vocabulary={Array.isArray(entry.data.vocabulary) ? entry.data.vocabulary.join('||') : (entry.data.vocabulary || '')}
                         data-tags={(entry.data.tags || []).join(',')}
                     >
                         <!-- expand hint -->
@@ -1044,11 +1043,6 @@ notes.sort((a, b) => {
                 d.concepts ? {
                     label: 'Concepts',
                     html: `<div class="prop-chips">${d.concepts.split('||').map(c=>`<span class="prop-concept-chip">${c.trim()}</span>`).join('')}</div>`,
-                    full: true
-                } : null,
-                d.vocabulary ? {
-                    label: 'Vocabulary',
-                    html: `<div class="prop-chips">${d.vocabulary.split('||').map(v=>`<span class="prop-concept-chip" style="font-style:italic;color:var(--accent);">${v.trim()}</span>`).join('')}</div>`,
                     full: true
                 } : null,
             ].filter(Boolean);

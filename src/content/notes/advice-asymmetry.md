@@ -9,7 +9,6 @@ primary_discipline: "Psychology"
 sub_discipline: "Cognitive Psychology"
 analytical_lens: "Behavioral"
 concepts_used: "empathy gap||self-serving bias||moral licensing"
-vocabulary: "hot-cold empathy gap||Solomon's Paradox||interpersonal distance"
-tags: ["advice", "hypocrisy", "bias"]
+tags: ["advice", "heuristics", "empathy"]
 ---
 There's a persistent asymmetry here that feels undertheorized. Hot-cold empathy gaps, sure, but also something about the role of language in making rules feel obligatory for others while remaining optional for the self.

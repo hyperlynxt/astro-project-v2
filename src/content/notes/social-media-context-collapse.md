@@ -9,7 +9,6 @@ primary_discipline: "Sociology"
 sub_discipline: "Digital Sociology"
 analytical_lens: "Structural"
 concepts_used: "context collapse||dramaturgical theory||identity performance"
-vocabulary: "context collapse||proscenium||polymorphic audience"
 tags: ["social media", "identity", "Goffman", "performance"]
 ---
 Goffman's front and back stages collapse into one ambiguous proscenium. You can't perform intimacy for close friends and authority for professional contacts simultaneously on the same feed. The result isn't inauthenticity; it's an impossible double bind.

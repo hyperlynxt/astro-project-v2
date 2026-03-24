@@ -9,7 +9,6 @@ primary_discipline: "Linguistics"
 sub_discipline: "Cognitive Linguistics"
 analytical_lens: "Structural"
 concepts_used: "Sapir-Whorf hypothesis||linguistic relativity||cognitive framing"
-vocabulary: "lexical availability||linguistic determinism||semantic scaffolding"
 tags: ["language", "cognition", "whorf"]
 ---
 Sapir-Whorf keeps resurfacing. Not the strong version — I'm not committed to full linguistic determinism — but the weak claim that lexical availability shapes the grooves along which thought tends to run feels more defensible than it's given credit for.
