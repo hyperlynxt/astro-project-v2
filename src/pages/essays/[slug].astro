@@ -1,0 +1,284 @@
+---
+import { getCollection, render } from 'astro:content';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('essays');
+  return essays.map(essay => ({
+    params: { slug: essay.id },
+    props: { essay },
+  }));
+}
+
+const { essay } = Astro.props;
+const { Content } = await render(essay);
+
+// Process list fields for the sidebar
+const concepts = essay.data.concepts_used || [];
+const notes = essay.data.notes_used || [];
+const items = [
+    { label: 'Published', value: essay.data.date_published.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) },
+    { label: 'Analytical Lens', value: essay.data.analytical_lens }
+];
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive — Essay #{essay.data.essay_number.toString().padStart(3, '0')}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --muted: #8E8981;
+            --green-accent: #a8c5a0;
+            --teal: #4A6B62;
+            --accent: #7BA08A;
+        }
+
+        body {
+            background-color: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            color: #1a1a1a;
+        }
+
+        .nav-frosted {
+            background-color: rgba(245, 242, 235, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .status-badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1px solid;
+            border-radius: 999px;
+            padding: 4px 12px;
+        }
+
+        .status-published { background: #F0F7F4; border-color: #a8c5a0; color: #4A6B62; }
+        .status-draft      { background: #FFF8F0; border-color: #E8C99A; color: #A07040; }
+        .status-openloop   { background: #F0F7F4; border-color: #a8c5a0; color: #4A6B62; }
+        .status-closed     { background: #F4F4F4; border-color: #C8C4BE; color: #6a6560; }
+
+        .argument-block {
+            border-left: 3px solid var(--green-accent);
+            background: linear-gradient(to right, rgba(168,197,160,0.07), transparent);
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border: 1px solid #E6DFD1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-card-header {
+            padding: 10px 16px;
+            background: rgba(245,242,235,0.6);
+            border-bottom: 1px solid #E6DFD1;
+        }
+
+        .sidebar-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #8E8981;
+        }
+
+        .lens-pill {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: rgba(74,107,98,0.08);
+            border: 1px solid rgba(74,107,98,0.25);
+            color: #4A6B62;
+            border-radius: 999px;
+            padding: 3px 10px;
+            display: inline-block;
+        }
+
+        .hover-underline:hover { text-decoration: underline; text-decoration-color: #4A6B62; text-underline-offset: 4px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+
+        #read-progress {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(to right, #a8c5a0, #4A6B62);
+            z-index: 49;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-serif selection:bg-[#E6DFD1]">
+
+    <div id="read-progress"></div>
+
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 nav-frosted flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
+        <div class="flex items-center gap-10">
+            <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
+            <div class="h-8 w-px bg-[#E8E2D2]"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="/astro-project-v2/notes/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Notes</a>
+                <a href="/astro-project-v2/essays/" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#7BA08A] shadow-[0_0_8px_rgba(123,160,138,0.55)]"></span>
+                    <span class="font-serif text-xl text-[#2A2724]">Essays</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#7BA08A] tracking-tight translate-y-1">hyperlynxt | teo</div>
+    </header>
+
+    <main class="w-full max-w-[1200px] mx-auto pt-[80px] pb-[120px] px-[60px] grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-[40px] lg:gap-[80px] flex-grow">
+        
+        <article class="w-full max-w-[720px]">
+            <header class="fade-up">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="font-['Reenie_Beanie'] text-[1.8rem] tracking-wide" style="color:#a8c5a0">
+                        Essay #{essay.data.essay_number.toString().padStart(3, '0')}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-sans text-[9px] font-bold tracking-[0.18em] uppercase text-muted">Status</span>
+                        <span class={`status-badge status-${essay.data.status.toLowerCase().replace(/\s/g, '')}`}>
+                            {essay.data.status}
+                        </span>
+                    </div>
+                </div>
+
+                <h1 class="font-serif text-[3.2rem] md:text-[3.6rem] font-normal leading-[1.1] text-gray-900 mb-6">
+                    {essay.data.title}
+                </h1>
+
+                <div class="flex items-center gap-6 mb-8 pb-8 border-b border-[#E6DFD1]">
+                    <div class="flex items-center gap-2">
+                        <span class="font-sans text-[9px] font-bold tracking-[0.18em] uppercase text-muted">Published</span>
+                        <span class="font-serif text-[0.95rem] text-gray-600">{essay.data.date_published.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                    </div>
+                    <span class="text-[#D4C9B5]">·</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-sans text-[9px] font-bold tracking-[0.18em] uppercase text-muted">Analytical Lens</span>
+                        <span class="lens-pill">{essay.data.analytical_lens}</span>
+                    </div>
+                </div>
+
+                {essay.data.follow_up_research && (
+                    <div class="argument-block px-5 py-4 rounded-r-md mb-[48px]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-sans text-[9px] font-bold tracking-[0.18em] uppercase" style="color:#4A6B62">Lead Question / Argument</span>
+                        </div>
+                        <p class="font-serif text-[1.1rem] leading-[1.65] text-gray-800 italic">
+                            {essay.data.follow_up_research}
+                        </p>
+                    </div>
+                )}
+            </header>
+
+            <div class="font-serif text-[1.3rem] leading-[1.8] text-gray-800 flex flex-col gap-[32px] fade-up shadow-sm bg-white/30 p-8 rounded-2xl border border-white/50">
+                <Content />
+            </div>
+        </article>
+
+        <aside class="flex flex-col gap-[32px]">
+            {essay.data.concepts_used && essay.data.concepts_used.length > 0 && (
+                <div>
+                    <div class="sidebar-label mb-4 block">Concepts Used</div>
+                    <ul class="flex flex-col gap-4">
+                        {essay.data.concepts_used.map((concept, i) => (
+                            <li>
+                                <div class="group flex items-baseline gap-3 text-gray-900">
+                                    <span class="font-['Reenie_Beanie'] text-[1.4rem] leading-none" style="color:#a8c5a0">{(i + 1).toString().padStart(2, '0')}</span>
+                                    <span class="font-serif text-[1.1rem]">{concept}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {essay.data.notes_used && essay.data.notes_used.length > 0 && (
+                <div>
+                    <div class="sidebar-label mb-3 block">Notes Used</div>
+                    <ul class="flex flex-col gap-2.5">
+                        {essay.data.notes_used.map(note => (
+                            <li class="flex items-center gap-3 bg-white/60 border border-[#E6DFD1] rounded-full px-4 py-2 shadow-sm">
+                                <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background-color:#a8c5a0"></span>
+                                <span class="font-serif text-[0.85rem] text-gray-600 leading-tight">{note}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            <div>
+                <div class="sidebar-label mb-3 block">Disciplines Touched</div>
+                <div class="flex flex-wrap gap-2">
+                    {essay.data.disciplines_touched.map(discipline => (
+                        <span class="font-serif text-[0.92rem] text-gray-700 bg-white/60 border border-[#E6DFD1] rounded-full px-4 py-1.5 shadow-sm">{discipline}</span>
+                    ))}
+                </div>
+            </div>
+
+            {essay.data.sections && essay.data.sections.length > 0 && (
+                <div class="sidebar-card shadow-lg border-none">
+                    <div class="sidebar-card-header bg-[#7BA08A]/5 border-b-[#7BA08A]/10">
+                        <span class="sidebar-label text-[#7BA08A]">Sections</span>
+                    </div>
+                    <div class="flex flex-col">
+                        {essay.data.sections.map((section, i) => (
+                            <div class="flex items-center gap-3 px-4 py-3 border-b border-[#F5F2EB] last:border-0 hover:bg-[#7BA08A]/5 transition-colors group">
+                                <span class="font-['Reenie_Beanie'] text-[1rem] leading-none text-[#a8c5a0]">{(i + 1).toString().padStart(2, '0')}</span>
+                                <span class="font-serif text-[0.9rem] text-gray-700">{section}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div class="mt-8">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-[10px] font-bold text-muted tracking-[0.15em] uppercase">
+                    {essay.data.tags.map((tag, i) => (
+                        <>
+                            <span>{tag}</span>
+                            {i < essay.data.tags.length - 1 && <span class="opacity-30">·</span>}
+                        </>
+                    ))}
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-[#F5F2EB] border-t border-[#E6DFD1] py-[48px] w-full">
+        <div class="text-center font-serif italic text-gray-800 opacity-50 text-[1.1rem]">
+            Entry Logged. Archive Registry Sequence {essay.data.essay_number.toString().padStart(3, '0')}-E.
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            const bar = document.getElementById('read-progress');
+            if (bar) bar.style.width = progress + '%';
+        });
+    </script>
+</body>
+</html>

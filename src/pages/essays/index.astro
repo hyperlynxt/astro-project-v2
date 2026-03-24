@@ -291,21 +291,14 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
     <main class="max-w-[1400px] mx-auto px-6 md:px-10">
         <div class="essays-grid" id="essays-grid">
             {essays.map((essay) => (
-                <article 
+                <a 
+                    href={`/astro-project-v2/essays/${essay.id}/`}
                     class="essay-card"
-                    data-id={essay.id}
                     data-number={essay.data.essay_number}
                     data-title={essay.data.title}
                     data-date={essay.data.date_published.toISOString()}
                     data-status={essay.data.status}
-                    data-disciplines={essay.data.disciplines_touched.join(',')}
-                    data-lens={essay.data.analytical_lens}
                     data-tags={essay.data.tags.join(',')}
-                    data-sections={essay.data.sections?.join('||') || ''}
-                    data-concepts={essay.data.concepts_used?.join('||') || ''}
-                    data-notes={essay.data.notes_used?.join('||') || ''}
-                    data-refs={essay.data.references?.join('||') || ''}
-                    data-followup={essay.data.follow_up_research || ''}
                 >
                     <span class="card-expand">↗</span>
                     <div class="card-number">Essay #{essay.data.essay_number.toString().padStart(3, '0')}</div>
@@ -320,7 +313,7 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
                             ))}
                         </div>
                     </div>
-                </article>
+                </a>
             ))}
         </div>
     </main>
@@ -335,162 +328,52 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
         <button id="open-filter-btn" class="bg-[#7BA08A] hover:bg-[#6f917c] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
     </div>
 
-    <!-- Modal -->
-    <div id="essay-modal">
-        <div class="modal-inner">
-            <button class="modal-close" id="close-modal">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-            <div class="modal-scroll">
-                <div class="modal-eyebrow" id="modal-eyebrow"></div>
-                <h1 class="modal-title" id="modal-title"></h1>
-                <div class="modal-divider"></div>
-                <div class="modal-content" id="modal-content">
-                    <p>The core thesis and extended exploration of this essay would go here. This long-form piece synthesizes the various notes and concepts listed in the properties panel below.</p>
-                </div>
-                <div class="flex justify-between items-center mt-12 pt-6 border-t border-rgba(123,160,138,0.1)">
-                    <span class="font-['Reenie_Beanie'] text-xl text-[#A39985]" id="modal-footer-date"></span>
-                    <button class="properties-btn" id="open-props-btn">
-                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
-                        </svg>
-                        Properties
-                    </button>
-                </div>
-            </div>
-
-            <!-- Properties Overlay -->
-            <div id="props-overlay">
-                <div class="props-panel">
-                    <div class="props-header">
-                        <div>
-                            <p class="props-eyebrow" id="props-eyebrow">Essay properties</p>
-                            <p class="props-title" id="props-title"></p>
-                        </div>
-                        <button class="modal-close" id="close-props-btn" style="position:static;">
-                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-                    <div class="props-body" id="props-body">
-                        <!-- Filled by JS -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Filter Modal -->
-    <div id="filter-modal">
-        <div class="filter-panel">
-            <div class="filter-header">
+    <div id="filter-modal" style="position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; background: rgba(245,242,235,0.45); backdrop-filter: blur(12px);">
+        <div class="filter-panel" style="width: 100%; max-width: 620px; background: #fff; border-radius: 28px; box-shadow: 0 40px 100px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column;">
+            <div class="filter-header" style="padding: 2rem; border-bottom: 1px solid rgba(123,160,138,0.1); text-align: center; position: relative;">
                 <h2 class="text-3xl font-serif font-medium text-[#2A2724]">Filter & Sort</h2>
-                <button id="close-filter-btn" class="modal-close" style="top:1.5rem; right:1.5rem;">
+                <button id="close-filter-btn" class="modal-close" style="position: absolute; top:1.5rem; right:1.5rem; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid rgba(42,39,35,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(42,39,35,0.4);">
                     <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <div class="filter-body">
+            <div class="filter-body" style="padding: 2rem; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 2rem;">
                 <div>
-                    <h3 class="meta-item-label">Sort Order</h3>
+                    <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Sort Order</h3>
                     <div class="flex flex-wrap gap-2">
-                        <button data-sort="number" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg">By Number</button>
-                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30">By Date</button>
+                        <button data-sort="number" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg transition-all">By Number</button>
+                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 transition-all">By Date</button>
                     </div>
                 </div>
                 <div>
-                    <h3 class="meta-item-label">Status</h3>
+                    <h3 class="font-sans text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Status</h3>
                     <div class="flex flex-wrap gap-2" id="filter-status">
                         {['Published', 'Draft', 'Open Loop', 'Closed'].map(s => (
-                            <button data-status={s} class="status-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30">{s}</button>
+                            <button data-status={s} class="status-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 transition-all">{s}</button>
                         ))}
                     </div>
                 </div>
             </div>
-            <div class="filter-footer">
-                <span id="filter-count" class="font-serif italic text-ink/40"></span>
-                <button id="apply-filter" class="bg-[#7BA08A] text-white px-6 py-2 rounded-full font-sans text-sm font-bold shadow-lg">Apply Filters</button>
+            <div class="filter-footer" style="padding: 1.5rem 2rem; border-top: 1px solid rgba(123,160,138,0.1); display: flex; justify-content: space-between; align-items: center;">
+                <span id="filter-count" class="font-serif italic text-ink/40 text-sm"></span>
+                <button id="apply-filter" class="bg-[#7BA08A] text-white px-6 py-2 rounded-full font-sans text-sm font-bold shadow-lg hover:bg-[#6f917c] transition-all">Apply Filters</button>
             </div>
         </div>
     </div>
 
     <script>
         const cards = document.querySelectorAll('.essay-card');
-        const modal = document.getElementById('essay-modal');
-        const closeModal = document.getElementById('close-modal');
         const searchInput = document.getElementById('essay-search');
         const bottomBar = document.getElementById('bottom-bar');
-        const propsOverlay = document.getElementById('props-overlay');
-        const openPropsBtn = document.getElementById('open-props-btn');
-        const closePropsBtn = document.getElementById('close-props-btn');
-
         const filterModal = document.getElementById('filter-modal');
         const openFilterBtn = document.getElementById('open-filter-btn');
         const closeFilterBtn = document.getElementById('close-filter-btn');
+        const applyFilterBtn = document.getElementById('apply-filter');
+        const sortBtns = document.querySelectorAll('.sort-btn');
+        const statusBtns = document.querySelectorAll('.status-btn');
 
-        // Modal Content
-        const mT = document.getElementById('modal-title');
-        const mE = document.getElementById('modal-eyebrow');
-        const mD = document.getElementById('modal-footer-date');
-        const pT = document.getElementById('props-title');
-        const pB = document.getElementById('props-body');
-
-        let currentData = null;
-
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                currentData = card.dataset;
-                mT.textContent = currentData.title;
-                mE.textContent = `Essay No. ${currentData.number.padStart(2, '0')}`;
-                mD.textContent = new Date(currentData.date).toLocaleDateString();
-                pT.textContent = currentData.title;
-                
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        const buildProps = (d) => {
-            pB.innerHTML = '';
-            const rows = [
-                { label: 'Status', value: d.status, type: 'status' },
-                { label: 'Date Published', value: new Date(d.date).toLocaleDateString() },
-                { label: 'Analytical Lens', value: d.lens, italic: true },
-                { label: 'Disciplines', value: d.disciplines, list: true },
-                { label: 'Sections', value: d.sections, list: true, sep: '||', full: true },
-                { label: 'Concepts Used', value: d.concepts, list: true, sep: '||', full: true },
-                { label: 'Notes Used', value: d.notes, list: true, sep: '||', full: true },
-                { label: 'Tags', value: d.tags, list: true, full: true },
-                { label: 'References', value: d.refs, list: true, sep: '||', full: true },
-                { label: 'Follow-up Research', value: d.followup, full: true }
-            ].filter(r => r.value && r.value !== '');
-
-            rows.forEach(r => {
-                const div = document.createElement('div');
-                div.className = `prop-row ${r.full ? 'full-width' : ''}`;
-                let valHtml = '';
-                if (r.list) {
-                    valHtml = `<div class="prop-chips">${r.value.split(r.sep || ',').map(i => `<span class="prop-chip prop-chip-neutral">${i.trim()}</span>`).join('')}</div>`;
-                } else if (r.type === 'status') {
-                    valHtml = `<span class="prop-chip prop-chip-accent">${r.value}</span>`;
-                } else {
-                    valHtml = `<span class="prop-value ${r.italic ? 'italic' : ''}">${r.value}</span>`;
-                }
-                div.innerHTML = `<p class="prop-label">${r.label}</p>${valHtml}`;
-                pB.appendChild(div);
-            });
-        };
-
-        openPropsBtn.addEventListener('click', () => {
-            buildProps(currentData);
-            propsOverlay.classList.add('open');
-        });
-
-        closePropsBtn.addEventListener('click', () => propsOverlay.classList.remove('open'));
-
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-            propsOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-        });
+        let currentSort = 'number';
+        let currentFilters = new Set();
 
         openFilterBtn.addEventListener('click', () => {
             filterModal.style.display = 'flex';
@@ -502,12 +385,68 @@ essays.sort((a, b) => b.data.essay_number - a.data.essay_number);
             document.body.style.overflow = '';
         });
 
+        sortBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                sortBtns.forEach(b => {
+                    b.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                    b.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                });
+                btn.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                btn.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                currentSort = btn.dataset.sort;
+            });
+        });
+
+        statusBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const s = btn.dataset.status;
+                if (currentFilters.has(s)) {
+                    currentFilters.delete(s);
+                    btn.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                    btn.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                } else {
+                    currentFilters.add(s);
+                    btn.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                    btn.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#D5CCB6]/30');
+                }
+            });
+        });
+
+        applyFilterBtn.addEventListener('click', () => {
+            const essaysGrid = document.getElementById('essays-grid');
+            let visibleCards = Array.from(cards);
+
+            // Filter
+            if (currentFilters.size > 0) {
+                visibleCards.forEach(c => {
+                    const show = currentFilters.has(c.dataset.status);
+                    c.style.display = show ? 'flex' : 'none';
+                });
+            } else {
+                visibleCards.forEach(c => c.style.display = 'flex');
+            }
+
+            // Sort
+            const sorted = Array.from(cards).sort((a, b) => {
+                if (currentSort === 'number') {
+                    return parseInt(b.dataset.number) - parseInt(a.dataset.number);
+                } else {
+                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                }
+            });
+
+            sorted.forEach(c => essaysGrid.appendChild(c));
+            
+            filterModal.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
         // Search logic
         searchInput.addEventListener('input', (e) => {
             const q = e.target.value.toLowerCase();
             cards.forEach(c => {
                 const match = c.dataset.title.toLowerCase().includes(q) || c.dataset.tags.toLowerCase().includes(q);
-                c.style.display = match ? 'block' : 'none';
+                c.style.display = match ? 'flex' : 'none';
             });
         });
 
