@@ -10,10 +10,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --accent:       #9B7CC8;
-            --accent-light: #C4A8E8;
-            --accent-pale:  #EDE6F8;
-            --accent-dark:  #7A5BA8;
+            --accent:       #7BA08A;
+            --accent-light: #A1C2AE;
+            --accent-pale:  #E7F1EB;
+            --accent-dark:  #5B7B68;
         }
         body {
             background-color: #FDFCF9;
@@ -50,10 +50,10 @@
             min-height: 260px;
         }
         .note-card:hover {
-            background: #F8F4FD;
-            border-color: #C4A8E8;
+            background: #F1F8F4;
+            border-color: #A1C2AE;
             transform: translateY(-4px);
-            box-shadow: 0 14px 28px -10px rgba(155,124,200,0.22);
+            box-shadow: 0 14px 28px -10px rgba(123,160,138,0.22);
         }
         .note-card:hover .card-title     { color: var(--accent); }
         .note-card:hover .card-draft-icon { color: var(--accent-dark); }
@@ -65,7 +65,7 @@
         }
         .note-card:hover .card-expand { opacity: 1; transform: scale(1); }
         .card-draft-icon {
-            color: #C4A8E8;
+            color: #A1C2AE;
             margin-bottom: 1rem;
             flex-shrink: 0;
             transition: color 0.3s ease;
@@ -153,7 +153,7 @@
             background-image:
                 url("https://www.transparenttextures.com/patterns/natural-paper.png"),
                 url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, rgba(253,252,249,0) 60%);
+                radial-gradient(circle at 10% 90%, rgba(123,160,138,0.04) 0%, rgba(253,252,249,0) 60%);
             background-position: 0px 0px, 40px 60px, 0 0;
             background-repeat: repeat, repeat, no-repeat;
         }
@@ -202,8 +202,8 @@
             color: rgba(42,39,35,0.82);
         }
         .concept-chip {
-            background: rgba(155,124,200,0.08);
-            border: 1px solid rgba(155,124,200,0.25);
+            background: rgba(123,160,138,0.08);
+            border: 1px solid rgba(123,160,138,0.25);
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.95rem;
@@ -211,12 +211,12 @@
             border-radius: 12px;
             transition: all 0.2s;
         }
-        .concept-chip:hover { background: rgba(155,124,200,0.15); border-color: var(--accent-light); }
+        .concept-chip:hover { background: rgba(123,160,138,0.15); border-color: var(--accent-light); }
 
         ::-webkit-scrollbar { width: 7px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background-color: rgba(155,124,200,0.4); }
+        ::-webkit-scrollbar-thumb { background-color: rgba(123,160,138,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(123,160,138,0.4); }
 
         .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
         .star-filter.active { color: var(--accent) !important; opacity: 1 !important; }
@@ -230,13 +230,13 @@
         #bottom-bar.hidden-bar { transform: translateY(120%); opacity: 0; pointer-events: none; }
 
         .modal-scrollbar::-webkit-scrollbar { width: 4px; }
-        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
+        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(123,160,138,0.2); border-radius: 10px; }
 
         .filter-btn-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; }
 
         /* Sort btn default */
         .sort-btn { transition: all 0.2s; }
-        .sort-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 14px rgba(155,124,200,0.3); }
+        .sort-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 14px rgba(123,160,138,0.3); }
     </style>
 </head>
 <body class="min-h-screen antialiased">
@@ -250,12 +250,12 @@
                 <a href="#" class="font-serif text-xl transition-all duration-300 hover:-translate-y-[1px]" style="color:#A39985; font-family:'EB Garamond',serif;">Concepts</a>
                 <a href="#" class="font-serif text-xl transition-all duration-300 hover:-translate-y-[1px]" style="color:#A39985; font-family:'EB Garamond',serif;">Linguistic Treats</a>
                 <a href="#" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
-                    <span class="w-1.5 h-1.5 rounded-full" style="background:#9B7CC8; box-shadow:0 0 8px rgba(155,124,200,0.6);"></span>
+                    <span class="w-1.5 h-1.5 rounded-full" style="background:#7BA08A; box-shadow:0 0 8px rgba(123, 160, 138, 0.6);"></span>
                     <span style="font-family:'EB Garamond',serif; font-size:1.25rem; color:#2A2724;">Notes</span>
                 </a>
             </nav>
         </div>
-        <div style="font-family:'Reenie Beanie',cursive; font-size:1.75rem; line-height:1; color:#9B7CC8; letter-spacing:-0.01em; transform:translateY(4px);">hyperlynxt | teo</div>
+        <div style="font-family:'Reenie Beanie',cursive; font-size:1.75rem; line-height:1; color:#7BA08A; letter-spacing:-0.01em; transform:translateY(4px);">hyperlynxt | teo</div>
     </header>
 
     <!-- ═══════════════ HERO ═══════════════ -->
@@ -266,7 +266,7 @@
                 Raw
                 <span class="hand-underline-sm italic">
                     Notes
-                    <svg class="absolute overflow-visible" style="width:110%; height:12px; bottom:-4px; left:-5%; color:#9B7CC8; opacity:0.85;" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <svg class="absolute overflow-visible" style="width:110%; height:12px; bottom:-4px; left:-5%; color:#7BA08A; opacity:0.85;" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                         <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
                     </svg>
                 </span>
@@ -587,17 +587,17 @@
     </main>
 
     <!-- ═══════════════ BOTTOM BAR ═══════════════ -->
-    <div id="bottom-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl border" style="background: rgba(253,252,249,0.94); backdrop-filter: blur(16px); border-color: rgba(155,124,200,0.18);">
+    <div id="bottom-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl border" style="background: rgba(253,252,249,0.94); backdrop-filter: blur(16px); border-color: rgba(123,160,138,0.18);">
         <div class="relative flex items-center">
             <svg class="absolute left-3 pointer-events-none" style="width:14px;height:14px;color:rgba(42,39,35,0.3);" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <input id="notes-search" type="text" placeholder="Search notes..."
-                style="padding: 6px 16px 6px 32px; width:200px; font-family:'Inter',sans-serif; font-size:0.85rem; border-radius:100px; border:1px solid rgba(155,124,200,0.2); background:rgba(42,39,35,0.04); color:#2A2724; outline:none;"
-                onfocus="this.style.borderColor='rgba(155,124,200,0.5)'" onblur="this.style.borderColor='rgba(155,124,200,0.2)'"/>
+                style="padding: 6px 16px 6px 32px; width:200px; font-family:'Inter',sans-serif; font-size:0.85rem; border-radius:100px; border:1px solid rgba(123,160,138,0.2); background:rgba(42,39,35,0.04); color:#2A2724; outline:none;"
+                onfocus="this.style.borderColor='rgba(123,160,138,0.5)'" onblur="this.style.borderColor='rgba(123,160,138,0.2)'"/>
         </div>
         <div style="width:1px; height:20px; background:rgba(42,39,35,0.12);"></div>
-        <button id="open-filter-btn" style="display:flex; align-items:center; gap:8px; padding:6px 16px; border-radius:100px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; color:rgba(42,39,35,0.6); border:1px solid rgba(155,124,200,0.2); background:transparent; cursor:pointer; transition:all 0.2s;"
-            onmouseover="this.style.borderColor='rgba(155,124,200,0.5)'; this.style.color='#9B7CC8';"
-            onmouseout="this.style.borderColor='rgba(155,124,200,0.2)'; this.style.color='rgba(42,39,35,0.6)';">
+        <button id="open-filter-btn" style="display:flex; align-items:center; gap:8px; padding:6px 16px; border-radius:100px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; color:rgba(42,39,35,0.6); border:1px solid rgba(123,160,138,0.2); background:transparent; cursor:pointer; transition:all 0.2s;"
+            onmouseover="this.style.borderColor='rgba(123,160,138,0.5)'; this.style.color='#7BA08A';"
+            onmouseout="this.style.borderColor='rgba(123,160,138,0.2)'; this.style.color='rgba(42,39,35,0.6)';">
             <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
             Filter
         </button>
@@ -605,11 +605,11 @@
 
     <!-- ═══════════════ NOTE MODAL ═══════════════ -->
     <div id="note-modal" style="display:none; position:fixed; inset:0; z-index:100; align-items:center; justify-content:center; padding:24px; background:rgba(42,39,35,0.32); backdrop-filter:blur(9px);">
-        <div class="modal-animate" style="width:100%; max-width:1200px; height:90vh; background:white; border-radius:40px; box-shadow:0 40px 100px rgba(155,124,200,0.2); overflow:hidden; border:1px solid rgba(255,255,255,0.7); position:relative;">
+        <div class="modal-animate" style="width:100%; max-width:1200px; height:90vh; background:white; border-radius:40px; box-shadow:0 40px 100px rgba(123,160,138,0.2); overflow:hidden; border:1px solid rgba(255,255,255,0.7); position:relative;">
             <!-- Close -->
             <div style="position:absolute; top:0; right:0; padding:28px; z-index:60;">
                 <button id="close-modal-btn" style="width:44px; height:44px; border-radius:100%; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px); border:1px solid #D5CCB6; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.3s;"
-                    onmouseover="this.style.background='#F8F4FD'" onmouseout="this.style.background='rgba(255,255,255,0.85)'">
+                    onmouseover="this.style.background='#F1F8F4'" onmouseout="this.style.background='rgba(255,255,255,0.85)'">
                     <svg style="width:18px;height:18px;color:#2A2724;opacity:0.6;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -628,7 +628,7 @@
                             <h1 id="modal-title" class="modal-title-anim" style="font-family:'EB Garamond',serif; font-size:clamp(2rem,4vw,3.2rem); font-weight:500; color:#2A2724; line-height:1.1; font-style:italic; position:relative;"></h1>
                         </div>
                         <!-- underline svg -->
-                        <svg id="modal-title-underline" style="display:none; position:absolute; height:12px; color:#9B7CC8; opacity:0.75; overflow:visible; pointer-events:none;" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <svg id="modal-title-underline" style="display:none; position:absolute; height:12px; color:#7BA08A; opacity:0.75; overflow:visible; pointer-events:none;" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                             <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
                         </svg>
                         <!-- status + type + date -->
@@ -640,7 +640,7 @@
                     </div>
 
                     <!-- Divider -->
-                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.4), rgba(196,168,232,0.1), transparent); margin-bottom:32px;"></div>
+                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.4), rgba(161,194,174,0.1), transparent); margin-bottom:32px;"></div>
 
                     <!-- Body -->
                     <div id="modal-body" class="modal-body-prose modal-reveal" style="margin-bottom:48px;"></div>
@@ -665,37 +665,37 @@
                 </div>
 
                 <!-- RIGHT sidebar -->
-                <div class="modal-scrollbar" style="width:270px; flex-shrink:0; border-left:1px solid rgba(155,124,200,0.12); padding:48px 28px 96px; overflow-y:auto; background:rgba(253,252,249,0.7);">
+                <div class="modal-scrollbar" style="width:270px; flex-shrink:0; border-left:1px solid rgba(123,160,138,0.12); padding:48px 28px 96px; overflow-y:auto; background:rgba(253,252,249,0.7);">
 
                     <div class="sidebar-block" style="margin-bottom:24px;">
                         <p class="modal-section-label">Primary Discipline</p>
                         <p id="sidebar-discipline" style="font-family:'EB Garamond',serif; font-size:1.05rem; color:rgba(42,39,35,0.8); line-height:1.4;"></p>
                     </div>
-                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.28), transparent); margin-bottom:24px;"></div>
+                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.28), transparent); margin-bottom:24px;"></div>
 
                     <div id="sidebar-subdiscipline-block" class="sidebar-block" style="display:none; margin-bottom:24px;">
                         <p class="modal-section-label">Sub-discipline</p>
                         <p id="sidebar-subdiscipline" style="font-family:'EB Garamond',serif; font-size:1.05rem; color:rgba(42,39,35,0.72); line-height:1.4;"></p>
                     </div>
-                    <div id="sidebar-sub-divider" style="display:none; width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.28), transparent); margin-bottom:24px;"></div>
+                    <div id="sidebar-sub-divider" style="display:none; width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.28), transparent); margin-bottom:24px;"></div>
 
                     <div id="sidebar-lens-block" class="sidebar-block" style="display:none; margin-bottom:24px;">
                         <p class="modal-section-label">Analytical Lens</p>
-                        <p id="sidebar-lens" style="font-family:'EB Garamond',serif; font-style:italic; color:#9B7CC8; font-size:1.05rem; line-height:1.4;"></p>
+                        <p id="sidebar-lens" style="font-family:'EB Garamond',serif; font-style:italic; color:#7BA08A; font-size:1.05rem; line-height:1.4;"></p>
                     </div>
-                    <div id="sidebar-lens-divider" style="display:none; width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.28), transparent); margin-bottom:24px;"></div>
+                    <div id="sidebar-lens-divider" style="display:none; width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.28), transparent); margin-bottom:24px;"></div>
 
                     <div class="sidebar-block" style="margin-bottom:24px;">
                         <p class="modal-section-label">Rating</p>
                         <div id="sidebar-dots" class="dot-rating" style="margin-top:6px;"></div>
                     </div>
-                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.28), transparent); margin-bottom:24px;"></div>
+                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.28), transparent); margin-bottom:24px;"></div>
 
                     <div class="sidebar-block" style="margin-bottom:24px;">
                         <p class="modal-section-label">Status</p>
                         <div id="sidebar-status-pipeline" style="display:flex; flex-direction:column; gap:8px; margin-top:6px;"></div>
                     </div>
-                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(196,168,232,0.28), transparent); margin-bottom:24px;"></div>
+                    <div style="width:100%; height:1px; background:linear-gradient(to right, rgba(161,194,174,0.28), transparent); margin-bottom:24px;"></div>
 
                     <div class="sidebar-block">
                         <p class="modal-section-label">Date</p>
@@ -709,17 +709,17 @@
 
     <!-- ═══════════════ FILTER MODAL ═══════════════ -->
     <div id="filter-modal" style="display:none; position:fixed; inset:0; z-index:60; align-items:center; justify-content:center; padding:24px; background:rgba(245,242,235,0.45); backdrop-filter:blur(12px);">
-        <div class="ink-stain" style="width:100%; max-width:620px; background:white; border-radius:28px; box-shadow:0 25px 60px rgba(155,124,200,0.18); border:1px solid rgba(255,255,255,0.7); overflow:hidden; display:flex; flex-direction:column; max-height:85vh;">
+        <div class="ink-stain" style="width:100%; max-width:620px; background:white; border-radius:28px; box-shadow:0 25px 60px rgba(123,160,138,0.18); border:1px solid rgba(255,255,255,0.7); overflow:hidden; display:flex; flex-direction:column; max-height:85vh;">
             <!-- Header -->
             <div style="padding:36px 28px 24px; border-bottom:1px solid rgba(196,168,232,0.15); display:flex; flex-direction:column; align-items:center; background:rgba(255,255,255,0.5); flex-shrink:0; position:relative;">
                 <h2 style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:500; color:#2A2724; position:relative; display:inline-block;">
                     Filter & Sort
-                    <svg style="position:absolute; width:110%; height:15px; bottom:-8px; left:-5%; color:#9B7CC8; opacity:0.82; overflow:visible;" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                    <svg style="position:absolute; width:110%; height:15px; bottom:-8px; left:-5%; color:#7BA08A; opacity:0.82; overflow:visible;" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
                         <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
                     </svg>
                 </h2>
                 <button id="close-filter-btn" style="position:absolute; top:28px; right:28px; width:32px; height:32px; border-radius:100%; background:#FDFCF9; border:1px solid rgba(213,204,182,0.3); display:flex; align-items:center; justify-content:center; cursor:pointer; color:rgba(42,39,35,0.5); transition:all 0.2s;"
-                    onmouseover="this.style.color='#9B7CC8'; this.style.background='#F8F4FD';"
+                    onmouseover="this.style.color='#7BA08A'; this.style.background='#F1F8F4';"
                     onmouseout="this.style.color='rgba(42,39,35,0.5)'; this.style.background='#FDFCF9';">
                     <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -732,35 +732,35 @@
                 <div style="margin-bottom:24px;">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
                             <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Sort By</span>
                         </div>
                         <button id="sort-direction-toggle" style="display:flex; align-items:center; gap:6px; padding:4px 10px; border-radius:8px; background:#FDFCF9; border:1px solid rgba(213,204,182,0.25); font-family:'Inter',sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(42,39,35,0.6); cursor:pointer; transition:all 0.2s;"
-                            onmouseover="this.style.color='#9B7CC8'" onmouseout="this.style.color='rgba(42,39,35,0.6)'">
+                            onmouseover="this.style.color='#7BA08A'" onmouseout="this.style.color='rgba(42,39,35,0.6)'">
                             <span id="sort-direction-label">Descending</span>
                             <svg id="sort-direction-icon" style="width:12px;height:12px;transition:transform 0.3s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
                         </button>
                     </div>
                     <div style="display:flex; flex-wrap:wrap; gap:8px;" id="sort-btns">
-                        <button data-sort="default"      class="sort-btn active"   style="padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid #9B7CC8; cursor:pointer;">Default</button>
+                        <button data-sort="default"      class="sort-btn active"   style="padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid #7BA08A; cursor:pointer;">Default</button>
                         <button data-sort="alphabetical" class="sort-btn"          style="padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid rgba(213,204,182,0.35); background:white; color:rgba(42,39,35,0.7); cursor:pointer;">Alphabetical</button>
                         <button data-sort="rating"       class="sort-btn"          style="padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid rgba(213,204,182,0.35); background:white; color:rgba(42,39,35,0.7); cursor:pointer;">Rating</button>
                         <button data-sort="date"         class="sort-btn"          style="padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid rgba(213,204,182,0.35); background:white; color:rgba(42,39,35,0.7); cursor:pointer;">Date</button>
                     </div>
                 </div>
 
-                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(196,168,232,0.35), transparent); margin-bottom:24px;"></div>
+                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(161,194,174,0.35), transparent); margin-bottom:24px;"></div>
 
                 <!-- Rating dots -->
                 <div style="margin-bottom:24px;">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                             <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Minimum Rating</span>
                         </div>
-                        <span id="min-rating-label" style="font-family:'Reenie Beanie',cursive; font-size:1.15rem; color:#9B7CC8;">0+ dots</span>
+                        <span id="min-rating-label" style="font-family:'Reenie Beanie',cursive; font-size:1.15rem; color:#7BA08A;">0+ dots</span>
                     </div>
-                    <div id="filter-rating-dots" style="display:flex; gap:14px; padding:14px; background:white; border:1px solid rgba(196,168,232,0.22); border-radius:16px; width:fit-content;">
+                    <div id="filter-rating-dots" style="display:flex; gap:14px; padding:14px; background:white; border:1px solid rgba(161,194,174,0.22); border-radius:16px; width:fit-content;">
                         <button data-rating="0" class="star-filter active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.65"/></svg></button>
                         <button data-rating="1" class="star-filter"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.65"/></svg></button>
                         <button data-rating="2" class="star-filter"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.65"/></svg></button>
@@ -768,12 +768,12 @@
                     </div>
                 </div>
 
-                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(196,168,232,0.35), transparent); margin-bottom:24px;"></div>
+                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(161,194,174,0.35), transparent); margin-bottom:24px;"></div>
 
                 <!-- Status -->
                 <div style="margin-bottom:24px;">
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                        <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Status</span>
                     </div>
                     <div id="filter-status-container" style="display:flex; flex-wrap:wrap; gap:8px;">
@@ -783,12 +783,12 @@
                     </div>
                 </div>
 
-                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(196,168,232,0.35), transparent); margin-bottom:24px;"></div>
+                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(161,194,174,0.35), transparent); margin-bottom:24px;"></div>
 
                 <!-- Note type -->
                 <div style="margin-bottom:24px;">
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                        <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                         <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Note Type</span>
                     </div>
                     <div id="filter-type-container" style="display:flex; flex-wrap:wrap; gap:8px;">
@@ -801,12 +801,12 @@
                     </div>
                 </div>
 
-                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(196,168,232,0.35), transparent); margin-bottom:24px;"></div>
+                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(161,194,174,0.35), transparent); margin-bottom:24px;"></div>
 
                 <!-- Discipline -->
                 <div style="margin-bottom:24px;">
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                        <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                         <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Discipline</span>
                     </div>
                     <div id="filter-discipline-container" style="display:flex; flex-wrap:wrap; gap:8px;">
@@ -817,12 +817,12 @@
                     </div>
                 </div>
 
-                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(196,168,232,0.35), transparent); margin-bottom:24px;"></div>
+                <div style="width:100%; height:1px; background:linear-gradient(to right, transparent, rgba(161,194,174,0.35), transparent); margin-bottom:24px;"></div>
 
                 <!-- Tags (dynamic) -->
                 <div style="padding-bottom:16px;">
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                        <svg style="width:14px;height:14px;color:#9B7CC8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                        <svg style="width:14px;height:14px;color:#7BA08A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         <span style="font-family:'Inter',sans-serif; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:rgba(42,39,35,0.5);">Tags</span>
                     </div>
                     <div id="filter-tags-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
@@ -830,18 +830,18 @@
             </div>
 
             <!-- Footer -->
-            <div style="padding:16px 28px 24px; border-top:1px solid rgba(196,168,232,0.12); display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.6); flex-shrink:0;">
+            <div style="padding:16px 28px 24px; border-top:1px solid rgba(161,194,174,0.12); display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.6); flex-shrink:0;">
                 <div style="display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:0.85rem; color:rgba(42,39,35,0.5);">
-                    <span id="filter-result-count" style="font-weight:600; color:#9B7CC8;">9 notes</span>
+                    <span id="filter-result-count" style="font-weight:600; color:#7BA08A;">9 notes</span>
                     <span>match</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                     <button id="clear-filters-btn" style="padding:8px 20px; border-radius:100px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; color:rgba(42,39,35,0.6); border:1px solid rgba(213,204,182,0.35); background:transparent; cursor:pointer; transition:all 0.2s;"
-                        onmouseover="this.style.borderColor='rgba(155,124,200,0.5)'; this.style.color='#9B7CC8';"
+                        onmouseover="this.style.borderColor='rgba(123,160,138,0.5)'; this.style.color='#7BA08A';"
                         onmouseout="this.style.borderColor='rgba(213,204,182,0.35)'; this.style.color='rgba(42,39,35,0.6)';">Clear</button>
-                    <button id="apply-filters-btn" style="padding:8px 20px; border-radius:100px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; color:white; background:#9B7CC8; border:1px solid #9B7CC8; box-shadow:0 4px 14px rgba(155,124,200,0.35); cursor:pointer; transition:all 0.2s;"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(155,124,200,0.45)';"
-                        onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(155,124,200,0.35)';">Apply</button>
+                    <button id="apply-filters-btn" style="padding:8px 20px; border-radius:100px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; color:white; background:#7BA08A; border:1px solid #7BA08A; box-shadow:0 4px 14px rgba(123,160,138,0.35); cursor:pointer; transition:all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(123,160,138,0.45)';"
+                        onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(123,160,138,0.35)';">Apply</button>
                 </div>
             </div>
         </div>
@@ -916,8 +916,8 @@
                     const idx     = pipeline.indexOf(step);
                     const curIdx  = pipeline.findIndex(s => status.toLowerCase().includes(s.split(' ')[0].toLowerCase()));
                     const past    = idx < curIdx;
-                    const dotCol  = current ? '#9B7CC8' : past ? '#C4A8E8' : '#E8E2D2';
-                    const txtCol  = current ? '#9B7CC8' : 'rgba(42,39,35,0.38)';
+                    const dotCol  = current ? '#7BA08A' : past ? '#A1C2AE' : '#E8E2D2';
+                    const txtCol  = current ? '#7BA08A' : 'rgba(42,39,35,0.38)';
                     const weight  = current ? '500' : '400';
                     return `<div style="display:flex; align-items:center; gap:8px;">
                         <span style="width:8px; height:8px; border-radius:50%; flex-shrink:0; background:${dotCol};"></span>
@@ -972,7 +972,7 @@
                 const vocabEl  = document.getElementById('modal-vocab');
                 if (vocabRaw) {
                     vocabEl.innerHTML = vocabRaw.split('||').map(v => v.trim()).filter(Boolean).map(v =>
-                        `<span style="font-family:'EB Garamond',serif; font-style:italic; color:#9B7CC8; font-size:1.05rem; background:rgba(196,168,232,0.15); padding:5px 14px; border-radius:10px;">${v}</span>`).join('');
+                        `<span style="font-family:'EB Garamond',serif; font-style:italic; color:#7BA08A; font-size:1.05rem; background:rgba(161,194,174,0.15); padding:5px 14px; border-radius:10px;">${v}</span>`).join('');
                     vocabSec.style.display = 'block';
                 } else vocabSec.style.display = 'none';
 
@@ -1020,7 +1020,7 @@
                     b.style.background = 'white'; b.style.color = 'rgba(42,39,35,0.7)'; b.style.borderColor = 'rgba(213,204,182,0.35)';
                 });
                 btn.classList.add('active');
-                btn.style.background = '#9B7CC8'; btn.style.color = 'white'; btn.style.borderColor = '#9B7CC8';
+                btn.style.background = '#7BA08A'; btn.style.color = 'white'; btn.style.borderColor = '#7BA08A';
                 updatePreviewCount();
             });
         });
@@ -1049,7 +1049,7 @@
                     const val = btn.dataset[stateKey] || btn.dataset.status || btn.dataset.notetype || btn.dataset.discipline;
                     const idx = filterState[stateKey === 'status' ? 'statuses' : stateKey === 'notetype' ? 'noteTypes' : 'disciplines'].indexOf(val);
                     const arr = filterState[stateKey === 'status' ? 'statuses' : stateKey === 'notetype' ? 'noteTypes' : 'disciplines'];
-                    if (idx === -1) { arr.push(val); btn.style.background = '#9B7CC8'; btn.style.color = 'white'; btn.style.borderColor = '#9B7CC8'; }
+                    if (idx === -1) { arr.push(val); btn.style.background = '#7BA08A'; btn.style.color = 'white'; btn.style.borderColor = '#7BA08A'; }
                     else { arr.splice(idx, 1); btn.style.background = 'white'; btn.style.color = 'rgba(42,39,35,0.7)'; btn.style.borderColor = 'rgba(213,204,182,0.35)'; }
                     updatePreviewCount();
                 });
@@ -1059,7 +1059,7 @@
             btn.addEventListener('click', () => {
                 const val = btn.dataset.status;
                 const idx = filterState.statuses.indexOf(val);
-                if (idx === -1) { filterState.statuses.push(val); btn.style.background='#9B7CC8'; btn.style.color='white'; btn.style.borderColor='#9B7CC8'; }
+                if (idx === -1) { filterState.statuses.push(val); btn.style.background='#7BA08A'; btn.style.color='white'; btn.style.borderColor='#7BA08A'; }
                 else { filterState.statuses.splice(idx,1); btn.style.background='white'; btn.style.color='rgba(42,39,35,0.7)'; btn.style.borderColor='rgba(213,204,182,0.35)'; }
                 updatePreviewCount();
             });
@@ -1068,7 +1068,7 @@
             btn.addEventListener('click', () => {
                 const val = btn.dataset.notetype;
                 const idx = filterState.noteTypes.indexOf(val);
-                if (idx === -1) { filterState.noteTypes.push(val); btn.style.background='#9B7CC8'; btn.style.color='white'; btn.style.borderColor='#9B7CC8'; }
+                if (idx === -1) { filterState.noteTypes.push(val); btn.style.background='#7BA08A'; btn.style.color='white'; btn.style.borderColor='#7BA08A'; }
                 else { filterState.noteTypes.splice(idx,1); btn.style.background='white'; btn.style.color='rgba(42,39,35,0.7)'; btn.style.borderColor='rgba(213,204,182,0.35)'; }
                 updatePreviewCount();
             });
@@ -1077,7 +1077,7 @@
             btn.addEventListener('click', () => {
                 const val = btn.dataset.discipline;
                 const idx = filterState.disciplines.indexOf(val);
-                if (idx === -1) { filterState.disciplines.push(val); btn.style.background='#9B7CC8'; btn.style.color='white'; btn.style.borderColor='#9B7CC8'; }
+                if (idx === -1) { filterState.disciplines.push(val); btn.style.background='#7BA08A'; btn.style.color='white'; btn.style.borderColor='#7BA08A'; }
                 else { filterState.disciplines.splice(idx,1); btn.style.background='white'; btn.style.color='rgba(42,39,35,0.7)'; btn.style.borderColor='rgba(213,204,182,0.35)'; }
                 updatePreviewCount();
             });
@@ -1094,10 +1094,10 @@
                 btn.textContent = tag;
                 btn.dataset.tag = tag;
                 const active = filterState.tags.includes(tag);
-                btn.style.cssText = `padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid ${active ? '#9B7CC8' : 'rgba(213,204,182,0.35)'}; background:${active ? '#9B7CC8' : 'white'}; color:${active ? 'white' : 'rgba(42,39,35,0.7)'}; cursor:pointer; transition:all 0.2s;`;
+                btn.style.cssText = `padding:8px 16px; font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; border-radius:100px; border:1px solid ${active ? '#7BA08A' : 'rgba(213,204,182,0.35)'}; background:${active ? '#7BA08A' : 'white'}; color:${active ? 'white' : 'rgba(42,39,35,0.7)'}; cursor:pointer; transition:all 0.2s;`;
                 btn.addEventListener('click', () => {
                     const idx = filterState.tags.indexOf(tag);
-                    if (idx === -1) { filterState.tags.push(tag); btn.style.background='#9B7CC8'; btn.style.color='white'; btn.style.borderColor='#9B7CC8'; }
+                    if (idx === -1) { filterState.tags.push(tag); btn.style.background='#7BA08A'; btn.style.color='white'; btn.style.borderColor='#7BA08A'; }
                     else { filterState.tags.splice(idx,1); btn.style.background='white'; btn.style.color='rgba(42,39,35,0.7)'; btn.style.borderColor='rgba(213,204,182,0.35)'; }
                     updatePreviewCount();
                 });
@@ -1158,9 +1158,9 @@
             document.getElementById('notes-search').value = '';
             document.querySelectorAll('.sort-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === 0);
-                b.style.background = i === 0 ? '#9B7CC8' : 'white';
+                b.style.background = i === 0 ? '#7BA08A' : 'white';
                 b.style.color = i === 0 ? 'white' : 'rgba(42,39,35,0.7)';
-                b.style.borderColor = i === 0 ? '#9B7CC8' : 'rgba(213,204,182,0.35)';
+                b.style.borderColor = i === 0 ? '#7BA08A' : 'rgba(213,204,182,0.35)';
             });
             document.querySelectorAll('#filter-rating-dots .star-filter').forEach((s,i) => s.classList.toggle('active', i === 0));
             document.getElementById('min-rating-label').textContent = '0+ dots';

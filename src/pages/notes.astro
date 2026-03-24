@@ -33,10 +33,10 @@ notes.sort((a, b) => {
         }
         /* ── Theme accent — pastel purple ── */
         :root {
-            --accent:       #9B7CC8;   /* main purple */
-            --accent-light: #C4A8E8;   /* hover / star */
-            --accent-pale:  #EDE6F8;   /* soft background chips */
-            --accent-dark:  #7A5BA8;   /* deeper hover */
+            --accent:       #7BA08A;   /* main green */
+            --accent-light: #A1C2AE;   /* hover / star */
+            --accent-pale:  #E7F1EB;   /* soft background chips */
+            --accent-dark:  #5B7B68;   /* deeper hover */
         }
 
         /* ── Nav ── */
@@ -68,10 +68,10 @@ notes.sort((a, b) => {
             min-height: 260px;
         }
         .note-card:hover {
-            background: #F8F4FD;
-            border-color: #C4A8E8;
+            background: #F1F8F4;
+            border-color: #A1C2AE;
             transform: translateY(-4px);
-            box-shadow: 0 14px 28px -10px rgba(155,124,200,0.18);
+            box-shadow: 0 14px 28px -10px rgba(123,160,138,0.18);
         }
         .note-card:hover .card-title     { color: var(--accent); }
         .note-card:hover .card-draft-icon { color: var(--accent); }
@@ -198,12 +198,12 @@ notes.sort((a, b) => {
             max-height: 90vh;
             background-color: var(--paper, #FDFCF9);
             background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, transparent 60%);
+                radial-gradient(circle at 10% 90%, rgba(123,160,138,0.04) 0%, transparent 60%);
             background-position: 0 0, 0 0;
             background-repeat: repeat, no-repeat;
             border-radius: 36px;
             border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 40px 100px rgba(155,124,200,0.18);
+            box-shadow: 0 40px 100px rgba(123,160,138,0.18);
             overflow: hidden;
             position: relative;
             display: flex;
@@ -282,7 +282,7 @@ notes.sort((a, b) => {
 
         .modal-divider {
             width: 100%; height: 1px;
-            background: linear-gradient(90deg, rgba(196,168,232,0.4), rgba(196,168,232,0.1), transparent);
+            background: linear-gradient(90deg, rgba(161,194,174,0.4), rgba(161,194,174,0.1), transparent);
             margin-bottom: 2rem;
         }
 
@@ -302,8 +302,8 @@ notes.sort((a, b) => {
         }
         .concept-chip {
             display: inline-block;
-            background: rgba(155,124,200,0.08);
-            border: 1px solid rgba(155,124,200,0.25);
+            background: rgba(123,160,138,0.08);
+            border: 1px solid rgba(123,160,138,0.25);
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.95rem;
@@ -313,7 +313,7 @@ notes.sort((a, b) => {
         /* ── Properties button (lives inside modal footer) ── */
         .modal-footer-bar {
             padding: 1rem 2.5rem 1.5rem;
-            border-top: 1px solid rgba(155,124,200,0.10);
+            border-top: 1px solid rgba(123,160,138,0.10);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -377,11 +377,11 @@ notes.sort((a, b) => {
             background-color: var(--paper, #FDFCF9);
             background-image:
                 url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 95% 5%, rgba(155,124,200,0.07) 0%, transparent 55%);
+                radial-gradient(circle at 95% 5%, rgba(123,160,138,0.07) 0%, transparent 55%);
             background-position: 0 0, 0 0;
             background-repeat: repeat, no-repeat;
             border-radius: 28px 28px 36px 36px;
-            border-top: 1px solid rgba(155,124,200,0.18);
+            border-top: 1px solid rgba(123,160,138,0.18);
             box-shadow: 0 -12px 48px rgba(42,39,35,0.14);
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
@@ -448,7 +448,7 @@ notes.sort((a, b) => {
         /* header divider */
         .props-header-divider {
             height: 1px; margin: 0 1.8rem;
-            background: linear-gradient(90deg, rgba(155,124,200,0.2), transparent);
+            background: linear-gradient(90deg, rgba(123,160,138,0.2), transparent);
             flex-shrink: 0;
         }
 
@@ -461,7 +461,7 @@ notes.sort((a, b) => {
             gap: 0;
         }
         .props-body::-webkit-scrollbar { width: 4px; }
-        .props-body::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
+        .props-body::-webkit-scrollbar-thumb { background: rgba(123,160,138,0.2); border-radius: 10px; }
 
         .prop-row {
             padding: 0.9rem 0.6rem;
@@ -521,8 +521,8 @@ notes.sort((a, b) => {
         .prop-chip-neutral  { background: rgba(42,39,35,0.06); color: rgba(42,39,35,0.48); }
         .prop-concept-chip {
             display: inline-block;
-            background: rgba(155,124,200,0.08);
-            border: 1px solid rgba(155,124,200,0.22);
+            background: rgba(123,160,138,0.08);
+            border: 1px solid rgba(123,160,138,0.22);
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.88rem;
@@ -538,7 +538,7 @@ notes.sort((a, b) => {
         /* scrollbar (main modal) */
         .note-modal-scroll::-webkit-scrollbar { width: 5px; }
         .note-modal-scroll::-webkit-scrollbar-track { background: transparent; }
-        .note-modal-scroll::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
+        .note-modal-scroll::-webkit-scrollbar-thumb { background: rgba(123,160,138,0.2); border-radius: 10px; }
 
         /* ── Star filter ── */
         .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
@@ -555,10 +555,10 @@ notes.sort((a, b) => {
 
         .modal-scrollbar::-webkit-scrollbar { width: 4px; }
         .modal-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(155,124,200,0.2); border-radius: 10px; }
+        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(123,160,138,0.2); border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen antialiased selection:bg-[#9B7CC8] selection:text-white">
+<body class="min-h-screen antialiased selection:bg-[#7BA08A] selection:text-white">
 
     <!-- ─────────────── NAV ─────────────── -->
     <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
@@ -567,12 +567,12 @@ notes.sort((a, b) => {
             <div class="h-8 w-px bg-[#E8E2D2]"></div>
             <nav class="flex items-center gap-8 translate-y-[2px]">
                 <a href="/astro-project-v2/notes" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#9B7CC8] shadow-[0_0_8px_rgba(155,124,200,0.55)]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#7BA08A] shadow-[0_0_8px_rgba(123,160,138,0.55)]"></span>
                     <span class="font-serif text-xl text-[#2A2724]">Notes</span>
                 </a>
             </nav>
         </div>
-        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#9B7CC8] tracking-tight translate-y-1">hyperlynxt | teo</div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#7BA08A] tracking-tight translate-y-1">hyperlynxt | teo</div>
     </header>
 
     <!-- ─────────────── HERO ─────────────── -->
@@ -583,7 +583,7 @@ notes.sort((a, b) => {
                 Raw
                 <span class="italic hand-underline-sm inline-block">
                     Notes
-                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                         <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
                     </svg>
                 </span>
@@ -663,11 +663,11 @@ notes.sort((a, b) => {
     <!-- ─────────────── BOTTOM BAR ─────────────── -->
     <div id="bottom-bar" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center z-50">
         <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="const input = document.getElementById('notes-search'); if(input) input.focus()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-[#9B7CC8] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-[#7BA08A] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             <input type="text" id="notes-search" placeholder="Search notes" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
         </div>
         <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
-        <button id="open-filter-btn" class="bg-[#9B7CC8] hover:bg-[#7A5BA8] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
+        <button id="open-filter-btn" class="bg-[#7BA08A] hover:bg-[#6f917c] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
     </div>
 
     <!-- ─────────────── NOTE MODAL ─────────────── -->
@@ -744,16 +744,16 @@ notes.sort((a, b) => {
     <div id="filter-modal" class="fixed inset-0 z-[60] items-center justify-center p-6" style="display:none; background: rgba(245,242,235,0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
         <div class="relative z-20 w-full max-w-[620px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] ink-stain">
             <!-- Header -->
-            <div class="px-7 pt-9 pb-6 border-b border-[#C4A8E8]/15 flex flex-col items-center justify-center bg-white/50 backdrop-blur-md flex-shrink-0 relative">
+            <div class="px-7 pt-9 pb-6 border-b border-[#9dbbaa]/15 flex flex-col items-center justify-center bg-white/50 backdrop-blur-md flex-shrink-0 relative">
                 <div class="text-center w-full">
                     <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
                         Filter & Sort
-                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
                             <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
                         </svg>
                     </h2>
                 </div>
-                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#D5CCB6]/20 flex items-center justify-center text-[#2A2724]/50 hover:text-[#9B7CC8] hover:bg-[#F8F4FD] transition-all group">
+                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#D5CCB6]/20 flex items-center justify-center text-[#2A2724]/50 hover:text-[#7BA08A] hover:bg-[#F1F8F4] transition-all group">
                     <svg class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -764,34 +764,34 @@ notes.sort((a, b) => {
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
-                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Sort By</h3>
                         </div>
-                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#D5CCB6]/20 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#9B7CC8] transition-all">
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#D5CCB6]/20 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#7BA08A] transition-all">
                             <span id="sort-direction-label">Descending</span>
                             <svg id="sort-direction-icon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
                         </button>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button data-sort="default" class="sort-btn px-4 py-2 bg-[#9B7CC8] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#9B7CC8] transition-all">Default</button>
-                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Alphabetical</button>
-                        <button data-sort="rating" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Rating</button>
-                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">Date</button>
+                        <button data-sort="default" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#7BA08A] transition-all">Default</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#9dbbaa] transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="rating" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#9dbbaa] transition-all shadow-sm">Rating</button>
+                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#9dbbaa] transition-all shadow-sm">Date</button>
                     </div>
                 </div>
 
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#A1C2AE]/30 to-transparent"></div>
 
                 <!-- Min Rating -->
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
-                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Rating</h3>
                         </div>
-                        <span id="min-rating-label" class="font-['Reenie_Beanie'] text-lg text-[#9B7CC8]">0+ dots</span>
+                        <span id="min-rating-label" class="font-['Reenie_Beanie'] text-lg text-[#7BA08A]">0+ dots</span>
                     </div>
-                    <div class="flex gap-4 p-3.5 bg-white border border-[#C4A8E8]/20 rounded-2xl w-fit" id="filter-rating-dots">
+                    <div class="flex gap-4 p-3.5 bg-white border border-[#9dbbaa]/20 rounded-2xl w-fit" id="filter-rating-dots">
                         <button data-rating="0" class="star-filter active active:scale-95">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <circle cx="12" cy="12" r="8" fill="currentColor" fill-opacity="0.6"></circle>
@@ -815,57 +815,57 @@ notes.sort((a, b) => {
                     </div>
                 </div>
 
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#A1C2AE]/30 to-transparent"></div>
 
                 <!-- Status filter -->
                 <div>
                     <div class="flex items-center gap-2 mb-3">
-                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Status</h3>
                     </div>
                     <div class="flex flex-wrap gap-2" id="filter-status-container">
                         {['Raw','Refine','Metastasis / Converted'].map(s => (
-                            <button data-status={s} class="status-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{s}</button>
+                            <button data-status={s} class="status-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#A1C2AE] transition-all shadow-sm">{s}</button>
                         ))}
                     </div>
                 </div>
 
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#A1C2AE]/30 to-transparent"></div>
 
                 <!-- Note type filter -->
                 <div>
                     <div class="flex items-center gap-2 mb-3">
-                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                         <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Note Type</h3>
                     </div>
                     <div class="flex flex-wrap gap-2" id="filter-type-container">
                         {['Question','Observation','Synthesis','Analysis','Argument','Interpersonal'].map(t => (
-                            <button data-notetype={t} class="type-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{t}</button>
+                            <button data-notetype={t} class="type-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#A1C2AE] transition-all shadow-sm">{t}</button>
                         ))}
                     </div>
                 </div>
 
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#A1C2AE]/30 to-transparent"></div>
 
                 <!-- Discipline filter -->
                 <div>
                     <div class="flex items-center gap-2 mb-3">
-                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                         <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Discipline</h3>
                     </div>
                     <div class="flex flex-wrap gap-2" id="filter-discipline-container">
                         {['Sociology','Psychology','Linguistics','Cognitive Science'].map(d => (
-                            <button data-discipline={d} class="discipline-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#C4A8E8] transition-all shadow-sm">{d}</button>
+                            <button data-discipline={d} class="discipline-filter-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:border-[#A1C2AE] transition-all shadow-sm">{d}</button>
                         ))}
                     </div>
                 </div>
 
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#C4A8E8]/30 to-transparent"></div>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#A1C2AE]/30 to-transparent"></div>
 
                 <!-- Tags -->
                 <div class="pb-4">
                     <div class="flex items-center gap-2 mb-3">
-                        <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                        <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Tags</h3>
                     </div>
                     <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
@@ -873,14 +873,14 @@ notes.sort((a, b) => {
             </div>
 
             <!-- Footer actions -->
-            <div class="px-7 pb-6 pt-4 border-t border-[#C4A8E8]/10 flex items-center justify-between bg-white/60 flex-shrink-0">
+            <div class="px-7 pb-6 pt-4 border-t border-[#A1C2AE]/10 flex items-center justify-between bg-white/60 flex-shrink-0">
                 <div class="flex items-center gap-2 text-sm font-sans text-[#2A2724]/50">
-                    <span id="filter-result-count" class="font-medium text-[#9B7CC8]">{notes.length} notes</span>
+                    <span id="filter-result-count" class="font-medium text-[#7BA08A]">{notes.length} notes</span>
                     <span>match</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="clear-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-[#2A2724]/60 border border-[#D5CCB6]/30 hover:border-[#C4A8E8] hover:text-[#9B7CC8] transition-all">Clear</button>
-                    <button id="apply-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-white transition-all hover:-translate-y-[1px]" style="background: #9B7CC8; box-shadow: 0 4px 14px rgba(155,124,200,0.35);">Apply</button>
+                    <button id="clear-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-[#2A2724]/60 border border-[#D5CCB6]/30 hover:border-[#A1C2AE] hover:text-[#7BA08A] transition-all">Clear</button>
+                    <button id="apply-filters-btn" class="px-5 py-2 rounded-full text-sm font-sans font-medium text-white transition-all hover:-translate-y-[1px]" style="background: #7BA08A; box-shadow: 0 4px 14px rgba(123,160,138,0.35);">Apply</button>
                 </div>
             </div>
         </div>
@@ -1085,11 +1085,11 @@ notes.sort((a, b) => {
             btn.addEventListener('click', () => {
                 filterState.sort = btn.dataset.sort;
                 document.querySelectorAll('.sort-btn').forEach(b => {
-                    b.classList.remove('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                    b.classList.remove('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
                     b.classList.add('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
                 });
                 btn.classList.remove('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
-                btn.classList.add('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                btn.classList.add('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
                 updatePreviewCount();
             });
         });
@@ -1119,8 +1119,8 @@ notes.sort((a, b) => {
             btn.addEventListener('click', () => {
                 const s = btn.dataset.status;
                 const idx = filterState.statuses.indexOf(s);
-                if (idx === -1) { filterState.statuses.push(s); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
-                else            { filterState.statuses.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                if (idx === -1) { filterState.statuses.push(s); btn.classList.add('bg-[#7BA08A]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.statuses.splice(idx,1); btn.classList.remove('bg-[#7BA08A]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
                 updatePreviewCount();
             });
         });
@@ -1130,8 +1130,8 @@ notes.sort((a, b) => {
             btn.addEventListener('click', () => {
                 const t = btn.dataset.notetype;
                 const idx = filterState.noteTypes.indexOf(t);
-                if (idx === -1) { filterState.noteTypes.push(t); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
-                else            { filterState.noteTypes.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                if (idx === -1) { filterState.noteTypes.push(t); btn.classList.add('bg-[#7BA08A]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.noteTypes.splice(idx,1); btn.classList.remove('bg-[#7BA08A]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
                 updatePreviewCount();
             });
         });
@@ -1141,8 +1141,8 @@ notes.sort((a, b) => {
             btn.addEventListener('click', () => {
                 const d = btn.dataset.discipline;
                 const idx = filterState.disciplines.indexOf(d);
-                if (idx === -1) { filterState.disciplines.push(d); btn.classList.add('bg-[#9B7CC8]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
-                else            { filterState.disciplines.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                if (idx === -1) { filterState.disciplines.push(d); btn.classList.add('bg-[#7BA08A]','text-white'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                else            { filterState.disciplines.splice(idx,1); btn.classList.remove('bg-[#7BA08A]','text-white'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
                 updatePreviewCount();
             });
         });
@@ -1158,11 +1158,11 @@ notes.sort((a, b) => {
                 btn.textContent = tag;
                 btn.dataset.tag = tag;
                 const active = filterState.tags.includes(tag);
-                btn.className = `tag-dyn-btn px-4 py-2 font-sans text-sm font-medium rounded-full border transition-all shadow-sm ${active ? 'bg-[#9B7CC8] text-white border-[#9B7CC8]' : 'bg-white text-[#2A2724]/70 border-[#D5CCB6]/30 hover:border-[#C4A8E8]'}`;
+                btn.className = `tag-dyn-btn px-4 py-2 font-sans text-sm font-medium rounded-full border transition-all shadow-sm ${active ? 'bg-[#7BA08A] text-white border-[#7BA08A]' : 'bg-white text-[#2A2724]/70 border-[#D5CCB6]/30 hover:border-[#A1C2AE]'}`;
                 btn.addEventListener('click', () => {
                     const idx = filterState.tags.indexOf(tag);
-                    if (idx === -1) { filterState.tags.push(tag); btn.classList.add('bg-[#9B7CC8]','text-white','border-[#9B7CC8]'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
-                    else            { filterState.tags.splice(idx,1); btn.classList.remove('bg-[#9B7CC8]','text-white','border-[#9B7CC8]'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
+                    if (idx === -1) { filterState.tags.push(tag); btn.classList.add('bg-[#7BA08A]','text-white','border-[#7BA08A]'); btn.classList.remove('bg-white','text-[#2A2724]/70'); }
+                    else            { filterState.tags.splice(idx,1); btn.classList.remove('bg-[#7BA08A]','text-white','border-[#7BA08A]'); btn.classList.add('bg-white','text-[#2A2724]/70'); }
                     updatePreviewCount();
                 });
                 container.appendChild(btn);
@@ -1235,14 +1235,14 @@ notes.sort((a, b) => {
             document.getElementById('notes-search').value = '';
             // reset sort buttons
             document.querySelectorAll('.sort-btn').forEach((b,i) => {
-                b.classList.remove('bg-[#9B7CC8]','text-white','shadow-lg','border-[#9B7CC8]');
+                b.classList.remove('bg-[#7BA08A]','text-white','shadow-lg','border-[#7BA08A]');
                 b.classList.add('bg-white','text-[#2A2724]/70','border-[#D5CCB6]/30');
-                if (i === 0) { b.classList.add('bg-[#9B7CC8]','text-white','shadow-lg'); b.classList.remove('bg-white','text-[#2A2724]/70'); }
+                if (i === 0) { b.classList.add('bg-[#7BA08A]','text-white','shadow-lg'); b.classList.remove('bg-white','text-[#2A2724]/70'); }
             });
             document.querySelectorAll('#filter-rating-dots .star-filter').forEach((s,i) => s.classList.toggle('active', i === 0));
             document.getElementById('min-rating-label').textContent = '0+ dots';
             document.querySelectorAll('.status-filter-btn,.type-filter-btn,.discipline-filter-btn').forEach(b => {
-                b.classList.remove('bg-[#9B7CC8]','text-white');
+                b.classList.remove('bg-[#7BA08A]','text-white');
                 b.classList.add('bg-white','text-[#2A2724]/70');
             });
             cards.forEach(c => { c.style.display = ''; });

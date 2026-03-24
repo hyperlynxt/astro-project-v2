@@ -72,13 +72,13 @@ const STAR_ROTATIONS = [0, 15, -10];
 
         .quote-card:hover {
             background: #F5F2EB;
-            border-color: #7BA08A;
+            border-color: #9B7CC8;
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px -15px rgba(123, 160, 138, 0.25);
+            box-shadow: 0 20px 40px -15px rgba(155, 124, 200, 0.25);
             z-index: 10;
         }
-        .quote-card:hover .card-body p { color: #7BA08A; }
-        .quote-card:hover .card-quote-icon { color: #7BA08A; }
+        .quote-card:hover .card-body p { color: #9B7CC8; }
+        .quote-card:hover .card-quote-icon { color: #9B7CC8; }
         .card-expand {
             position: absolute;
             top: 1.1rem;
@@ -91,7 +91,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             line-height: 1;
         }
         .quote-card:hover .card-expand { opacity: 1; transform: scale(1); }
-        .card-quote-icon { color: #7BA08A; margin-bottom: 0.75rem; flex-shrink: 0; transition: color 0.3s ease; display:flex; align-items:center; }
+        .card-quote-icon { color: #9B7CC8; margin-bottom: 0.75rem; flex-shrink: 0; transition: color 0.3s ease; display:flex; align-items:center; }
         .card-body p { transition: color 0.3s ease; }
         .card-body { flex-grow: 1; }
         .card-footer {
@@ -161,7 +161,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             stroke-dashoffset: 600;
             animation: drawStroke 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.28s forwards;
         }
-        .star-rating { display: flex; gap: 4px; color: #7BA08A; }
+        .star-rating { display: flex; gap: 4px; color: #9B7CC8; }
         ::-webkit-scrollbar { width: 7px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: rgba(42,39,35,0.1); border-radius: 10px; }
@@ -191,9 +191,9 @@ const STAR_ROTATIONS = [0, 15, -10];
         
         /* Star Filter Fixes */
         .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .star-filter.active { color: #7BA08A !important; opacity: 1 !important; }
-        .star-filter.active svg { color: #7BA08A !important; }
-        .star-filter.active svg path { fill: #7BA08A !important; fill-opacity: 0.8 !important; stroke: #7BA08A !important; }
+        .star-filter.active { color: #9B7CC8 !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #9B7CC8 !important; }
+        .star-filter.active svg path { fill: #9B7CC8 !important; fill-opacity: 0.8 !important; stroke: #9B7CC8 !important; }
         .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
         .star-filter:not(.active) svg { color: #A39985 !important; }
         .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.15 !important; stroke: #A39985 !important; }
@@ -208,13 +208,13 @@ const STAR_ROTATIONS = [0, 15, -10];
             <div class="h-8 w-px bg-[#E8E2D2]"></div>
             <nav class="flex items-center gap-8 translate-y-[2px]">
                 <a href="/astro-project-v2/quotes" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#7BA08A] shadow-[0_0_8px_rgba(123,160,138,0.5)]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#9B7CC8] shadow-[0_0_8px_rgba(155,124,200,0.5)]"></span>
                     <span class="font-serif text-xl text-[#2A2724]">Quotes</span>
                 </a>
                 <a href="/astro-project-v2/linguistic-treats" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Linguistic Treats</a>
             </nav>
         </div>
-        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#7BA08A] tracking-tight translate-y-1">hyperlynxt | teo</div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#9B7CC8] tracking-tight translate-y-1">hyperlynxt | teo</div>
     </header>
 
     <section class="w-full bg-gradient-to-b from-[#F5F2EB] to-transparent pt-20 pb-16 px-6">
@@ -223,7 +223,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             <h2 class="font-serif text-5xl md:text-7xl leading-tight text-[#2A2724] mb-8">
                 Collected <span class="italic hand-underline-sm inline-block">
                     Quotes
-                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                         <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
                     </svg>
                 </span>
@@ -307,9 +307,9 @@ const STAR_ROTATIONS = [0, 15, -10];
                 </div>
                 <blockquote class="modal-quote-text font-serif font-bold text-[1.8rem] md:text-[2.1rem] leading-relaxed text-[#2A2724] mt-2 mb-2 relative z-10" id="modal-quote-text"></blockquote>
                 <svg class="draw-line w-full mb-4" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
-                    <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#7BA08A" stroke-width="1.3" stroke-linecap="round"/>
+                    <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#9B7CC8" stroke-width="1.3" stroke-linecap="round"/>
                 </svg>
-                <div id="summary-container" class="modal-attribution border-l-4 border-[#7BA08A] pl-6 py-1 mb-6">
+                <div id="summary-container" class="modal-attribution border-l-4 border-[#9B7CC8] pl-6 py-1 mb-6">
                     <p id="modal-summary" class="font-serif italic text-[1.1rem] leading-relaxed text-[#8C8070]"></p>
                 </div>
             </div>
@@ -317,7 +317,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             <div class="w-full border-t border-[#2A2724]/[0.08] bg-white/50 backdrop-blur-sm px-8 py-8 flex flex-col md:flex-row gap-6">
                 <div class="sidebar-block flex-1 bg-white/80 rounded-2xl border border-[#2A2724]/[0.07] p-5 shadow-sm">
                     <div class="flex items-center gap-2 mb-3">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#7BA08A]"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#9B7CC8]"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
                         <span class="font-sans text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Origin</span>
                     </div>
                     <p id="sidebar-author" class="font-serif text-[1.3rem] text-[#2A2724] leading-tight mb-1"></p>
@@ -325,7 +325,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                 </div>
                 <div class="sidebar-block flex-1 bg-white/80 rounded-2xl border border-[#2A2724]/[0.07] p-5 shadow-sm">
                     <div class="flex items-center gap-2 mb-3">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#7BA08A]"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#9B7CC8]"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                         <span class="font-sans text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Categories</span>
                     </div>
                     <div id="sidebar-tags" class="flex flex-wrap gap-2"></div>
@@ -343,7 +343,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <div class="text-center">
                     <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
                         Filter & Sort
-                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#7BA08A] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#9B7CC8] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
                             <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
                         </svg>
                     </h2>
@@ -357,16 +357,16 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
-                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Sort Order</h3>
                         </div>
-                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#2A2724]/15 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#7BA08A] transition-all group">
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#2A2724]/15 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#9B7CC8] transition-all group">
                             <span id="sort-direction-label">Descending</span>
                             <svg id="sort-direction-icon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
                         </button>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button data-sort="default" class="sort-btn px-4 py-2 bg-[#7BA08A] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#7BA08A] transition-all">Default</button>
+                        <button data-sort="default" class="sort-btn px-4 py-2 bg-[#9B7CC8] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#9B7CC8] transition-all">Default</button>
                         <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">Alphabetical</button>
                         <button data-sort="category" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">By Category</button>
                         <button data-sort="most-stars" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#2A2724]/20 hover:text-[#2A2724] transition-all shadow-sm">Most Stars</button>
@@ -378,10 +378,10 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
-                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Filter by Tags</h3>
                         </div>
-                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-[#7BA08A]/70 hover:text-[#7BA08A] transition-colors">Select All</button>
+                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-[#9B7CC8]/70 hover:text-[#9B7CC8] transition-colors">Select All</button>
                     </div>
                     <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
                 </div>
@@ -391,10 +391,10 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <div class="pb-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
-                            <svg class="w-3.5 h-3.5 text-[#7BA08A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Stars</h3>
                         </div>
-                        <span class="font-['Reenie_Beanie'] text-lg text-[#7BA08A] hand-label">1+ stars</span>
+                        <span class="font-['Reenie_Beanie'] text-lg text-[#9B7CC8] hand-label">1+ stars</span>
                     </div>
                     <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-[#2A2724]/10 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
                         <button data-rating="1" class="star-filter active active:scale-95">
@@ -417,8 +417,8 @@ const STAR_ROTATIONS = [0, 15, -10];
             </div>
 
             <div class="p-6 border-t border-[#2A2724]/10 bg-[#FDFCF9] flex items-center justify-between flex-shrink-0">
-                <button id="clear-filter-btn" class="font-['Reenie_Beanie'] text-[1.4rem] font-medium text-[#7BA08A] hover:bg-[#7BA08A]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
-                <button id="apply-filter-btn" class="bg-[#7BA08A] hover:bg-[#6a9079] text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                <button id="clear-filter-btn" class="font-['Reenie_Beanie'] text-[1.4rem] font-medium text-[#9B7CC8] hover:bg-[#9B7CC8]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
+                <button id="apply-filter-btn" class="bg-[#9B7CC8] hover:bg-[#7A5BA8] text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
                     <span>Apply Filters</span>
                     <span id="filter-result-count" class="font-['Reenie_Beanie'] text-lg text-white/90 pt-0.5">-- quotes</span>
                 </button>
@@ -435,7 +435,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             <input type="text" id="quotes-search" placeholder="Search quotes" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
         </div>
         <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
-        <button id="filter-btn" class="bg-[#7BA08A] hover:bg-[#6a9079] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
+        <button id="filter-btn" class="bg-[#9B7CC8] hover:bg-[#7A5BA8] text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
     </div>
 
     <script is:inline>
@@ -610,7 +610,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             const container = document.getElementById('filter-tags-container');
             container.innerHTML = allTags.map(tag => {
                 const active = filterState.tags.includes(tag);
-                return `<button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all ${active ? 'bg-[#2A4747] text-white shadow-md scale-105' : 'bg-[#F5F2EB] text-[#2A2724]/60 border border-[#2A2724]/10 hover:bg-[#E8E2D2]'}">${tag}</button>`;
+                return `<button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all ${active ? 'bg-[#4A2A47] text-white shadow-md scale-105' : 'bg-[#F5F2EB] text-[#2A2724]/60 border border-[#2A2724]/10 hover:bg-[#EDE6F8]'}">${tag}</button>`;
             }).join('');
             container.querySelectorAll('.tag-filter-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -634,11 +634,11 @@ const STAR_ROTATIONS = [0, 15, -10];
             btn.addEventListener('click', () => {
                 filterState.sort = btn.dataset.sort;
                 document.querySelectorAll('.sort-btn').forEach(b => {
-                    b.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg', 'border-[#7BA08A]');
+                    b.classList.remove('bg-[#9B7CC8]', 'text-white', 'shadow-lg', 'border-[#9B7CC8]');
                     b.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20');
                 });
                 btn.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20');
-                btn.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg', 'border-[#7BA08A]');
+                btn.classList.add('bg-[#9B7CC8]', 'text-white', 'shadow-lg', 'border-[#9B7CC8]');
                 updatePreviewCount();
             });
         });
@@ -728,10 +728,10 @@ const STAR_ROTATIONS = [0, 15, -10];
             renderTagFilters();
             updatePreviewCount();
             document.querySelectorAll('.sort-btn').forEach((b, i) => {
-                b.classList.remove('bg-[#7BA08A]', 'text-white', 'shadow-lg', 'border-[#7BA08A]');
+                b.classList.remove('bg-[#9B7CC8]', 'text-white', 'shadow-lg', 'border-[#9B7CC8]');
                 b.classList.add('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20');
                 if (i === 0) {
-                    b.classList.add('bg-[#7BA08A]', 'text-white', 'shadow-lg');
+                    b.classList.add('bg-[#9B7CC8]', 'text-white', 'shadow-lg');
                     b.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20');
                 }
             });

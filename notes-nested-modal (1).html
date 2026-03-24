@@ -13,10 +13,10 @@
 
         /* ── Variables ── */
         :root {
-            --accent:       #9B7CC8;
-            --accent-light: #C4A8E8;
-            --accent-pale:  #EDE6F8;
-            --accent-dark:  #7A5BA8;
+            --accent:       #7BA08A;
+            --accent-light: #9dbbaa;
+            --accent-pale:  #f1f6f3;
+            --accent-dark:  #6a9079;
             --ink:          #2A2724;
             --paper:        #FDFCF9;
         }
@@ -62,10 +62,10 @@
             min-height: 260px;
         }
         .note-card:hover {
-            background: #F8F4FD;
-            border-color: #C4A8E8;
+            background: #f1f6f3;
+            border-color: #9dbbaa;
             transform: translateY(-4px);
-            box-shadow: 0 14px 28px -10px rgba(155,124,200,0.18);
+            box-shadow: 0 14px 28px -10px rgba(123, 160, 138, 0.18);
         }
         .note-card:hover .card-title { color: var(--accent); }
 
@@ -169,12 +169,12 @@
             max-height: 90vh;
             background-color: var(--paper);
             background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 10% 90%, rgba(155,124,200,0.04) 0%, transparent 60%);
+                radial-gradient(circle at 10% 90%, rgba(123, 160, 138, 0.04) 0%, transparent 60%);
             background-position: 0 0, 0 0;
             background-repeat: repeat, no-repeat;
             border-radius: 36px;
             border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 40px 100px rgba(155,124,200,0.18);
+            box-shadow: 0 40px 100px rgba(123, 160, 138, 0.18);
             overflow: hidden;
             position: relative;
             display: flex;
@@ -253,7 +253,7 @@
 
         .modal-divider {
             width: 100%; height: 1px;
-            background: linear-gradient(90deg, rgba(196,168,232,0.4), rgba(196,168,232,0.1), transparent);
+            background: linear-gradient(90deg, rgba(157,187,170,0.4), rgba(157,187,170,0.1), transparent);
             margin-bottom: 2rem;
         }
 
@@ -273,8 +273,8 @@
         }
         .concept-chip {
             display: inline-block;
-            background: rgba(155,124,200,0.08);
-            border: 1px solid rgba(155,124,200,0.25);
+            background: rgba(123, 160, 138, 0.08);
+            border: 1px solid rgba(123, 160, 138, 0.25);
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.95rem;
@@ -284,7 +284,7 @@
         /* ── Properties button (lives inside modal footer) ── */
         .modal-footer-bar {
             padding: 1rem 2.5rem 1.5rem;
-            border-top: 1px solid rgba(155,124,200,0.10);
+            border-top: 1px solid rgba(123, 160, 138, 0.10);
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -348,11 +348,11 @@
             background-color: var(--paper);
             background-image:
                 url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                radial-gradient(circle at 95% 5%, rgba(155,124,200,0.07) 0%, transparent 55%);
+                radial-gradient(circle at 95% 5%, rgba(123, 160, 138, 0.07) 0%, transparent 55%);
             background-position: 0 0, 0 0;
             background-repeat: repeat, no-repeat;
             border-radius: 28px 28px 36px 36px;
-            border-top: 1px solid rgba(155,124,200,0.18);
+            border-top: 1px solid rgba(123, 160, 138, 0.18);
             box-shadow: 0 -12px 48px rgba(42,39,35,0.14);
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
@@ -419,7 +419,7 @@
         /* header divider */
         .props-header-divider {
             height: 1px; margin: 0 1.8rem;
-            background: linear-gradient(90deg, rgba(155,124,200,0.2), transparent);
+            background: linear-gradient(90deg, rgba(123, 160, 138, 0.2), transparent);
             flex-shrink: 0;
         }
 
@@ -432,7 +432,7 @@
             gap: 0;
         }
         .props-body::-webkit-scrollbar { width: 4px; }
-        .props-body::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
+        .props-body::-webkit-scrollbar-thumb { background: rgba(123, 160, 138, 0.2); border-radius: 10px; }
 
         .prop-row {
             padding: 0.9rem 0.6rem;
@@ -488,8 +488,8 @@
         .prop-chip-neutral  { background: rgba(42,39,35,0.06); color: rgba(42,39,35,0.48); }
         .prop-concept-chip {
             display: inline-block;
-            background: rgba(155,124,200,0.08);
-            border: 1px solid rgba(155,124,200,0.22);
+            background: rgba(123, 160, 138, 0.08);
+            border: 1px solid rgba(123, 160, 138, 0.22);
             color: var(--accent-dark);
             font-family: 'EB Garamond', serif;
             font-size: 0.88rem;
@@ -505,7 +505,7 @@
         /* scrollbar (main modal) */
         .note-modal-scroll::-webkit-scrollbar { width: 5px; }
         .note-modal-scroll::-webkit-scrollbar-track { background: transparent; }
-        .note-modal-scroll::-webkit-scrollbar-thumb { background: rgba(155,124,200,0.2); border-radius: 10px; }
+        .note-modal-scroll::-webkit-scrollbar-thumb { background: rgba(123, 160, 138, 0.2); border-radius: 10px; }
 
         /* ── Page intro ── */
         .page-head {
