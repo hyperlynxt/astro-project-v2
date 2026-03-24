@@ -292,6 +292,10 @@ notes.sort((a, b) => {
             color: rgba(42,39,35,0.82);
             margin-bottom: 2.5rem;
         }
+        .modal-body-prose strong, .modal-body-prose b {
+            color: var(--accent);
+            font-weight: 600;
+        }
 
         .modal-section-label {
             font-family: 'Inter', sans-serif;
@@ -936,7 +940,8 @@ notes.sort((a, b) => {
                 document.getElementById('modal-footer-date').textContent = fmtDate(d.date);
 
                 // body
-                document.getElementById('modal-body').textContent = d.body || '';
+                const bodyHtml = (d.body || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                document.getElementById('modal-body').innerHTML = bodyHtml;
 
                 // store data on props button for quick access
                 document.getElementById('open-props-btn').dataset.cardData = JSON.stringify(d);
