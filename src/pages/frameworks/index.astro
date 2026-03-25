@@ -1,0 +1,279 @@
+---
+import { getCollection, render } from 'astro:content';
+import '../../styles/global.css';
+
+const frameworks = await getCollection('frameworks');
+
+frameworks.sort((a, b) => {
+  const ratingA = a.data.rating || 0;
+  const ratingB = b.data.rating || 0;
+  if (ratingB !== ratingA) return ratingB - ratingA;
+  return new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime();
+});
+
+const renderedFrameworks = await Promise.all(
+  frameworks.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+
+const ACCENT_COLOR = '#005F6B'; // Deep Teal
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Field Notes — Frameworks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style define:vars={{ accent: ACCENT_COLOR }}>
+        body {
+            background-color: #FDFCF9;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            color: #2A2724;
+        }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .hand-underline-sm { position: relative; display: inline-block; }
+        
+        .framework-card {
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(42, 39, 35, 0.1);
+            box-shadow: 0 2px 12px rgba(42, 39, 35, 0.06);
+        }
+        .framework-card:hover {
+            background: #F5F2EB;
+            border-color: #D5CCB6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42, 39, 36, 0.1);
+        }
+        .framework-card:hover .card-title { color: var(--accent); }
+        .card-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            color: #A39985;
+            transition: color 0.2s ease;
+        }
+        .framework-card:hover .card-icon { color: var(--accent); }
+        
+        .star-rating { display: flex; gap: 4px; color: var(--accent); }
+        
+        .masonry-grid {
+            position: relative;
+            width: 100%;
+            transition: height 0.4s ease;
+        }
+        .masonry-item-wrapper {
+            position: absolute;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, width 0.4s ease;
+        }
+        
+        /* Modal Styles */
+        #modal-overlay { 
+            background: rgba(42, 39, 35, 0.38); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px); 
+            transition: opacity 0.35s ease; 
+        }
+        .modal-card { 
+            background-color: #FDFCF9; 
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+        
+        @keyframes textReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-title-text { opacity: 0; animation: textReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
+        .modal-reveal { opacity: 0; animation: textReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.12); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 39, 36, 0.25); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42, 39, 35, 0.12);">
+        <div class="flex items-center gap-10">
+            <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
+            <div class="h-8 w-px bg-[#E8E2D2]"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="/astro-project-v2/concepts" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Concepts</a>
+                <a href="/astro-project-v2/definitions" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Definitions</a>
+                <a href="/astro-project-v2/frameworks" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#005F6B] shadow-[0_0_8px_rgba(0,95,107,0.4)]"></span>
+                    <span class="font-serif text-xl text-[#2A2724]">Frameworks</span>
+                </a>
+            </nav>
+        </div>
+        <div class="font-hand text-[1.75rem] leading-none text-seal tracking-tight translate-y-1">hyperlynxt | teo</div>
+    </header>
+
+    <main class="flex-1 pb-32">
+        <section class="w-full bg-gradient-to-b from-[#F5F2EB] to-transparent pt-20 pb-16 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <span class="font-hand text-2xl text-[#8C8070] mb-2 block">scaffolding for thought</span>
+                <h2 class="font-serif text-5xl md:text-7xl leading-tight text-[#2A2724] mb-8">
+                    Mental <span class="italic hand-underline-sm inline-block">
+                        Frameworks
+                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#005F6B] opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                        </svg>
+                    </span>
+                </h2>
+                <p class="font-serif italic text-lg md:text-xl text-[#8C8070] max-w-2xl mx-auto leading-relaxed">
+                    Higher-order structures, heuristics, and lenses for organizing perception and action.
+                </p>
+            </div>
+        </section>
+
+        <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Structural Scaffolding</span>
+            <span id="count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{frameworks.length} entries</span>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="masonry-grid" id="frameworks-grid">
+                {renderedFrameworks.map(({ entry }) => (
+                    <div class="masonry-item-wrapper">
+                        <article
+                            class="framework-card rounded-3xl p-8 flex flex-col gap-6"
+                            data-title={entry.data.title}
+                            data-id={entry.id}
+                            data-description={entry.data.description}
+                            data-type={entry.data.type}
+                            data-rating={entry.data.rating}
+                            data-tags={entry.data.tags.join(',')}
+                        >
+                            <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3v18"></path>
+                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                                <path d="M3 9h18"></path>
+                                <path d="M3 15h18"></path>
+                            </svg>
+                            <div class="flex flex-col gap-2">
+                                <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#005F6B] opacity-60">{entry.data.type}</p>
+                                <h3 class="card-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
+                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.description}</p>
+                            </div>
+                            <div class="pt-5 border-t border-[#F5F2EB]/80 mt-auto flex items-center justify-between">
+                                <div class="star-rating">
+                                    {Array.from({ length: entry.data.rating || 0 }).map((_, i) => (
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style={`transform: rotate(${(i % 2 === 0 ? 10 : -10)}deg)`}>
+                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.3"></path>
+                                        </svg>
+                                    ))}
+                                </div>
+                                <div class="flex gap-1.5 flex-wrap justify-end">
+                                    {entry.data.tags.slice(0, 2).map(tag => (
+                                        <span class="bg-[#F5F2EB] text-[#8C8070] font-sans text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md">{tag}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal (simplified for now, mimicking Concepts) -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; opacity:0;">
+        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-2xl" style="max-height:90vh;">
+            <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs">✕</button>
+            <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12">
+                <div class="flex justify-center mb-6">
+                    <div id="modal-stars" class="star-rating"></div>
+                </div>
+                <div class="modal-title-text mb-2 text-center">
+                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#005F6B] opacity-60 mb-2"></p>
+                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="modal-title"></h2>
+                </div>
+                <div class="w-full h-px bg-[#005F6B]/20 my-8"></div>
+                <div class="modal-reveal">
+                    <p id="modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
+                    <div id="modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data for JS -->
+    <script id="frameworks-data" type="application/json" is:inline set:html={JSON.stringify(frameworks.map(f => ({ id: f.id, ...f.data })))} />
+    <div style="display:none;" aria-hidden="true">
+        {renderedFrameworks.map(({ entry, Content }) => (
+            <div id={`framework-content-${entry.id}`}><Content /></div>
+        ))}
+    </div>
+
+    <script is:inline>
+        const cards = document.querySelectorAll('.framework-card');
+        const grid = document.getElementById('frameworks-grid');
+        const overlay = document.getElementById('modal-overlay');
+        const modalCard = document.getElementById('modal-card');
+        const frameworksData = JSON.parse(document.getElementById('frameworks-data').textContent);
+
+        function layoutMasonry() {
+            const items = Array.from(document.querySelectorAll('.masonry-item-wrapper'));
+            const containerWidth = grid.offsetWidth;
+            let cols = 1;
+            if (window.innerWidth >= 1024) cols = 3;
+            else if (window.innerWidth >= 768) cols = 2;
+            
+            const gap = 24;
+            const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
+            const heights = new Array(cols).fill(0);
+            
+            items.forEach(item => {
+                const minH = Math.min(...heights);
+                const colIdx = heights.indexOf(minH);
+                item.style.width = `${colWidth}px`;
+                item.style.transform = `translate3d(${colIdx * (colWidth + gap)}px, ${minH}px, 0)`;
+                heights[colIdx] += item.offsetHeight + gap;
+            });
+            grid.style.height = `${Math.max(...heights)}px`;
+        }
+
+        window.addEventListener('load', layoutMasonry);
+        window.addEventListener('resize', layoutMasonry);
+        layoutMasonry();
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                const data = frameworksData.find(f => f.id === id);
+                const content = document.getElementById(`framework-content-${id}`).innerHTML;
+                
+                document.getElementById('modal-title').textContent = data.title;
+                document.getElementById('modal-type').textContent = data.type;
+                document.getElementById('modal-description').textContent = data.description;
+                document.getElementById('modal-content').innerHTML = content;
+                
+                // Stars
+                const starHtml = Array.from({ length: data.rating }).map((_, i) => 
+                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="#005F6B" fill-opacity="0.3" stroke="#005F6B" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+                ).join('');
+                document.getElementById('modal-stars').innerHTML = starHtml;
+
+                overlay.style.display = 'flex';
+                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const closeBtn = document.getElementById('close-modal-btn');
+        const closeModal = () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+        };
+        closeBtn.onclick = closeModal;
+        overlay.onclick = (e) => { if(e.target === overlay) closeModal(); };
+        window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>

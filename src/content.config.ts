@@ -95,4 +95,17 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes };
+const frameworks = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/frameworks' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    type: z.string(),
+    tags: z.array(z.string()),
+    rating: z.number().min(0).max(5),
+    date_added: z.date(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks };
+
