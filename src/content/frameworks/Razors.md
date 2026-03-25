@@ -4,6 +4,7 @@ description: "A collection of philosophical razors — heuristics that allow for
 type: "Heuristic Set"
 tags: ["Philosophy", "Decision Making", "Heuristics"]
 rating: 3
+related_concepts: ["Occam's Razor", "Hanlon's Razor", "Hitchens's Razor"]
 date_added: 2026-03-25
 ---
 

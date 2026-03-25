@@ -114,6 +114,39 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         <div class="font-hand text-[1.75rem] leading-none text-seal tracking-tight translate-y-1">hyperlynxt | teo</div>
     </header>
 
+    <!-- Modal (Nuclear Fix: Moved to top and simplified) -->
+    <div id="modal-overlay" class="fixed inset-0 z-[9999] flex items-center justify-center p-6 md:p-10" style="display:none; opacity:0; pointer-events: none; background-color: rgba(42, 39, 36, 0.4); backdrop-filter: blur(8px);">
+        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/8 bg-[#FDFCF9] shadow-2xl" style="max-height:90vh;">
+            <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs">✕</button>
+            <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12">
+                <div class="flex justify-center mb-6">
+                    <div id="modal-stars" class="star-rating"></div>
+                </div>
+                <div class="modal-title-text mb-2 text-center">
+                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
+                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="modal-title"></h2>
+                </div>
+                <div class="w-full h-px bg-[#8B2626]/20 my-8"></div>
+                <div class="modal-reveal">
+                    <p id="modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
+                    <div id="modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80 mb-12"></div>
+                    
+                    <!-- Related Concepts Section -->
+                    <div id="modal-related-section" style="display:none;">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
+                            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">Related Concepts</span>
+                            <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
+                        </div>
+                        <div id="modal-related-items" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Items populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main class="flex-1 pb-32">
         <section class="w-full bg-gradient-to-b from-[#F5F2EB] to-transparent pt-20 pb-16 px-6">
             <div class="max-w-4xl mx-auto text-center">
@@ -182,26 +215,6 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         </div>
     </main>
 
-    <!-- Modal (simplified for now, mimicking Concepts) -->
-    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; opacity:0;">
-        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-2xl" style="max-height:90vh;">
-            <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs">✕</button>
-            <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12">
-                <div class="flex justify-center mb-6">
-                    <div id="modal-stars" class="star-rating"></div>
-                </div>
-                <div class="modal-title-text mb-2 text-center">
-                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
-                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="modal-title"></h2>
-                </div>
-                <div class="w-full h-px bg-[#8B2626]/20 my-8"></div>
-                <div class="modal-reveal">
-                    <p id="modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
-                    <div id="modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Data for JS -->
     <script id="frameworks-data" type="application/json" is:inline set:html={JSON.stringify(frameworks.map(f => ({ id: f.id, ...f.data })))} />
@@ -212,68 +225,119 @@ const ACCENT_COLOR = '#8B2626'; // Seal
     </div>
 
     <script is:inline>
-        const cards = document.querySelectorAll('.framework-card');
-        const grid = document.getElementById('frameworks-grid');
-        const overlay = document.getElementById('modal-overlay');
-        const modalCard = document.getElementById('modal-card');
-        const frameworksData = JSON.parse(document.getElementById('frameworks-data').textContent);
+        function initFrameworks() {
+            console.log('initFrameworks running');
+            const cards = document.querySelectorAll('.framework-card');
+            const grid = document.getElementById('frameworks-grid');
+            const overlay = document.getElementById('modal-overlay');
+            const closeBtn = document.getElementById('close-modal-btn');
+            
+            const dataEl = document.getElementById('frameworks-data');
+            if (!dataEl) {
+                console.error('Data element #frameworks-data not found');
+                return;
+            }
+            const frameworksData = JSON.parse(dataEl.textContent);
 
-        function layoutMasonry() {
-            const items = Array.from(document.querySelectorAll('.masonry-item-wrapper'));
-            const containerWidth = grid.offsetWidth;
-            let cols = 1;
-            if (window.innerWidth >= 1024) cols = 3;
-            else if (window.innerWidth >= 768) cols = 2;
-            
-            const gap = 24;
-            const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
-            const heights = new Array(cols).fill(0);
-            
-            items.forEach(item => {
-                const minH = Math.min(...heights);
-                const colIdx = heights.indexOf(minH);
-                item.style.width = `${colWidth}px`;
-                item.style.transform = `translate3d(${colIdx * (colWidth + gap)}px, ${minH}px, 0)`;
-                heights[colIdx] += item.offsetHeight + gap;
+            function layoutMasonry() {
+                if (!grid) return;
+                const items = Array.from(document.querySelectorAll('.masonry-item-wrapper'));
+                if (items.length === 0) return;
+                
+                const containerWidth = grid.offsetWidth;
+                let cols = 1;
+                if (window.innerWidth >= 1024) cols = 3;
+                else if (window.innerWidth >= 768) cols = 2;
+                
+                const gap = 24;
+                const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
+                const heights = new Array(cols).fill(0);
+                
+                items.forEach(item => {
+                    const minH = Math.min(...heights);
+                    const colIdx = heights.indexOf(minH);
+                    item.style.width = `${colWidth}px`;
+                    item.style.transform = `translate3d(${colIdx * (colWidth + gap)}px, ${minH}px, 0)`;
+                    heights[colIdx] += item.offsetHeight + gap;
+                });
+                grid.style.height = `${Math.max(...heights)}px`;
+            }
+
+            window.addEventListener('load', layoutMasonry);
+            window.addEventListener('resize', layoutMasonry);
+            layoutMasonry();
+
+            console.log(`Setting up listeners for ${cards.length} cards`);
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    console.log('Card clicked:', card.dataset.id);
+                    const id = card.dataset.id;
+                    const data = frameworksData.find(f => f.id === id);
+                    if (!data) {
+                        console.error('Data not found for ID:', id);
+                        return;
+                    }
+
+                    const contentEl = document.getElementById(`framework-content-${id}`);
+                    if (!contentEl) {
+                        console.error('Content element not found for ID:', id);
+                        return;
+                    }
+                    
+                    document.getElementById('modal-title').textContent = data.title;
+                    document.getElementById('modal-type').textContent = data.type;
+                    document.getElementById('modal-description').textContent = data.description;
+                    document.getElementById('modal-content').innerHTML = contentEl.innerHTML;
+                    
+                    // Stars
+                    const starHtml = Array.from({ length: data.rating }).map((_, i) => 
+                        `<svg width="20" height="20" viewBox="0 0 24 24" fill="#8B2626" fill-opacity="0.3" stroke="#8B2626" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+                    ).join('');
+                    document.getElementById('modal-stars').innerHTML = starHtml;
+
+                    // Related Concepts
+                    const relatedSec = document.getElementById('modal-related-section');
+                    const relatedItems = document.getElementById('modal-related-items');
+                    if (data.related_concepts && data.related_concepts.length > 0) {
+                        relatedItems.innerHTML = data.related_concepts.map(name => `
+                            <div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all">
+                                <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors">${name.trim()}</p>
+                                <svg class="text-[#D5CCB6]/50 group-hover:text-[#B08D57]/60 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round tracking-tighter"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                            </div>
+                        `).join('');
+                        relatedSec.style.display = 'block';
+                    } else {
+                        relatedSec.style.display = 'none';
+                    }
+
+                    overlay.style.display = 'flex';
+                    overlay.style.pointerEvents = 'all';
+                    requestAnimationFrame(() => { 
+                        overlay.style.opacity = '1'; 
+                    });
+                    document.body.style.overflow = 'hidden';
+                });
             });
-            grid.style.height = `${Math.max(...heights)}px`;
+
+            const closeModal = () => {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+                setTimeout(() => { 
+                    overlay.style.display = 'none'; 
+                    document.body.style.overflow = ''; 
+                }, 300);
+            };
+            if (closeBtn) closeBtn.onclick = closeModal;
+            if (overlay) overlay.onclick = (e) => { if(e.target === overlay) closeModal(); };
+            window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
         }
 
-        window.addEventListener('load', layoutMasonry);
-        window.addEventListener('resize', layoutMasonry);
-        layoutMasonry();
-
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                const id = card.dataset.id;
-                const data = frameworksData.find(f => f.id === id);
-                const content = document.getElementById(`framework-content-${id}`).innerHTML;
-                
-                document.getElementById('modal-title').textContent = data.title;
-                document.getElementById('modal-type').textContent = data.type;
-                document.getElementById('modal-description').textContent = data.description;
-                document.getElementById('modal-content').innerHTML = content;
-                
-                // Stars
-                const starHtml = Array.from({ length: data.rating }).map((_, i) => 
-                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="#8B2626" fill-opacity="0.3" stroke="#8B2626" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
-                ).join('');
-                document.getElementById('modal-stars').innerHTML = starHtml;
-
-                overlay.style.display = 'flex';
-                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        const closeBtn = document.getElementById('close-modal-btn');
-        const closeModal = () => {
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
-        };
-        closeBtn.onclick = closeModal;
-        overlay.onclick = (e) => { if(e.target === overlay) closeModal(); };
-        window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+        // Initialize on DOMContentLoaded or immediately if already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFrameworks);
+        } else {
+            initFrameworks();
+        }
     </script>
 </body>
 </html>

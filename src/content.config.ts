@@ -103,6 +103,7 @@ const frameworks = defineCollection({
     type: z.string(),
     tags: z.array(z.string()),
     rating: z.number().min(0).max(5),
+    related_concepts: z.array(z.string()).optional(),
     date_added: z.date(),
   }),
 });
