@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import '../../styles/global.css';
+import ConceptModal from '../../components/ConceptModal.astro';
 
 const frameworks = await getCollection('frameworks');
+const allConcepts = await getCollection('concepts');
 
 frameworks.sort((a, b) => {
   const ratingA = a.data.rating || 0;
@@ -13,6 +15,13 @@ frameworks.sort((a, b) => {
 
 const renderedFrameworks = await Promise.all(
   frameworks.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+
+const renderedConcepts = await Promise.all(
+  allConcepts.map(async (entry) => {
     const { Content } = await render(entry);
     return { entry, Content };
   })
@@ -115,30 +124,30 @@ const ACCENT_COLOR = '#8B2626'; // Seal
     </header>
 
     <!-- Modal (Nuclear Fix: Moved to top and simplified) -->
-    <div id="modal-overlay" class="fixed inset-0 z-[9999] flex items-center justify-center p-6 md:p-10" style="display:none; opacity:0; pointer-events: none; background-color: rgba(42, 39, 36, 0.4); backdrop-filter: blur(8px);">
-        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/8 bg-[#FDFCF9] shadow-2xl" style="max-height:90vh;">
-            <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs">✕</button>
+    <div id="framework-modal-overlay" class="fixed inset-0 z-[70] flex items-center justify-center p-6 md:p-10" style="display:none; opacity:0; pointer-events: none; background-color: rgba(42, 39, 36, 0.4); backdrop-filter: blur(8px);">
+        <div id="framework-modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/8 bg-[#FDFCF9] shadow-2xl" style="max-height:90vh;">
+            <button id="framework-close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs">✕</button>
             <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12">
                 <div class="flex justify-center mb-6">
-                    <div id="modal-stars" class="star-rating"></div>
+                    <div id="framework-modal-stars" class="star-rating"></div>
                 </div>
                 <div class="modal-title-text mb-2 text-center">
-                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
-                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="modal-title"></h2>
+                    <p id="framework-modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
+                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="framework-modal-title"></h2>
                 </div>
                 <div class="w-full h-px bg-[#8B2626]/20 my-8"></div>
                 <div class="modal-reveal">
-                    <p id="modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
-                    <div id="modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80 mb-12"></div>
+                    <p id="framework-modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
+                    <div id="framework-modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80 mb-12"></div>
                     
                     <!-- Related Concepts Section -->
-                    <div id="modal-related-section" style="display:none;">
+                    <div id="framework-related-section" style="display:none;">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
                             <span class="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">Related Concepts</span>
                             <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
                         </div>
-                        <div id="modal-related-items" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div id="framework-related-items" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <!-- Items populated via JS -->
                         </div>
                     </div>
@@ -224,20 +233,30 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         ))}
     </div>
 
+    <!-- Concepts Data for Modal -->
+    <script id="concepts-data" type="application/json" is:inline set:html={JSON.stringify(allConcepts.map(c => ({ id: c.id, ...c.data })))} />
+    <div style="display:none;" aria-hidden="true">
+        {renderedConcepts.map(({ entry, Content }) => (
+            <div id={`concept-content-${entry.id}`}><Content /></div>
+        ))}
+    </div>
+
+    <ConceptModal />
+
     <script is:inline>
         function initFrameworks() {
             console.log('initFrameworks running');
             const cards = document.querySelectorAll('.framework-card');
             const grid = document.getElementById('frameworks-grid');
-            const overlay = document.getElementById('modal-overlay');
-            const closeBtn = document.getElementById('close-modal-btn');
+            const overlay = document.getElementById('framework-modal-overlay');
+            const closeBtn = document.getElementById('framework-close-modal-btn');
             
             const dataEl = document.getElementById('frameworks-data');
-            if (!dataEl) {
-                console.error('Data element #frameworks-data not found');
-                return;
-            }
+            const conceptsDataEl = document.getElementById('concepts-data');
+            if (!dataEl || !conceptsDataEl) return;
+            
             const frameworksData = JSON.parse(dataEl.textContent);
+            const conceptsData = JSON.parse(conceptsDataEl.textContent);
 
             function layoutMasonry() {
                 if (!grid) return;
@@ -273,36 +292,30 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     console.log('Card clicked:', card.dataset.id);
                     const id = card.dataset.id;
                     const data = frameworksData.find(f => f.id === id);
-                    if (!data) {
-                        console.error('Data not found for ID:', id);
-                        return;
-                    }
+                    if (!data) return;
 
                     const contentEl = document.getElementById(`framework-content-${id}`);
-                    if (!contentEl) {
-                        console.error('Content element not found for ID:', id);
-                        return;
-                    }
+                    if (!contentEl) return;
                     
-                    document.getElementById('modal-title').textContent = data.title;
-                    document.getElementById('modal-type').textContent = data.type;
-                    document.getElementById('modal-description').textContent = data.description;
-                    document.getElementById('modal-content').innerHTML = contentEl.innerHTML;
+                    document.getElementById('framework-modal-title').textContent = data.title;
+                    document.getElementById('framework-modal-type').textContent = data.type;
+                    document.getElementById('framework-modal-description').textContent = data.description;
+                    document.getElementById('framework-modal-content').innerHTML = contentEl.innerHTML;
                     
                     // Stars
                     const starHtml = Array.from({ length: data.rating }).map((_, i) => 
                         `<svg width="20" height="20" viewBox="0 0 24 24" fill="#8B2626" fill-opacity="0.3" stroke="#8B2626" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
                     ).join('');
-                    document.getElementById('modal-stars').innerHTML = starHtml;
+                    document.getElementById('framework-modal-stars').innerHTML = starHtml;
 
                     // Related Concepts
-                    const relatedSec = document.getElementById('modal-related-section');
-                    const relatedItems = document.getElementById('modal-related-items');
+                    const relatedSec = document.getElementById('framework-related-section');
+                    const relatedItems = document.getElementById('framework-related-items');
                     if (data.related_concepts && data.related_concepts.length > 0) {
                         relatedItems.innerHTML = data.related_concepts.map(name => `
-                            <div class="group p-3.5 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all">
-                                <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors">${name.trim()}</p>
-                                <svg class="text-[#D5CCB6]/50 group-hover:text-[#B08D57]/60 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round tracking-tighter"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                            <div class="related-concept-item group p-1 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all" data-name="${name.trim()}">
+                                <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors ml-2.5">${name.trim()}</p>
+                                <svg class="text-[#D5CCB6]/50 group-hover:text-[#B08D57]/60 transition-colors mr-2.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round tracking-tighter"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                             </div>
                         `).join('');
                         relatedSec.style.display = 'block';
@@ -318,6 +331,23 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     document.body.style.overflow = 'hidden';
                 });
             });
+
+            // Handle Related Concepts Click
+            const relatedItems = document.getElementById('framework-related-items');
+            if (relatedItems) {
+                relatedItems.addEventListener('click', (e) => {
+                    const item = e.target.closest('.related-concept-item');
+                    if (!item) return;
+                    const name = item.dataset.name;
+                    const concept = conceptsData.find(c => c.title.toLowerCase() === name.toLowerCase());
+                    if (concept) {
+                        const content = document.getElementById(`concept-content-${concept.id}`).innerHTML;
+                        if (window.openConceptModal) {
+                            window.openConceptModal(concept.id, conceptsData, content);
+                        }
+                    }
+                });
+            }
 
             const closeModal = () => {
                 overlay.style.opacity = '0';
