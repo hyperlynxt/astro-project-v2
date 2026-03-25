@@ -18,7 +18,7 @@ const renderedFrameworks = await Promise.all(
   })
 );
 
-const ACCENT_COLOR = '#005F6B'; // Deep Teal
+const ACCENT_COLOR = '#8B2626'; // Seal
 ---
 
 <html lang="en">
@@ -106,7 +106,7 @@ const ACCENT_COLOR = '#005F6B'; // Deep Teal
                 <a href="/astro-project-v2/concepts" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Concepts</a>
                 <a href="/astro-project-v2/definitions" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Definitions</a>
                 <a href="/astro-project-v2/frameworks" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#005F6B] shadow-[0_0_8px_rgba(0,95,107,0.4)]"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#8B2626] shadow-[0_0_8px_rgba(139,38,38,0.4)]"></span>
                     <span class="font-serif text-xl text-[#2A2724]">Frameworks</span>
                 </a>
             </nav>
@@ -121,7 +121,7 @@ const ACCENT_COLOR = '#005F6B'; // Deep Teal
                 <h2 class="font-serif text-5xl md:text-7xl leading-tight text-[#2A2724] mb-8">
                     Mental <span class="italic hand-underline-sm inline-block">
                         Frameworks
-                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#005F6B] opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#8B2626] opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                             <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
                         </svg>
                     </span>
@@ -157,7 +157,7 @@ const ACCENT_COLOR = '#005F6B'; // Deep Teal
                                 <path d="M3 15h18"></path>
                             </svg>
                             <div class="flex flex-col gap-2">
-                                <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#005F6B] opacity-60">{entry.data.type}</p>
+                                <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8B2626] opacity-60">{entry.data.type}</p>
                                 <h3 class="card-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
                                 <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.description}</p>
                             </div>
@@ -191,10 +191,10 @@ const ACCENT_COLOR = '#005F6B'; // Deep Teal
                     <div id="modal-stars" class="star-rating"></div>
                 </div>
                 <div class="modal-title-text mb-2 text-center">
-                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#005F6B] opacity-60 mb-2"></p>
+                    <p id="modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
                     <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="modal-title"></h2>
                 </div>
-                <div class="w-full h-px bg-[#005F6B]/20 my-8"></div>
+                <div class="w-full h-px bg-[#8B2626]/20 my-8"></div>
                 <div class="modal-reveal">
                     <p id="modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
                     <div id="modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80"></div>
@@ -256,7 +256,7 @@ const ACCENT_COLOR = '#005F6B'; // Deep Teal
                 
                 // Stars
                 const starHtml = Array.from({ length: data.rating }).map((_, i) => 
-                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="#005F6B" fill-opacity="0.3" stroke="#005F6B" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="#8B2626" fill-opacity="0.3" stroke="#8B2626" stroke-width="2" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
                 ).join('');
                 document.getElementById('modal-stars').innerHTML = starHtml;
 
