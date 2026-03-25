@@ -301,6 +301,9 @@
                 toggleSec('modal-related-section', true);
             } else toggleSec('modal-related-section', false);
 
+            conceptModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
             // Underline animation
             const titleEl = document.getElementById('modal-concept-title');
             const underline = document.getElementById('modal-title-underline');
@@ -323,10 +326,8 @@
                 });
             }
 
-            conceptModal.style.display = 'flex';
             const scrollContainer = conceptModal.querySelector('.modal-scrollbar');
             if (scrollContainer) scrollContainer.scrollTop = 0;
-            document.body.style.overflow = 'hidden';
         };
 
         const hideConceptModal = () => {

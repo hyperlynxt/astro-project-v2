@@ -85,6 +85,10 @@ const renderedConcepts = await Promise.all(
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.12); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
         ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 39, 36, 0.25); }
+        
+        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
+        .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
     </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-[#8B2626] selection:text-white flex flex-col">

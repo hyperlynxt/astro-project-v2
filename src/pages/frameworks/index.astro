@@ -103,6 +103,10 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.12); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
         ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 39, 36, 0.25); }
+
+        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
+        .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -131,9 +135,14 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                 <div class="flex justify-center mb-6">
                     <div id="framework-modal-stars" class="star-rating"></div>
                 </div>
-                <div class="modal-title-text mb-2 text-center">
+                <div class="modal-title-text mb-2 text-center relative px-12">
                     <p id="framework-modal-type" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
-                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724]" id="framework-modal-title"></h2>
+                    <h2 class="font-serif text-[3.5rem] md:text-[4rem] font-medium leading-none text-[#2A2724] relative inline-block">
+                        <span id="framework-modal-title" class="italic"></span>
+                        <svg id="framework-modal-title-underline" class="absolute h-[12px] text-[#8B2626] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display: none;">
+                            <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
+                        </svg>
+                    </h2>
                 </div>
                 <div class="w-full h-px bg-[#8B2626]/20 my-8"></div>
                 <div class="modal-reveal">
@@ -329,6 +338,28 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                         overlay.style.opacity = '1'; 
                     });
                     document.body.style.overflow = 'hidden';
+
+                    // Underline Animation
+                    const titleEl = document.getElementById('framework-modal-title');
+                    const underline = document.getElementById('framework-modal-title-underline');
+                    if (titleEl && underline) {
+                        requestAnimationFrame(() => {
+                            const rects = titleEl.getClientRects();
+                            const containerRect = titleEl.parentElement.getBoundingClientRect();
+                            if (rects.length > 0) {
+                                const firstRect = rects[0];
+                                underline.style.width = (firstRect.width * 1.05) + 'px';
+                                underline.style.top = (firstRect.bottom - containerRect.top - (firstRect.height * 0.12)) + 'px';
+                                underline.style.left = (firstRect.left - containerRect.left - (firstRect.width * 0.025)) + 'px';
+                                underline.style.display = 'block';
+                                const path = underline.querySelector('path');
+                                if (path) {
+                                    path.style.animation = 'none'; void path.offsetWidth;
+                                    path.style.animation = 'drawSwoosh 0.8s ease-out 0.4s forwards';
+                                }
+                            }
+                        });
+                    }
                 });
             });
 
