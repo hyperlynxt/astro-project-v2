@@ -241,14 +241,14 @@
             if (d.discipline && d.discipline.includes('/')) {
                 const parts = d.discipline.split('/');
                 displayDiscipline = parts[0].trim();
-                displayFramework = parts[1].trim();
+                displayFramework = parts.slice(1).map(p => p.trim()).join(' / ');
             }
 
             const rows = [
                 { label: 'Rating', html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
                 { label: 'Linked Notes', html: `<span class="concept-prop-value italic-accent">${d.linked_notes || d.linked || 0} insights</span>` },
                 { label: 'Discipline', html: `<span class="concept-prop-value">${displayDiscipline || '—'}</span>` },
-                { label: 'Parent Framework', html: `<span class="concept-prop-value">${displayFramework || '—'}</span>` },
+                { label: 'Sub-Discipline', html: `<span class="concept-prop-value">${displayFramework || '—'}</span>` },
                 { label: 'Origin', html: `<span class="concept-prop-value italic-accent">${d.origin || '—'}</span>`, full: true },
                 { 
                     label: 'From the work of', 
