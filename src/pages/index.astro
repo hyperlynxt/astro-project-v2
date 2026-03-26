@@ -194,14 +194,25 @@ import '../styles/global.css';
             transform: scale(1.05);
         }
 
-        .treats-hover:hover .node-circle {
-            background: #9B7CC8 !important;
-            box-shadow: 0 0 25px #9B7CC8, 0 0 50px rgba(0, 0, 0, 0.2) !important;
+        .essays-hover:hover .node-circle {
+            background: #7BA08A !important;
+            box-shadow: 0 0 25px #7BA08A, 0 0 50px rgba(0, 0, 0, 0.2) !important;
         }
 
-        .treats-hover:hover .chapter-label,
-        .treats-hover:hover .chapter-title {
-            color: #9B7CC8 !important;
+        .essays-hover:hover .chapter-label,
+        .essays-hover:hover .chapter-title {
+            color: #7BA08A !important;
+            transform: scale(1.05);
+        }
+
+        .definitions-hover:hover .node-circle {
+            background: #8B2626 !important;
+            box-shadow: 0 0 25px #8B2626, 0 0 50px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .definitions-hover:hover .chapter-label,
+        .definitions-hover:hover .chapter-title {
+            color: #8B2626 !important;
             transform: scale(1.05);
         }
 
@@ -287,42 +298,53 @@ import '../styles/global.css';
             style="top: 12%; left: 70%; translate: -50% 0; animation-delay: 0.4s;">
             <div class="node-circle" style="margin-bottom: 0;"></div>
             <div style="position: absolute; left: 100%; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 0.75rem; width: max-content;">
-                <span class="chapter-label" style="opacity: 0.6;">Part I</span>
-                <span class="chapter-title" style="margin-top: 0.25rem;">Notes & Essays</span>
+                <span class="chapter-label">Part I</span>
+                <span class="chapter-title">Notes</span>
+            </div>
+        </a>
+
+        <a href="/astro-project-v2/essays" class="chapter-node fade-in-node essays-hover"
+            style="top: 18%; left: 55%; translate: -50% 0; animation-delay: 0.5s;">
+            <div class="node-circle" style="margin-bottom: 0;"></div>
+            <div style="position: absolute; left: 100%; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 0.75rem; width: max-content;">
+                <span class="chapter-label">Part I</span>
+                <span class="chapter-title">Essays</span>
             </div>
         </a>
 
         <a href="/astro-project-v2/quotes" class="chapter-node fade-in-node quotes-hover"
-            style="top: 29%; left: 83%; animation-delay: 0.6s;">
+            style="top: 32%; left: 83%; animation-delay: 0.6s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part II</span>
-            <span class="chapter-title">Quotes & Words I Love</span>
+            <span class="chapter-title">Quotes</span>
+        </a>
+
+        <a href="/astro-project-v2/linguistic-treats" class="chapter-node fade-in-node treats-hover"
+            style="top: 42%; left: 70%; animation-delay: 0.7s;">
+            <div class="node-circle"></div>
+            <span class="chapter-label">Part II</span>
+            <span class="chapter-title">Linguistic Treats</span>
         </a>
 
         <a href="/astro-project-v2/concepts" class="chapter-node fade-in-node concepts-hover"
-            style="top: 70%; left: 78%; animation-delay: 0.8s;">
+            style="top: 68%; left: 82%; animation-delay: 0.8s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part III</span>
-            <span class="chapter-title">Sophia Atlas</span>
+            <span class="chapter-title">Concepts</span>
         </a>
 
-        <a href="/astro-project-v2/frameworks" class="chapter-node fade-in-node treats-hover"
-            style="top: 77%; left: 70%; translate: -50% 0; animation-delay: 1.0s;">
+        <a href="/astro-project-v2/definitions" class="chapter-node fade-in-node definitions-hover"
+            style="top: 82%; left: 72%; animation-delay: 0.9s;">
             <div class="node-circle"></div>
-            <span class="chapter-label">Part IV</span>
-            <span class="chapter-title">Frameworks & Dives</span>
+            <span class="chapter-label">Part III</span>
+            <span class="chapter-title">Definitions</span>
         </a>
 
-        <a href="#" class="chapter-node fade-in-node" style="top: 70%; left: 47%; animation-delay: 1.2s;">
+        <a href="/astro-project-v2/frameworks" class="chapter-node fade-in-node concepts-hover"
+            style="top: 72%; left: 58%; animation-delay: 1.0s;">
             <div class="node-circle"></div>
-            <span class="chapter-label">Part V</span>
-            <span class="chapter-title">Cinema Annotations</span>
-        </a>
-
-        <a href="#" class="chapter-node fade-in-node" style="top: 29%; left: 42%; animation-delay: 1.4s;">
-            <div class="node-circle"></div>
-            <span class="chapter-label">Part VI</span>
-            <span class="chapter-title">Reading Annotations</span>
+            <span class="chapter-label">Part III</span>
+            <span class="chapter-title">Frameworks</span>
         </a>
     </main>
 
