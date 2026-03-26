@@ -2,6 +2,7 @@
 title: "Hanlon's Razor"
 short_description: "A heuristic that advises against attributing to malice that which is adequately explained by stupidity or incompetence."
 discipline: "Philosophy"
+framework: "Razors"
 tags: ["Heuristics", "Social Psychology", "Logic"]
 origin: "Robert J. Hanlon (1980)"
 rating: 2

@@ -24,6 +24,7 @@ const concepts = defineCollection({
     authors: z.array(z.string()).optional(),
     short_description: z.string(),
     discipline: z.string(),
+    framework: z.string().optional(),
     tags: z.array(z.string()),
     origin: z.string(),
     rating: z.number().min(0).max(5),

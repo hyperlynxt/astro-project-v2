@@ -2,6 +2,7 @@
 title: "Alder's Razor"
 short_description: "Also known as Newton's Flaming Laser Sword; it suggests that if something cannot be settled by experiment, it is not worthy of debate."
 discipline: "Philosophy"
+framework: "Razors"
 tags: ["Science", "Logic", "Empiricism"]
 origin: "Mike Alder (2004)"
 rating: 2

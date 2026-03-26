@@ -2,6 +2,7 @@
 title: "Coordination Failure"
 short_description: "A situation where **agents fail to reach a mutually beneficial outcome** despite its existence as a Potential Nash equilibrium."
 discipline: "Game Theory"
+framework: "Game Theory"
 tags: ["Economics", "Collective Action", "Social Dilemma"]
 origin: "General Game Theory"
 rating: 3

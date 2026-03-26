@@ -3,6 +3,7 @@ title: Nash Equilibrium
 authors: ["John Nash"] 
 short_description: "A stable state in game theory where no player can gain by changing their strategy if others remain constant."
 discipline: "Game Theory / Economics"
+framework: "Game Theory"
 tags: [Strategy, Balance, Stalemate]
 origin: "John Forbes Nash Jr., 'Non-Cooperative Games' (1950)"
 rating: 1

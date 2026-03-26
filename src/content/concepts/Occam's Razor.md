@@ -2,6 +2,7 @@
 title: "Occam's Razor"
 short_description: "The principle that among competing hypotheses, the one with the fewest assumptions should be selected."
 discipline: "Philosophy"
+framework: "Razors"
 tags: ["Heuristics", "Logic", "Simplicity"]
 origin: "William of Ockham (14th Century)"
 rating: 2

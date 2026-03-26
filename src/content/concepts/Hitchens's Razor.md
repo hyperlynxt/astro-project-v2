@@ -2,6 +2,7 @@
 title: "Hitchens's Razor"
 short_description: "An epistemological rule stating that what can be asserted without evidence can also be dismissed without evidence."
 discipline: "Philosophy"
+framework: "Razors"
 tags: ["Epistemology", "Logic", "Skepticism"]
 origin: "Christopher Hitchens (2007)"
 rating: 2
