@@ -172,11 +172,11 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     <p id="framework-modal-description" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724] mb-8"></p>
                     <div id="framework-modal-content" class="prose prose-stone prose-lg max-w-none font-serif text-[#2A2724]/80 mb-12"></div>
                     
-                    <!-- Related Concepts Section -->
+                    <!-- In-Framework Concepts Section -->
                     <div id="framework-related-section" style="display:none;">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
-                            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">Related Concepts</span>
+                            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">In-Framework Concepts</span>
                             <div class="h-px flex-1 bg-[#D5CCB6]/30"></div>
                         </div>
                         <div id="framework-related-items" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -710,7 +710,7 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     ).join('');
                     document.getElementById('framework-modal-stars').innerHTML = starHtml;
 
-                    // Related Concepts
+                    // In-Framework Concepts
                     const relatedSec = document.getElementById('framework-related-section');
                     const relatedItemsContainer = document.getElementById('framework-related-items');
                     if (data.related_concepts && data.related_concepts.length > 0) {
@@ -756,7 +756,7 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                 });
             });
 
-            // Handle Related Concepts Click
+            // Handle In-Framework Concepts Click
             const relatedItems = document.getElementById('framework-related-items');
             if (relatedItems) {
                 relatedItems.addEventListener('click', (e) => {
