@@ -195,6 +195,18 @@ function starRotations(index: number) {
         .star-filter:not(.active) svg { color: #A39985 !important; }
         .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.1 !important; stroke: #A39985 !important; stroke-width: 1.5 !important; }
         .star-filter:hover { transform: scale(1.1); opacity: 0.8 !important; }
+
+        .lexicon-card strong,
+        .lexicon-card b {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
+
+        #modal-definition strong,
+        #modal-definition b {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-parchment-50 antialiased selection:bg-seal selection:text-white flex flex-col">
@@ -259,7 +271,7 @@ function starRotations(index: number) {
                             {entry.data.title}
                             <span class="card-pos">{entry.data.part_of_speech}.</span>
                         </div>
-                        <p class="card-snippet">{entry.data.definition}</p>
+                        <p class="card-snippet" set:html={entry.data.definition.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
                         {entry.data.personal_note && (
                             <div class="card-note-container">
                                 <span class="card-note">{entry.data.personal_note}</span>
@@ -617,7 +629,7 @@ function starRotations(index: number) {
 
                 modalWord.textContent = wordText;
                 modalPOS.textContent = pos;
-                modalDef.textContent = snippet;
+                modalDef.innerHTML = snippet.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 modalNote.textContent = note;
                 const noteSection = document.getElementById('modal-note-section');
                 if (note) {

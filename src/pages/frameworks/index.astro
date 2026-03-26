@@ -130,14 +130,19 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         .modal-scrollbar::-webkit-scrollbar { width: 6px; }
         .modal-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.1); border-radius: 10px; }
+    </style>
 
-        .framework-card strong {
+    <style is:global>
+        .framework-card strong,
+        .framework-card b {
             color: #8B2626 !important;
             font-weight: 600 !important;
         }
 
         #framework-modal-description strong,
-        #framework-modal-content strong {
+        #framework-modal-description b,
+        #framework-modal-content strong,
+        #framework-modal-content b {
             color: #8B2626 !important;
             font-weight: 600 !important;
         }

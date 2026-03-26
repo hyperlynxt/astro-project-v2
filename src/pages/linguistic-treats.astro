@@ -71,6 +71,18 @@ words.sort((a, b) => {
         .star-filter:not(.active) svg { color: #A39985 !important; }
         .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.15 !important; stroke: #A39985 !important; }
         .star-filter:hover { transform: scale(1.1); }
+
+        .word-card strong,
+        .word-card b {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
+
+        #modal-definition strong,
+        #modal-definition b {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -139,7 +151,7 @@ words.sort((a, b) => {
                         </div>
                         <div style="flex-grow:1;">
                             <p class="card-word">{entry.data.word}</p>
-                            <p class="card-definition" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{entry.data.definition}</p>
+                            <p class="card-definition" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;" set:html={entry.data.definition.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
                         </div>
                         <div class="card-footer">
                             <div class="star-rating">
@@ -327,7 +339,7 @@ words.sort((a, b) => {
                 const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
 
                 document.getElementById('modal-word').textContent = word;
-                document.getElementById('modal-definition').textContent = definition;
+                document.getElementById('modal-definition').innerHTML = definition.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 const noteSection = document.getElementById('modal-note-section');
                 if (note) {
                     document.getElementById('modal-note').textContent = note;
