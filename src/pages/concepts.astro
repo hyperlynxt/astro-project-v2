@@ -158,8 +158,9 @@ const renderedConcepts = await Promise.all(
                                 <path d="m15 7 2 10"></path>
                             </svg>
                             <div class="flex flex-col gap-2">
+                                <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8B2626] opacity-60">{entry.data.discipline}</p>
                                 <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
-                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2" set:html={entry.data.short_description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
+                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2" set:html={(entry.data.short_description || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
                             </div>
                             <div class="pt-5 border-t border-[#F5F2EB]/80 mt-auto">
                                 <div class="flex items-center justify-between mb-3">
