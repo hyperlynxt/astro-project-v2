@@ -115,6 +115,15 @@
         display: inline-block; background: rgba(139,38,38,0.05); border: 1px solid rgba(139,38,38,0.15);
         color: #8B2626; font-family: 'EB Garamond', serif; font-size: 0.95rem; padding: 4px 12px; border-radius: 9px;
     }
+
+    /* Red bolding for main body content and summary */
+    #concept-modal strong, 
+    #concept-modal b,
+    #modal-detailed-desc strong,
+    #modal-detailed-desc b {
+        color: #8B2626 !important;
+        font-weight: 600 !important;
+    }
 </style>
 
 <div id="concept-modal">
@@ -272,7 +281,10 @@
 
             setElTxt('modal-concept-title', d.title);
             setElTxt('modal-concept-bg-letter', d.title[0].toUpperCase());
-            setElTxt('modal-summary', d.short_description || d.short || d.summary);
+            
+            const summaryRaw = d.short_description || d.short || d.summary || '';
+            setElHtml('modal-summary', summaryRaw.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'));
+
             setElHtml('modal-detailed-desc', contentHtml || '');
 
             const propsBtn = document.getElementById('open-concept-props-btn');

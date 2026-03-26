@@ -135,6 +135,12 @@ const ACCENT_COLOR = '#8B2626'; // Seal
             color: #8B2626 !important;
             font-weight: 600 !important;
         }
+
+        #framework-modal-description strong,
+        #framework-modal-content strong {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -706,7 +712,10 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     
                     document.getElementById('framework-modal-title').textContent = data.title;
                     document.getElementById('framework-modal-type').textContent = data.type;
-                    document.getElementById('framework-modal-description').textContent = data.description;
+                    
+                    const descRaw = data.description || '';
+                    document.getElementById('framework-modal-description').innerHTML = descRaw.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    
                     document.getElementById('framework-modal-content').innerHTML = contentEl.innerHTML;
                     
                     // Stars
