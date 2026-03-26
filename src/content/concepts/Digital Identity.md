@@ -1,6 +1,6 @@
 ---
 title: "Digital Identity"
-short_description: "The distinct identity we create and maintain in digital spaces, often distinct from our physical or offline selves."
+short_description: "The set of data that identifies us in the digital realm, often **distinct from our physical** or **offline selves**."
 discipline: "Sociology"
 tags: ["Identity", "Digital Culture", "Privacy"]
 origin: "Contemporary Media Studies"

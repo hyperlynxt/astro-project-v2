@@ -1,6 +1,6 @@
 ---
 title: "Evolutionarily Stable Strategy"
-short_description: "A strategy that, if adopted by a population, cannot be invaded by any alternative, rare 'mutant' strategy under the force of natural selection."
+short_description: "A **strategy** that, if adopted by a population, cannot be invaded by any alternative strategy, representing a refined **Nash equilibrium**, under the force of natural selection."
 discipline: "Game Theory"
 tags: ["Biology", "Evolution", "Strategy", "Stability"]
 origin: "John Maynard Smith and George R. Price (1973)"

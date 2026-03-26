@@ -1,6 +1,6 @@
 ---
 title: "Game Theory"
-description: "The study of mathematical models of strategic interaction among rational agents, providing a framework for understanding cooperation and competition."
+description: "The study of mathematical models of **strategic interaction** among rational agents, providing a framework for understanding **cooperation and competition**."
 type: "Strategic Framework"
 tags: ["Economics", "Strategy", "Mathematics", "Behavioral Science"]
 rating: 3

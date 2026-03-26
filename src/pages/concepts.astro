@@ -89,6 +89,11 @@ const renderedConcepts = await Promise.all(
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        .catalog-card strong {
+            color: #8B2626 !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-[#8B2626] selection:text-white flex flex-col">
@@ -154,7 +159,7 @@ const renderedConcepts = await Promise.all(
                             </svg>
                             <div class="flex flex-col gap-2">
                                 <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
-                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2">{entry.data.short_description}</p>
+                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2" set:html={entry.data.short_description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
                             </div>
                             <div class="pt-5 border-t border-[#F5F2EB]/80 mt-auto">
                                 <div class="flex items-center justify-between mb-3">

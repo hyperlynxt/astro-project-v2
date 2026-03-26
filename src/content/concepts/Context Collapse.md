@@ -1,6 +1,6 @@
 ---
 title: "Context Collapse"
-short_description: "The phenomenon where different social contexts are blurred or erased by digital platforms, leading to a fragmented or performance-heavy self."
+short_description: "The flattening of multiple **social contexts** into a single audience, necessitating a **performance-heavy self**."
 discipline: "Sociology"
 tags: ["Identity", "Digital Culture", "Social Media"]
 origin: "danah boyd"

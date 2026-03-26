@@ -1,6 +1,6 @@
 ---
 title: "Razors"
-description: "A collection of philosophical razors — heuristics that allow for the elimination of unlikely explanations or unnecessary actions."
+description: "**Philosophical heuristics** that allow for **simplifying complex decisions** by eliminating unlikely explanations or unnecessary assumptions."
 type: "Heuristic Set"
 tags: ["Philosophy", "Decision Making", "Heuristics"]
 rating: 2

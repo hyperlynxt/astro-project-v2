@@ -1,6 +1,6 @@
 ---
 title: "Coordination Failure"
-short_description: "A situation where agents' inability to coordinate their plans leads to an outcome that is worse for everyone than another feasible outcome."
+short_description: "A situation where **agents fail to reach a mutually beneficial outcome** despite its existence as a Potential Nash equilibrium."
 discipline: "Game Theory"
 tags: ["Economics", "Collective Action", "Social Dilemma"]
 origin: "General Game Theory"
