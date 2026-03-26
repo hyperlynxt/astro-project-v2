@@ -4,7 +4,7 @@ short_description: "A situation where agents' inability to coordinate their plan
 discipline: "Game Theory"
 tags: ["Economics", "Collective Action", "Social Dilemma"]
 origin: "General Game Theory"
-rating: 4
+rating: 3
 linked_notes: 0
 date_added: 2026-03-26
 ---

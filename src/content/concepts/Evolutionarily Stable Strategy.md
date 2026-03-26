@@ -4,7 +4,7 @@ short_description: "A strategy that, if adopted by a population, cannot be invad
 discipline: "Game Theory"
 tags: ["Biology", "Evolution", "Strategy", "Stability"]
 origin: "John Maynard Smith and George R. Price (1973)"
-rating: 4
+rating: 3
 linked_notes: 0
 date_added: 2026-03-26
 ---
