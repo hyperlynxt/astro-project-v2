@@ -107,6 +107,29 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
         .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
         .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        /* Star Filter Fixes */
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .star-filter.active { color: #8B2626 !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #8B2626 !important; }
+        .star-filter.active svg path { fill: #8B2626 !important; fill-opacity: 0.2 !important; stroke: #8B2626 !important; stroke-width: 1.5 !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
+        .star-filter:not(.active) svg { color: #A39985 !important; }
+        .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.1 !important; stroke: #A39985 !important; stroke-width: 1.5 !important; }
+        .star-filter:hover { transform: scale(1.1); }
+
+        .ink-stain {
+            background-color: #FDFCF9;
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                radial-gradient(circle at 10% 90%, rgba(42,39,36,0.03) 0%, rgba(253,252,249,0) 60%);
+            background-position: 0px 0px, 40px 60px, 0 0;
+            background-repeat: repeat, repeat, no-repeat;
+        }
+        .modal-scrollbar::-webkit-scrollbar { width: 6px; }
+        .modal-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .modal-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.1); border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -233,6 +256,133 @@ const ACCENT_COLOR = '#8B2626'; // Seal
         </div>
     </main>
 
+    <ConceptModal />
+
+    <!-- Filter Modal -->
+    <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[80] items-center justify-center p-6 bg-[#F5F2EB]/40 backdrop-blur-md">
+        <div class="relative z-20 w-full max-w-[630px] bg-white rounded-[28px] shadow-2xl border border-white/60 overflow-hidden flex flex-col max-h-[85vh] ink-stain">
+            <div class="px-7 pt-9 pb-6 border-b border-[#D5CCB6]/15 flex flex-col items-center justify-center bg-white/50 backdrop-blur-md z-10 flex-shrink-0 relative">
+                <div class="text-center w-full">
+                    <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
+                        Filter & Sort
+                        <svg class="absolute w-[110%] h-[15px] -bottom-2 -left-[5%] text-[#8B2626] opacity-80 overflow-visible" viewBox="0 0 100 10" fill="none" preserveAspectRatio="none">
+                            <path d="M0 7 Q12.5 10 25 6 T50 7 T75 6 T100 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="swoosh-path animate-draw-line"/>
+                        </svg>
+                    </h2>
+                </div>
+                <button id="close-filter-btn" class="absolute top-7 right-7 w-8 h-8 rounded-full bg-[#FDFCF9] border border-[#D5CCB6]/20 flex items-center justify-center text-[#2A2724]/50 hover:text-[#2A2724] hover:bg-[#F5F2EB] transition-all group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="px-7 py-6 overflow-y-auto modal-scrollbar relative z-0 flex-grow space-y-8 h-[500px]">
+                <!-- Sort -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Sort Order</h3>
+                        </div>
+                        <button id="sort-direction-toggle" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#D5CCB6]/20 text-[10px] font-bold uppercase tracking-wider text-[#2A2724]/60 hover:text-[#8B2626] transition-all group">
+                            <span id="sort-direction-label">Descending</span>
+                            <svg id="sort-direction-icon" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-sort="rating" class="sort-btn px-4 py-2 bg-[#8B2626] text-white font-sans text-sm font-medium rounded-full shadow-lg border border-[#8B2626] transition-all">Rating</button>
+                        <button data-sort="alphabetical" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:text-[#2A2724] transition-all shadow-sm">Alphabetical</button>
+                        <button data-sort="date" class="sort-btn px-4 py-2 bg-white text-[#2A2724]/70 font-sans text-sm font-medium rounded-full border border-[#D5CCB6]/30 hover:text-[#2A2724] transition-all shadow-sm">Date Added</button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
+
+                <!-- Stars -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2"></polygon></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Complexity</h3>
+                        </div>
+                        <span id="min-rating-label" class="font-hand text-lg text-[#8B2626]">1+ stars</span>
+                    </div>
+                    <div class="flex gap-3 p-3.5 bg-white border border-[#D5CCB6]/20 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
+                        <button data-rating="1" class="star-filter active active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="2" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="3" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-10deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="4" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(5deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                        <button data-rating="5" class="star-filter active:scale-95">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(-15deg)">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
+
+                <!-- Framework Types -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Framework Types</h3>
+                    </div>
+                    <div id="filter-types-container" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2A2724]/15 to-transparent"></div>
+
+                <!-- Tags -->
+                <div class="pb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8B2626]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                            <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Filter by Tags</h3>
+                        </div>
+                        <button id="toggle-all-tags" class="font-sans text-[10px] font-bold uppercase tracking-wider text-[#8B2626]/60 hover:text-[#8B2626] transition-colors">Select All</button>
+                    </div>
+                    <div id="filter-tags-container" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-[#D5CCB6]/15 bg-[#FDFCF9] relative z-10 flex items-center justify-between flex-shrink-0">
+                <button id="clear-filter-btn" class="font-hand text-[1.4rem] font-medium text-[#8B2626] hover:bg-[#8B2626]/10 px-4 py-1.5 rounded-lg transition-all underline underline-offset-4">Clear Filters</button>
+                <button id="apply-filter-btn" class="bg-seal hover:bg-[#6D1E1E] text-white px-6 py-3 rounded-xl font-sans text-sm font-medium transition-all shadow-md hover:-translate-y-0.5 flex items-center gap-2">
+                    <span>Apply Filters</span>
+                    <span id="filter-result-count" class="font-hand text-lg text-white/80 pt-0.5">-- frameworks</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="fixed bottom-10 left-0 right-0 flex justify-center pointer-events-none z-50">
+        <div class="bg-white/80 backdrop-blur-xl border border-[#E8E2D2] rounded-[24px] shadow-[0_20px_50px_rgba(42,39,36,0.15)] p-2.5 flex items-center pointer-events-auto">
+            <div class="flex items-center gap-3 pl-4 pr-3 py-2 group cursor-text" onclick="document.getElementById('framework-search').focus()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#A39985] group-hover:text-seal transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="framework-search" placeholder="Search frameworks" class="bg-transparent border-none outline-none font-sans text-xs font-bold text-[#2A2724] placeholder:text-[#A39985] w-32 transition-all focus:w-48">
+            </div>
+            <div class="w-px h-6 bg-[#E8E2D2] mx-1"></div>
+            <button id="filter-btn" class="bg-seal hover:bg-seal/90 text-white rounded-xl px-5 py-2.5 text-[11px] uppercase tracking-widest font-sans font-bold transition-colors shadow-sm">Filter & Sort</button>
+        </div>
+    </div>
+
 
     <!-- Data for JS -->
     <script id="frameworks-data" type="application/json" is:inline set:html={JSON.stringify(frameworks.map(f => ({ id: f.id, ...f.data })))} />
@@ -267,10 +417,33 @@ const ACCENT_COLOR = '#8B2626'; // Seal
             const frameworksData = JSON.parse(dataEl.textContent);
             const conceptsData = JSON.parse(conceptsDataEl.textContent);
 
+            // Filter Elements
+            const searchInput = document.getElementById('framework-search');
+            const filterModal = document.getElementById('filter-modal');
+            const countLabel = document.getElementById('count-label');
+            const filterResultCount = document.getElementById('filter-result-count');
+            const sortDirectionLabel = document.getElementById('sort-direction-label');
+            const sortDirectionIcon = document.getElementById('sort-direction-icon');
+            const filterTypesContainer = document.getElementById('filter-types-container');
+            const filterTagsContainer = document.getElementById('filter-tags-container');
+
+            let currentFilterState = {
+                query: '',
+                sort: 'rating',
+                sortOrder: 'desc',
+                types: ['All'],
+                tags: [],
+                minComplexity: 0
+            };
+
+            // ─────────────── MASONRY ───────────────
             function layoutMasonry() {
                 if (!grid) return;
-                const items = Array.from(document.querySelectorAll('.masonry-item-wrapper'));
-                if (items.length === 0) return;
+                const items = Array.from(document.querySelectorAll('.masonry-item-wrapper')).filter(item => item.style.display !== 'none');
+                if (items.length === 0) {
+                    grid.style.height = '200px';
+                    return;
+                }
                 
                 const containerWidth = grid.offsetWidth;
                 let cols = 1;
@@ -286,6 +459,7 @@ const ACCENT_COLOR = '#8B2626'; // Seal
                     const colIdx = heights.indexOf(minH);
                     item.style.width = `${colWidth}px`;
                     item.style.transform = `translate3d(${colIdx * (colWidth + gap)}px, ${minH}px, 0)`;
+                    item.style.opacity = '1';
                     heights[colIdx] += item.offsetHeight + gap;
                 });
                 grid.style.height = `${Math.max(...heights)}px`;
@@ -293,8 +467,227 @@ const ACCENT_COLOR = '#8B2626'; // Seal
 
             window.addEventListener('load', layoutMasonry);
             window.addEventListener('resize', layoutMasonry);
-            layoutMasonry();
+            setTimeout(layoutMasonry, 100);
 
+            // ─────────────── FILTERING ───────────────
+            const availableTypes = new Set();
+            const availableTags = new Set();
+            frameworksData.forEach(f => {
+                if (f.type) availableTypes.add(f.type);
+                if (f.tags) f.tags.forEach(t => availableTags.add(t));
+            });
+            const sortedTypes = Array.from(availableTypes).sort();
+            const sortedTags = Array.from(availableTags).sort();
+
+            function renderFilterTypes() {
+                const allActive = currentFilterState.types.includes('All');
+                let html = `<button data-type="All" class="type-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${allActive ? 'bg-[#2A2724] text-white shadow-md' : 'bg-[#F5F2EB] text-[#2A2724]/60 border border-[#D5CCB6]/20 hover:bg-[#E8E2D2]'}">All Types</button>`;
+                html += sortedTypes.map(type => {
+                    const isActive = currentFilterState.types.includes(type);
+                    return `<button data-type="${type}" class="type-filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${isActive ? 'bg-[#8B2626] text-white shadow-md' : 'bg-[#FDFCF9] text-[#2A2724]/60 border border-[#D5CCB6]/20 hover:bg-[#F5F2EB]'}">${type}</button>`;
+                }).join('');
+                filterTypesContainer.innerHTML = html;
+                filterTypesContainer.querySelectorAll('.type-filter-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const type = btn.dataset.type;
+                        if (type === 'All') {
+                            currentFilterState.types = ['All'];
+                        } else {
+                            currentFilterState.types = currentFilterState.types.filter(t => t !== 'All');
+                            if (currentFilterState.types.includes(type)) {
+                                currentFilterState.types = currentFilterState.types.filter(t => t !== type);
+                                if (currentFilterState.types.length === 0) currentFilterState.types = ['All'];
+                            } else {
+                                currentFilterState.types.push(type);
+                            }
+                        }
+                        renderFilterTypes();
+                        updateFilterPreview();
+                    };
+                });
+            }
+
+            function renderFilterTags() {
+                filterTagsContainer.innerHTML = sortedTags.map(tag => {
+                    const isActive = currentFilterState.tags.includes(tag);
+                    return `<button data-tag="${tag}" class="tag-filter-btn px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest transition-all ${isActive ? 'bg-[#8B2626] text-white shadow-md' : 'bg-[#8B2626]/10 text-[#8B2626] border border-[#8B2626]/20 hover:bg-[#8B2626]/20'}">${tag}</button>`;
+                }).join('');
+                filterTagsContainer.querySelectorAll('.tag-filter-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const tag = btn.dataset.tag;
+                        if (currentFilterState.tags.includes(tag)) {
+                            currentFilterState.tags = currentFilterState.tags.filter(t => t !== tag);
+                        } else {
+                            currentFilterState.tags.push(tag);
+                        }
+                        renderFilterTags();
+                        updateFilterPreview();
+                    };
+                });
+            }
+
+            function updateFilterPreview() {
+                const results = getFilteredData();
+                filterResultCount.textContent = `${results.length} frameworks`;
+            }
+
+            function getFilteredData() {
+                return frameworksData.filter(f => {
+                    const matchesQuery = !currentFilterState.query || 
+                        f.title.toLowerCase().includes(currentFilterState.query.toLowerCase()) || 
+                        f.description.toLowerCase().includes(currentFilterState.query.toLowerCase());
+                    const matchesType = currentFilterState.types.includes('All') || currentFilterState.types.includes(f.type);
+                    const matchesTags = currentFilterState.tags.length === 0 || currentFilterState.tags.some(t => f.tags.includes(t));
+                    const matchesRating = f.rating >= currentFilterState.minComplexity;
+                    return matchesQuery && matchesType && matchesTags && matchesRating;
+                }).sort((a, b) => {
+                    let comparison = 0;
+                    if (currentFilterState.sort === 'rating') comparison = (a.rating || 0) - (b.rating || 0);
+                    else if (currentFilterState.sort === 'alphabetical') comparison = a.title.localeCompare(b.title);
+                    else if (currentFilterState.sort === 'date') comparison = new Date(a.date_added || 0) - new Date(b.date_added || 0);
+                    return currentFilterState.sortOrder === 'desc' ? -comparison : comparison;
+                });
+            }
+
+            function applyFilterSystem() {
+                const results = getFilteredData();
+                const resultIds = new Set(results.map(r => r.id));
+                
+                // Sort the actual DOM elements
+                const wrappers = Array.from(document.querySelectorAll('.masonry-item-wrapper'));
+                wrappers.forEach(wrapper => {
+                    const card = wrapper.querySelector('.framework-card');
+                    const id = card.dataset.id;
+                    if (resultIds.has(id)) {
+                        wrapper.style.display = 'block';
+                        wrapper.dataset.sortValue = results.findIndex(r => r.id === id);
+                    } else {
+                        wrapper.style.display = 'none';
+                    }
+                });
+
+                // Move items in DOM based on sort order for masonry to pick them up in order
+                const sortedWrappers = wrappers
+                    .filter(w => w.style.display !== 'none')
+                    .sort((a, b) => parseInt(a.dataset.sortValue) - parseInt(b.dataset.sortValue));
+                
+                sortedWrappers.forEach(w => grid.appendChild(w));
+
+                countLabel.textContent = `${results.length} entries`;
+                layoutMasonry();
+                if (filterModal.style.display !== 'none') closeFilterModal();
+            }
+
+            // Listeners
+            if (searchInput) {
+                searchInput.oninput = (e) => {
+                    currentFilterState.query = e.target.value;
+                    applyFilterSystem();
+                };
+            }
+
+            document.getElementById('filter-btn').onclick = openFilterModal;
+            document.getElementById('close-filter-btn').onclick = closeFilterModal;
+            document.getElementById('apply-filter-btn').onclick = applyFilterSystem;
+            document.getElementById('clear-filter-btn').onclick = clearAllFilters;
+            
+            document.getElementById('sort-direction-toggle').onclick = () => {
+                currentFilterState.sortOrder = currentFilterState.sortOrder === 'desc' ? 'asc' : 'desc';
+                sortDirectionLabel.textContent = currentFilterState.sortOrder === 'desc' ? 'Descending' : 'Ascending';
+                sortDirectionIcon.style.transform = currentFilterState.sortOrder === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)';
+                updateFilterPreview();
+            };
+
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.onclick = () => {
+                    currentFilterState.sort = btn.dataset.sort;
+                    document.querySelectorAll('.sort-btn').forEach(b => {
+                        if (b === btn) {
+                            b.classList.add('bg-[#8B2626]', 'text-white', 'shadow-lg');
+                            b.classList.remove('bg-white', 'text-[#2A2724]/70');
+                        } else {
+                            b.classList.remove('bg-[#8B2626]', 'text-white', 'shadow-lg');
+                            b.classList.add('bg-white', 'text-[#2A2724]/70');
+                        }
+                    });
+                    updateFilterPreview();
+                };
+            });
+
+            document.querySelectorAll('.star-filter').forEach(btn => {
+                btn.onclick = () => {
+                    const rating = parseInt(btn.dataset.rating);
+                    currentFilterState.minComplexity = rating;
+                    document.getElementById('min-rating-label').textContent = `${rating}+ stars`;
+                    document.querySelectorAll('.star-filter').forEach(b => {
+                        if (parseInt(b.dataset.rating) <= rating) b.classList.add('active');
+                        else b.classList.remove('active');
+                    });
+                    updateFilterPreview();
+                };
+            });
+
+            document.getElementById('toggle-all-tags').onclick = (e) => {
+                if (currentFilterState.tags.length === sortedTags.length) {
+                    currentFilterState.tags = [];
+                    e.target.textContent = 'Select All';
+                } else {
+                    currentFilterState.tags = [...sortedTags];
+                    e.target.textContent = 'Clear All';
+                }
+                renderFilterTags();
+                updateFilterPreview();
+            };
+
+            function openFilterModal() {
+                filterModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                renderFilterTypes();
+                renderFilterTags();
+                updateFilterPreview();
+            }
+
+            function closeFilterModal() {
+                filterModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            function clearAllFilters() {
+                currentFilterState = {
+                    query: searchInput.value = '',
+                    sort: 'rating',
+                    sortOrder: 'desc',
+                    types: ['All'],
+                    tags: [],
+                    minComplexity: 0
+                };
+                
+                // Reset Sort UI
+                document.querySelectorAll('.sort-btn').forEach(b => {
+                    if (b.dataset.sort === 'rating') {
+                        b.classList.add('bg-[#8B2626]', 'text-white', 'shadow-lg');
+                        b.classList.remove('bg-white', 'text-[#2A2724]/70');
+                    } else {
+                        b.classList.remove('bg-[#8B2626]', 'text-white', 'shadow-lg');
+                        b.classList.add('bg-white', 'text-[#2A2724]/70');
+                    }
+                });
+                sortDirectionLabel.textContent = 'Descending';
+                sortDirectionIcon.style.transform = 'rotate(0deg)';
+                
+                // Reset Stars UI
+                document.getElementById('min-rating-label').textContent = '1+ stars';
+                document.querySelectorAll('.star-filter').forEach(b => {
+                    if (parseInt(b.dataset.rating) === 1) b.classList.add('active');
+                    else b.classList.remove('active');
+                });
+
+                renderFilterTypes();
+                renderFilterTags();
+                applyFilterSystem();
+            }
+
+            // ─────────────── CARD CLICKS ───────────────
             console.log(`Setting up listeners for ${cards.length} cards`);
             cards.forEach(card => {
                 card.addEventListener('click', () => {
@@ -319,9 +712,9 @@ const ACCENT_COLOR = '#8B2626'; // Seal
 
                     // Related Concepts
                     const relatedSec = document.getElementById('framework-related-section');
-                    const relatedItems = document.getElementById('framework-related-items');
+                    const relatedItemsContainer = document.getElementById('framework-related-items');
                     if (data.related_concepts && data.related_concepts.length > 0) {
-                        relatedItems.innerHTML = data.related_concepts.map(name => `
+                        relatedItemsContainer.innerHTML = data.related_concepts.map(name => `
                             <div class="related-concept-item group p-1 bg-[#FDFCF9]/50 border border-[#D5CCB6]/40 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#FDFCF9] hover:border-[#B08D57]/40 hover:shadow-sm transition-all" data-name="${name.trim()}">
                                 <p class="font-serif text-[17px] text-[#2A2724] group-hover:text-[#B08D57] font-medium transition-colors ml-2.5">${name.trim()}</p>
                                 <svg class="text-[#D5CCB6]/50 group-hover:text-[#B08D57]/60 transition-colors mr-2.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round tracking-tighter"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
