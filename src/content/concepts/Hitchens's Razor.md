@@ -4,7 +4,7 @@ short_description: "An epistemological rule stating that what can be asserted wi
 discipline: "Philosophy"
 tags: ["Epistemology", "Logic", "Skepticism"]
 origin: "Christopher Hitchens (2007)"
-rating: 5
+rating: 2
 linked_notes: 0
 date_added: 2026-03-25
 ---

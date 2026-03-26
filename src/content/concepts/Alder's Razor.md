@@ -4,7 +4,7 @@ short_description: "Also known as Newton's Flaming Laser Sword; it suggests that
 discipline: "Philosophy"
 tags: ["Science", "Logic", "Empiricism"]
 origin: "Mike Alder (2004)"
-rating: 3
+rating: 2
 linked_notes: 0
 date_added: 2026-03-25
 ---

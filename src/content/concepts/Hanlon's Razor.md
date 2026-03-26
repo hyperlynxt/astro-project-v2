@@ -4,7 +4,7 @@ short_description: "A heuristic that advises against attributing to malice that 
 discipline: "Philosophy"
 tags: ["Heuristics", "Social Psychology", "Logic"]
 origin: "Robert J. Hanlon (1980)"
-rating: 4
+rating: 2
 linked_notes: 0
 date_added: 2026-03-25
 ---

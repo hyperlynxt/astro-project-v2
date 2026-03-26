@@ -4,7 +4,7 @@ short_description: "The principle that among competing hypotheses, the one with 
 discipline: "Philosophy"
 tags: ["Heuristics", "Logic", "Simplicity"]
 origin: "William of Ockham (14th Century)"
-rating: 5
+rating: 2
 linked_notes: 0
 date_added: 2026-03-25
 ---
