@@ -137,23 +137,28 @@
             <div class="relative animate-content-enter">
                 <div id="modal-concept-bg-letter" class="absolute top-0 right-0 text-[24rem] font-serif font-bold text-[#2A2724]/[0.015] leading-none pointer-events-none select-none -z-10 -rotate-3"></div>
 
-                <div class="mb-10">
-                    <h1 class="font-serif text-4xl md:text-5xl lg:text-[4.5rem] font-medium text-[#2A2724] leading-[1.01] mb-6 tracking-tight relative pr-12">
+                <div class="mb-14 text-center flex flex-col items-center">
+                    <!-- Stars Rating -->
+                    <div id="modal-stars-container" class="flex justify-center mb-6">
+                        <div id="modal-stars" class="flex gap-1 text-[#8B2626]"></div>
+                    </div>
+
+                    <!-- Discipline -->
+                    <p id="modal-discipline" class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#8B2626] opacity-60 mb-2"></p>
+
+                    <!-- Title -->
+                    <h1 class="font-serif text-4xl md:text-5xl lg:text-[4.5rem] font-medium text-[#2A2724] leading-tight mb-8 tracking-tight relative inline-block mx-auto">
                         <span id="modal-concept-title" class="inline"></span>
                         <svg id="modal-title-underline" class="absolute h-[12px] text-[#8B2626] opacity-70 overflow-visible pointer-events-none" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display: none;">
                             <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path"></path>
                         </svg>
                     </h1>
                     
-                    <div class="relative">
-                        <div class="flex flex-col">
-                            <!-- Redundant metadata hidden per request -->
-                            <div id="modal-stars" style="display:none;"></div>
+                    <!-- Summary -->
+                    <div class="max-w-3xl mx-auto">
+                        <div class="font-serif text-[1.25rem] md:text-[1.4rem] leading-relaxed text-[#2A2724]">
+                            <p id="modal-summary"></p>
                         </div>
-                    </div>
-
-                    <div class="font-serif text-[1.25rem] leading-[1.65] text-[#2A2724] pl-6 border-l-[3px] border-[#B08D57]/40 max-w-4xl">
-                        <p id="modal-summary"></p>
                     </div>
                 </div>
 
@@ -281,6 +286,13 @@
 
             setElTxt('modal-concept-title', d.title);
             setElTxt('modal-concept-bg-letter', d.title[0].toUpperCase());
+            setElTxt('modal-discipline', d.discipline);
+
+            // Generate stars
+            const starHtml = Array.from({ length: parseInt(d.rating) || 0 }).map((_, i) => 
+                `<svg width="22" height="22" viewBox="0 0 24 24" fill="#8B2626" fill-opacity="0.3" stroke="#8B2626" stroke-width="2" stroke-linejoin="round" style="transform: rotate(${(i % 2 === 0 ? 10 : -10)}deg)"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+            ).join('');
+            setElHtml('modal-stars', starHtml);
             
             const summaryRaw = d.short_description || d.short || d.summary || '';
             setElHtml('modal-summary', summaryRaw.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'));
