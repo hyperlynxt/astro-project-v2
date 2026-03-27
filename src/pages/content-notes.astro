@@ -147,12 +147,7 @@ const accentColorDark = "#8C8C8C";
                             data-rating={entry.data.rating}
                             data-summary={entry.data.summary || ''}
                         >
-                            <svg class="bookmark-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"></path>
-                                <path d="M8 7h6"></path>
-                                <path d="M8 11h8"></path>
-                                <path d="M8 15h6"></path>
-                            </svg>
+                            <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plug-zap-icon lucide-plug-zap"><path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z"/><path d="m2 22 3-3"/><path d="M7.5 13.5 10 11"/><path d="M10.5 16.5 13 14"/><path d="m18 3-4 4h6l-4 4"/></svg>
                             <div class="flex flex-col gap-2">
                                 <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#B4BCC0] opacity-80">{entry.data.source || 'General Research'}</p>
                                 <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
