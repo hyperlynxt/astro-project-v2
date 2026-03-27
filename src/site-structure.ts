@@ -28,7 +28,8 @@ export const PROJECT_STRUCTURE = {
         title: "Learning & Research",
         label: "Part IV",
         pages: [
-            { title: "Content Notes", path: "/content-notes" }
+            { title: "Content Notes", path: "/content-notes" },
+            { title: "Research Dives", path: "/research-dives" }
         ]
     }
 } as const;
