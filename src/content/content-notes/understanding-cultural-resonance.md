@@ -1,11 +1,18 @@
 ---
 title: "Understanding Cultural Resonance"
-description: "A deep dive into how shared cultural narratives shape individual perception and collective action."
+creator_author: "Teo"
+platform: "Sophia Atlas Collective"
+link: "https://hyperlynxt.com/resonance"
+date_published: 2026-03-27
+content_type: "Research Synthesis"
+discipline: "Anthropology"
+sub_discipline: "Narrative Dynamics"
 rating: 3
 date: 2026-03-26
 tags: ["Anthropology", "Sociology", "Narrative"]
-source: "Atlas Field Notes Vol. IV"
 summary: "This note examines the mechanism of **Cultural Resonance**, highlighting how specific symbols gain power within a population. It explores the intersection of **Mythology** and **Modern Media**."
+description: "A deep dive into how shared cultural narratives shape individual perception and collective action."
+connected_content: ["The Architecture of Silence", "Digital Identity"]
 ---
 
 # Understanding Cultural Resonance

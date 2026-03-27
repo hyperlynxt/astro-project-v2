@@ -193,12 +193,26 @@
             title.textContent = d.title;
 
             const rows = [
+                { label: 'Title', html: `<span class="note-prop-value">${d.title}</span>`, full: true },
+                { label: 'Creator/Author', html: `<span class="note-prop-value">${d.creator_author || '—'}</span>` },
+                { label: 'Platform', html: `<span class="note-prop-value">${d.platform || '—'}</span>` },
+                { 
+                    label: 'Link', 
+                    html: d.link ? `<a href="${d.link}" target="_blank" class="note-prop-value italic-accent hover:underline text-[#B4BCC0]">View Original Source</a>` : `<span class="note-prop-value">—</span>` 
+                },
+                { label: 'Date Published', html: `<span class="note-prop-value italic-accent">${d.date_published ? new Date(d.date_published).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric'}) : '—'}</span>` },
+                { label: 'Content Type', html: `<span class="note-prop-chip">${d.content_type || '—'}</span>` },
                 { label: 'Rating', html: `<div class="dot-rating">${dots(parseInt(d.rating)||0)}</div>` },
-                { label: 'Date', html: `<span class="note-prop-value italic-accent">${new Date(d.date).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric'})}</span>` },
-                { label: 'Source', html: `<span class="note-prop-value">${d.source || 'General Research'}</span>` },
+                { label: 'Discipline', html: `<span class="note-prop-value">${d.discipline || '—'}</span>` },
+                { label: 'Sub-Discipline', html: `<span class="note-prop-value">${d.sub_discipline || '—'}</span>` },
                 { 
                     label: 'Tags', 
-                    html: (d.tags) ? `<div class="note-prop-chips">${(Array.isArray(d.tags) ? d.tags : d.tags.split(',')).map(t => `<span class="note-prop-chip">${t.trim()}</span>`).join('')}</div>` : '<span class="note-prop-value">—</span>',
+                    html: (d.tags && d.tags.length) ? `<div class="note-prop-chips">${(Array.isArray(d.tags) ? d.tags : d.tags.split(',')).map(t => `<span class="note-prop-chip">${t.trim()}</span>`).join('')}</div>` : '<span class="note-prop-value">—</span>',
+                    full: true 
+                },
+                { 
+                    label: 'Connected Notes or Essays', 
+                    html: (d.connected_content && d.connected_content.length) ? `<div class="note-prop-chips">${d.connected_content.map(c => `<span class="note-prop-chip">${c.trim()}</span>`).join('')}</div>` : '<span class="note-prop-value">—</span>',
                     full: true 
                 }
             ];

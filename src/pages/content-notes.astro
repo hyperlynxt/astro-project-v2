@@ -300,7 +300,8 @@ const accentColorDark = "#8C8C8C";
     <script id="notes-data" type="application/json" is:inline set:html={JSON.stringify(contentNotes.map(c => ({
             id: c.id,
             ...c.data,
-            date: c.data.date?.toISOString()
+            date: c.data.date?.toISOString(),
+            date_published: c.data.date_published?.toISOString()
         })))} />
     <div style="display:none;" aria-hidden="true">
         {renderedNotes.map(({ entry, Content }) => (
