@@ -109,5 +109,18 @@ const frameworks = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks };
+const contentNotes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/content-notes' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    rating: z.number().min(0).max(3),
+    date: z.date(),
+    tags: z.array(z.string()),
+    source: z.string().optional(),
+    summary: z.string().optional(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes };
 

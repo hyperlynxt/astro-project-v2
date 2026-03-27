@@ -23,5 +23,12 @@ export const PROJECT_STRUCTURE = {
             { title: "Definitions", path: "/definitions" },
             { title: "Frameworks", path: "/frameworks" }
         ]
+    },
+    PART_4: {
+        title: "Learning & Research",
+        label: "Part IV",
+        pages: [
+            { title: "Content Notes", path: "/content-notes" }
+        ]
     }
 } as const;

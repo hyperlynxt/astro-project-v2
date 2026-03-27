@@ -1,0 +1,245 @@
+---
+import { getCollection, render } from 'astro:content';
+import '../styles/global.css';
+import ContentNoteModal from '../components/ContentNoteModal.astro';
+
+const contentNotes = await getCollection('contentNotes');
+contentNotes.sort((a, b) => {
+  const ratingA = a.data.rating || 0;
+  const ratingB = b.data.rating || 0;
+  if (ratingB !== ratingA) return ratingB - ratingA;
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+
+const renderedNotes = await Promise.all(
+  contentNotes.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+
+const accentColor = "#B4BCC0";
+const accentColorDark = "#8C8C8C";
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Field Notes - Content Notes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style define:vars={{ accentColor, accentColorDark }}>
+        body {
+            background-color: #FDFCF9;
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+            color: #2A2724;
+        }
+        .hand-underline-sm { position: relative; display: inline-block; }
+        .catalog-card {
+            background: white !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .catalog-card:hover {
+            background: #F5F2EB !important;
+            border-color: #D5CCB6;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42, 39, 36, 0.1);
+        }
+        .catalog-card:hover .model-title { color: var(--accentColorDark); }
+        .bookmark-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            color: #A39985;
+            transition: color 0.2s ease;
+            z-index: 10;
+        }
+        .catalog-card:hover .bookmark-icon { color: var(--accentColorDark); }
+        .star-rating { display: flex; gap: 4px; color: var(--accentColorDark); }
+        .masonry-grid {
+            position: relative;
+            width: 100%;
+            transition: height 0.4s ease;
+        }
+        .masonry-item-wrapper {
+            position: absolute;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, width 0.4s ease;
+            padding: 0;
+            margin: 0;
+        }
+        .masonry-item { 
+            break-inside: avoid; 
+            margin-bottom: 1.25rem; 
+            display: block; 
+            position: relative;
+        }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: rgba(42, 39, 36, 0.12); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 39, 36, 0.25); }
+        
+        @keyframes drawSwoosh { to { stroke-dashoffset: 0; } }
+        .swoosh-path { stroke-dasharray: 100; stroke-dashoffset: 100; }
+        .animate-draw-line { animation: drawSwoosh 0.8s ease-out 0.4s forwards; }
+
+        .catalog-card strong {
+            color: var(--accentColorDark) !important;
+            font-weight: 600 !important;
+        }
+    </style>
+</head>
+<body class={`min-h-screen antialiased selection:bg-[${accentColor}] selection:text-white flex flex-col`}>
+
+    <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42, 39, 35, 0.12);">
+        <div class="flex items-center gap-10">
+            <a href="/astro-project-v2/" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Main Page</a>
+            <div class="h-8 w-px bg-[#E8E2D2]"></div>
+            <nav class="flex items-center gap-8 translate-y-[2px]">
+                <a href="/astro-project-v2/content-notes" class="group flex items-center gap-2 transition-all duration-300 hover:-translate-y-[1px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#B4BCC0] shadow-[0_0_8px_rgba(180,188,192,0.4)]"></span>
+                    <span class="font-serif text-xl text-[#2A2724]">Content Notes</span>
+                </a>
+                <a href="/astro-project-v2/concepts" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Concepts</a>
+                <a href="/astro-project-v2/definitions" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Definitions</a>
+            </nav>
+        </div>
+        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-seal tracking-tight translate-y-1 text-[#8C8C8C]">hyperlynxt | teo</div>
+    </header>
+
+    <main class="flex-1 pb-32">
+        <section class="w-full bg-gradient-to-b from-[#F5F2EB] to-transparent pt-20 pb-16 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <span class="font-['Reenie_Beanie'] text-2xl text-[#8C8070] mb-2 block">Part IV</span>
+                <h2 class="font-serif text-5xl md:text-7xl leading-tight text-[#2A2724] mb-8">
+                    Learning & <span class="italic hand-underline-sm inline-block">
+                        Research
+                        <svg class="absolute w-[110%] h-[12px] -bottom-1 -left-[5%] text-[#B4BCC0] opacity-70 overflow-visible" viewBox="0 0 100 10" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M0,8 C25,12 75,4 100,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="swoosh-path animate-draw-line"></path>
+                        </svg>
+                    </span>
+                </h2>
+                <p class="font-serif italic text-lg md:text-xl text-[#8C8070] max-w-2xl mx-auto leading-relaxed">
+                    Notes on content consumed, research conducted, and knowledge syntheses.
+                </p>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="masonry-grid">
+                {renderedNotes.map(({ entry, Content }) => (
+                    <div class="masonry-item-wrapper">
+                        <article
+                            class="masonry-item catalog-card group bg-white rounded-3xl border border-[#E8E2D2] p-8 flex flex-col gap-6 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(213,204,182,0.5)]"
+                            data-title={entry.data.title}
+                            data-description={entry.data.description}
+                            data-id={entry.id}
+                            data-source={entry.data.source || ''}
+                            data-tags={entry.data.tags.join(',')}
+                            data-rating={entry.data.rating}
+                            data-summary={entry.data.summary || ''}
+                        >
+                            <svg class="bookmark-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"></path>
+                                <path d="M8 7h6"></path>
+                                <path d="M8 11h8"></path>
+                                <path d="M8 15h6"></path>
+                            </svg>
+                            <div class="flex flex-col gap-2">
+                                <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#B4BCC0] opacity-80">{entry.data.source || 'General Research'}</p>
+                                <h3 class="model-title font-serif text-3xl font-medium text-[#2A2724] transition-colors leading-tight">{entry.data.title}</h3>
+                                <p class="font-serif text-[#8C8070] text-[16px] leading-relaxed mt-2" set:html={(entry.data.description || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}></p>
+                            </div>
+                            <div class="pt-5 border-t border-[#F5F2EB]/80 mt-auto">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="star-rating">
+                                        {Array.from({ length: entry.data.rating || 0 }).map((_, i) => (
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style={i === 1 ? "transform: rotate(15deg);" : i === 2 ? "transform: rotate(-10deg);" : i === 3 ? "transform: rotate(5deg);" : ""}>
+                                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.3"></path>
+                                            </svg>
+                                        ))}
+                                    </div>
+                                    <div class="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[#B4BCC0]"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                        <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-[#2A2724]">Research Note</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .star-filter { transition: all 0.25s ease; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .star-filter.active { color: #B4BCC0 !important; opacity: 1 !important; }
+        .star-filter.active svg { color: #B4BCC0 !important; }
+        .star-filter.active svg path { fill: #B4BCC0 !important; fill-opacity: 0.2 !important; stroke: #B4BCC0 !important; stroke-width: 1.5 !important; }
+        .star-filter:not(.active) { color: #A39985 !important; opacity: 0.5 !important; }
+        .star-filter.active:hover { transform: scale(1.1); }
+    </style>
+
+    <ContentNoteModal />
+
+    <!-- Data for JS -->
+    <script id="notes-data" type="application/json" is:inline set:html={JSON.stringify(contentNotes.map(c => ({
+            id: c.id,
+            ...c.data,
+            date: c.data.date?.toISOString()
+        })))} />
+    <div style="display:none;" aria-hidden="true">
+        {renderedNotes.map(({ entry, Content }) => (
+            <div id={`note-content-${entry.id}`}><Content /></div>
+        ))}
+    </div>
+
+    <script is:inline>
+        // Use inline script for faster masonry and basic UI
+        function layoutMasonry() {
+            const grid = document.querySelector('.masonry-grid');
+            if (!grid) return;
+            const items = Array.from(grid.querySelectorAll('.masonry-item-wrapper')).filter(i => i.style.display !== 'none');
+            const containerWidth = grid.offsetWidth;
+            let cols = 1;
+            if (window.innerWidth >= 1024) cols = 3;
+            else if (window.innerWidth >= 768) cols = 2;
+            const gap = 20;
+            const colWidth = (containerWidth - (gap * (cols - 1))) / cols;
+            const colHeights = new Array(cols).fill(0);
+            items.forEach(item => {
+                const minH = Math.min(...colHeights);
+                const colIdx = colHeights.indexOf(minH);
+                const x = colIdx * (colWidth + gap);
+                const y = minH;
+                item.style.width = colWidth + 'px';
+                item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                colHeights[colIdx] += item.offsetHeight + gap;
+            });
+            grid.style.height = Math.max(...colHeights) + 'px';
+        }
+        window.addEventListener('load', layoutMasonry);
+        window.addEventListener('resize', layoutMasonry);
+        document.addEventListener('click', e => {
+            const card = e.target.closest('.catalog-card');
+            if (card) {
+                const id = card.getAttribute('data-id');
+                const contentEl = document.getElementById(`note-content-${id}`);
+                const bodyHtml = contentEl ? contentEl.innerHTML : '';
+                const data = JSON.parse(document.getElementById('notes-data').textContent);
+                if (window.openNoteModal) window.openNoteModal(id, data, bodyHtml);
+            }
+        });
+    </script>
+</body>
+</html>
