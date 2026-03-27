@@ -132,6 +132,10 @@ const accentColorDark = "#8C8C8C";
                 </p>
             </div>
         </section>
+        <div class="max-w-7xl mx-auto px-6 mb-12 flex items-center justify-between pb-4" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">The Field Notes</span>
+            <span id="note-count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{contentNotes.length} notes</span>
+        </div>
 
         <div class="max-w-7xl mx-auto px-6">
             <div class="masonry-grid">
@@ -427,6 +431,16 @@ const accentColorDark = "#8C8C8C";
         function updateFilterPreview() {
             const filtered = getFilteredData();
             filterResultCount.textContent = `${filtered.length} notes`;
+            syncDividerCount();
+        }
+
+        function syncDividerCount() {
+            const countLabel = document.getElementById('note-count-label');
+            if (countLabel) {
+                const visibleCount = Array.from(cards).filter(c => c.closest('.masonry-item-wrapper').style.display !== 'none').length;
+                const totalCount = cards.length;
+                countLabel.textContent = visibleCount === totalCount ? `${totalCount} notes` : `${visibleCount} of ${totalCount} notes`;
+            }
         }
 
         function getFilteredData() {
@@ -484,6 +498,7 @@ const accentColorDark = "#8C8C8C";
             });
 
             setTimeout(layoutMasonry, 50);
+            syncDividerCount();
             closeFilterModal();
         }
 
