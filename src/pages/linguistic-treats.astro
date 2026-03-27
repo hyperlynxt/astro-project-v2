@@ -60,14 +60,58 @@ words.sort((a, b) => {
         @keyframes cardIn    { from { opacity:0; transform: translateY(28px) scale(0.96); } to { opacity:1; transform: translateY(0) scale(1); } }
         @keyframes textReveal{ from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
         @keyframes drawStroke{ to { stroke-dashoffset: 0; } }
-        .modal-card      { background-color:#FDFCF9; background-image:url("https://www.transparenttextures.com/patterns/natural-paper.png"); animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
-        .modal-word-text { opacity:0; animation: textReveal 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards; }
-        .modal-reveal    { opacity:0; animation: textReveal 0.5s cubic-bezier(0.16,1,0.3,1) 0.28s forwards; }
+        
+        .scene { 
+            perspective: 1200px; 
+            perspective-origin: center;
+            width: 100%; 
+            min-height: 500px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 10; 
+            position: relative;
+            overflow: visible;
+        }
+
+        .modal-card {
+            background-color:#FDFCF9; 
+            background-image:url("https://www.transparenttextures.com/patterns/natural-paper.png"); 
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        
+        .modal-card-initial {
+            animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .modal-word-text { opacity:0; animation: textReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
+        .modal-reveal    { opacity:0; animation: textReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards; }
         .draw-line path  { stroke-dasharray:600; stroke-dashoffset:600; animation: drawStroke 1.1s cubic-bezier(0.22,1,0.36,1) 0.18s forwards; }
         .sidebar-block { opacity:0; transform:translateY(12px); animation: sidebarIn 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
         .sidebar-block:nth-child(1){ animation-delay:.20s; }
         .sidebar-block:nth-child(2){ animation-delay:.32s; }
         @keyframes sidebarIn { to { opacity:1; transform:translateY(0); } }
+        
+        /* 3D Flip Animations */
+        @keyframes flipNext {
+            0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+            33%    { transform: perspective(1000px) rotateX(0deg) rotateY(90deg) scale(0.92); opacity: 0.8; }
+            100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        @keyframes flipPrev {
+            0%     { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+            33%    { transform: perspective(1000px) rotateX(0deg) rotateY(-90deg) scale(0.92); opacity: 0.8; }
+            100%   { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        .flipping-next { animation: flipNext 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+        .flipping-prev { animation: flipPrev 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important; z-index: 100; transition: none !important; }
+
         ::-webkit-scrollbar { width:7px; } ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background-color:rgba(42,39,35,0.1); border-radius:10px; }
         ::-webkit-scrollbar-thumb:hover { background-color:rgba(42,39,35,0.2); }
@@ -186,30 +230,42 @@ words.sort((a, b) => {
         </div>
     </main>
 
-    <!-- Modal -->
-    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; opacity:0;">
-        <div id="modal-card" class="modal-card relative w-full max-w-[650px] rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-2xl animate-slide-up" style="max-height:90vh;">
-            <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
-            <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
-                <div class="flex justify-center mb-6">
-                    <div id="modal-stars" class="star-rating px-1"></div>
-                </div>
-                <div class="modal-word-text mb-2">
-                    <h2 class="font-serif text-[3.8rem] md:text-[4.5rem] font-medium leading-none text-[#2A2724]" id="modal-word"></h2>
-                </div>
-                <svg class="draw-line w-full mt-0.5 mb-6" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
-                    <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#9B7CC8" stroke-width="1.3" stroke-linecap="round"/>
-                </svg>
-                <div id="modal-tags-attribution" class="flex flex-wrap items-baseline gap-2 font-serif italic text-[1.25rem] mb-10" style="display:none;">
-                    <span style="color:#9B7CC8;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
-                    <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;"></span>
-                </div>
-                <div id="summary-container" class="modal-definition mb-10">
-                    <p id="modal-definition" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724]"></p>
-                </div>
-                <div id="modal-note-section" class="modal-reveal mb-10" style="display:none;">
-                    <div style="color:#9B7CC8;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;font-family:serif;">Notes from Self</div>
-                    <span id="modal-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724] leading-tight block"></span>
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 items-center justify-center p-6 md:p-10" style="display:none; opacity:0; background: rgba(245, 242, 235, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <div class="relative w-full max-w-[650px]">
+            <!-- Navigation Buttons -->
+            <button id="modal-prev-btn" class="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
+                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            </button>
+            <button id="modal-next-btn" class="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-16 w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#FDFCF9]/90 border border-[#2A2724]/10 text-[#2A2724]/50 flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:text-[#2A2724] hover:border-[#2A2724]/20 hover:scale-105 backdrop-blur-md shadow-sm z-[60]">
+                <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+
+            <div class="scene">
+                <div id="modal-card" class="modal-card relative w-full rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-[0_25px_50px_-12px_rgba(42,39,36,0.25)]" style="max-height:92vh;">
+                    <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
+                    <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
+                        <div class="flex justify-center mb-6">
+                            <div id="modal-stars" class="star-rating px-1"></div>
+                        </div>
+                        <div class="modal-word-text mb-2">
+                            <h2 class="font-serif text-[3.8rem] md:text-[4.5rem] font-medium leading-none text-[#2A2724]" id="modal-word"></h2>
+                        </div>
+                        <svg class="draw-line w-full mt-0.5 mb-6" height="14" viewBox="0 0 480 14" preserveAspectRatio="none" style="overflow:visible;">
+                            <path d="M0,10 Q60,14 120,8 T240,10 T360,8 T480,10" fill="none" stroke="#9B7CC8" stroke-width="1.3" stroke-linecap="round"/>
+                        </svg>
+                        <div id="modal-tags-attribution" class="flex flex-wrap items-baseline gap-2 font-serif italic text-[1.25rem] mb-10" style="display:none;">
+                            <span style="color:#9B7CC8;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.9rem;font-weight:700;font-style:normal;">Tags</span>
+                            <span id="modal-tags-list" style="color:#B08D57;opacity:0.7;"></span>
+                        </div>
+                        <div id="summary-container" class="modal-definition mb-10">
+                            <p id="modal-definition" class="font-serif text-[1.2rem] md:text-[1.4rem] leading-relaxed text-[#2A2724]"></p>
+                        </div>
+                        <div id="modal-note-section" class="modal-reveal mb-10" style="display:none;">
+                            <div style="color:#9B7CC8;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;font-family:serif;">Notes from Self</div>
+                            <span id="modal-note" class="font-['Reenie_Beanie'] text-2xl text-[#2A2724] leading-tight block"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -326,61 +382,93 @@ words.sort((a, b) => {
         }
         const cards = document.querySelectorAll('.word-card');
         const wordsGrid = document.getElementById('words-grid');
+        const modalCard = document.getElementById('modal-card');
+
+        // Navigation state
+        let currentCardIndex = 0;
+        let currentVisibleCards = [];
 
         document.getElementById('filter-btn').addEventListener('click', openFilterModal);
         document.getElementById('close-filter-btn').addEventListener('click', closeFilterModal);
         document.getElementById('apply-filter-btn').addEventListener('click', applyFilterSystem);
         document.getElementById('clear-filter-btn').addEventListener('click', clearAllFilters);
-        document.getElementById('close-modal-btn').addEventListener('click', closeModalDirect);
 
         const STAR_ROTATIONS = [0, 15, -10];
         function buildStars(count) {
             return Array.from({ length: count }, (_, i) =>
-                `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(${STAR_ROTATIONS[i]||0}deg)">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"/>
+                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="transform:rotate(${STAR_ROTATIONS[i]||0}deg)">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.8"/>
                 </svg>`
             ).join('');
         }
 
         function resetAnimation(el) { if(!el) return; el.style.animation='none'; el.offsetHeight; el.style.animation=null; }
 
+        function populateModal(card, isNavigation = false) {
+            const word = card.getAttribute('data-fullword');
+            const definition = card.getAttribute('data-definition');
+            const note = card.getAttribute('data-note') || '';
+            const stars = parseInt(card.getAttribute('data-stars')) || 0;
+            const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
+
+            document.getElementById('modal-word').textContent = word;
+            document.getElementById('modal-definition').innerHTML = definition.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const noteSection = document.getElementById('modal-note-section');
+            if (note) {
+                document.getElementById('modal-note').textContent = note;
+                noteSection.style.display = 'block';
+            } else {
+                noteSection.style.display = 'none';
+            }
+            document.getElementById('modal-stars').innerHTML = buildStars(stars);
+            
+            const tagsAttribution = document.getElementById('modal-tags-attribution');
+            const tagsList = document.getElementById('modal-tags-list');
+            if (tags.length > 0 && tags[0] !== "") {
+                tagsList.textContent = tags.map(t => t.trim()).join(', ');
+                tagsAttribution.style.display = 'flex';
+            } else {
+                tagsAttribution.style.display = 'none';
+            }
+
+            // Restart line drawing
+            const path = overlay.querySelector('.draw-line path');
+            if (path) {
+                path.style.animation = 'none';
+                path.offsetHeight;
+                path.style.animation = null;
+            }
+
+            if (!isNavigation) {
+                resetAnimation(document.getElementById('modal-word'));
+                overlay.querySelectorAll('.modal-reveal').forEach(el => resetAnimation(el));
+            }
+        }
+
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                const word = card.getAttribute('data-fullword');
-                const definition = card.getAttribute('data-definition');
-                const note = card.getAttribute('data-note') || '';
-                const stars = parseInt(card.getAttribute('data-stars')) || 0;
-                const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
-
-                document.getElementById('modal-word').textContent = word;
-                document.getElementById('modal-definition').innerHTML = definition.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                const noteSection = document.getElementById('modal-note-section');
-                if (note) {
-                    document.getElementById('modal-note').textContent = note;
-                    noteSection.style.display = 'block';
-                } else {
-                    noteSection.style.display = 'none';
-                }
-                document.getElementById('modal-stars').innerHTML = buildStars(stars);
+                currentVisibleCards = Array.from(wordsGrid.querySelectorAll('.word-card')).filter(c => c.style.display !== 'none');
+                currentCardIndex = currentVisibleCards.indexOf(card);
                 
-                const tagsAttribution = document.getElementById('modal-tags-attribution');
-                const tagsList = document.getElementById('modal-tags-list');
-                if (tags.length > 0 && tags[0] !== "") {
-                    tagsList.textContent = tags.map(t => t.trim()).join(', ');
-                    tagsAttribution.style.display = 'flex';
-                } else {
-                    tagsAttribution.style.display = 'none';
-                }
+                document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
+                document.getElementById('modal-next-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
 
-                resetAnimation(document.getElementById('modal-card'));
-                overlay.querySelectorAll('.modal-word-text, .modal-reveal').forEach(el => resetAnimation(el));
-                resetAnimation(overlay.querySelector('.draw-line path'));
+                populateModal(card, false);
 
                 overlay.style.display = 'flex';
                 overlay.style.opacity = '0';
                 document.body.style.overflow = 'hidden';
                 toggleBottomBar(false);
-                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+                requestAnimationFrame(() => { 
+                    overlay.style.opacity = '1';
+                    modalCard.classList.add('modal-card-initial');
+                    setTimeout(() => {
+                        modalCard.classList.remove('modal-card-initial');
+                        modalCard.style.animation = 'none';
+                        modalCard.style.transform = 'none';
+                        modalCard.style.opacity = '1';
+                    }, 550);
+                });
             });
         });
 
@@ -395,7 +483,46 @@ words.sort((a, b) => {
             }, 320);
         }
         function closeModalDirect() { doClose(); }
+        document.getElementById('close-modal-btn').addEventListener('click', doClose);
         overlay.addEventListener('click', (e) => { if (e.target === overlay) doClose(); });
+
+        // Navigation controls
+        let isNavigating = false;
+        async function navigateModal(direction) {
+            if (isNavigating || currentVisibleCards.length <= 1) return;
+            isNavigating = true;
+
+            modalCard.classList.remove('flipping-next', 'flipping-prev', 'modal-card-initial');
+            modalCard.style.animation = 'none';
+            modalCard.style.transform = 'none';
+            modalCard.offsetHeight; 
+
+            modalCard.classList.add(direction === 'next' ? 'flipping-next' : 'flipping-prev');
+
+            setTimeout(() => {
+                currentCardIndex = direction === 'next' 
+                    ? (currentCardIndex + 1) % currentVisibleCards.length 
+                    : (currentCardIndex - 1 + currentVisibleCards.length) % currentVisibleCards.length;
+                
+                populateModal(currentVisibleCards[currentCardIndex], true);
+            }, 200);
+
+            setTimeout(() => {
+                modalCard.classList.remove('flipping-next', 'flipping-prev');
+                isNavigating = false;
+            }, 600);
+        }
+
+        document.getElementById('modal-prev-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('prev'); });
+        document.getElementById('modal-next-btn').addEventListener('click', (e) => { e.stopPropagation(); navigateModal('next'); });
+
+        document.addEventListener('keydown', (e) => {
+            if (overlay.style.display === 'flex') {
+                if (e.key === 'ArrowRight') navigateModal('next');
+                if (e.key === 'ArrowLeft') navigateModal('prev');
+                if (e.key === 'Escape') doClose();
+            }
+        });
 
         let filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 1 };
 
