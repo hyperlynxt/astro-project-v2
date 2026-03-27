@@ -149,59 +149,31 @@ import '../styles/global.css';
         }
 
         .chapter-node:hover .node-circle {
-            box-shadow: 0 0 25px var(--accent-gold), 0 0 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 25px var(--hover-color, var(--accent-gold)), 0 0 50px rgba(0, 0, 0, 0.2);
             transform: scale(1.5);
         }
 
         .chapter-node:hover .chapter-label,
         .chapter-node:hover .chapter-title {
-            color: #1a1a1a;
+            color: var(--hover-color, #1a1a1a);
             opacity: 1;
             text-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Specialized Hover Colors */
-        .quotes-hover:hover .node-circle {
-            background: #9B7CC8 !important;
-            box-shadow: 0 0 25px #9B7CC8, 0 0 50px rgba(0, 0, 0, 0.2) !important;
+        /* Thematic Hover Colors */
+        .notes-hover { --hover-color: #7BA08A; }
+        .quotes-hover { --hover-color: #9B7CC8; }
+        .concepts-hover { --hover-color: #8B2626; }
+        .research-hover { --hover-color: #B4BCC0; } /* Slightly darker silver for visibility */
+
+        .chapter-node:hover .node-circle {
+            background: var(--hover-color) !important;
+            box-shadow: 0 0 25px var(--hover-color), 0 0 50px rgba(0, 0, 0, 0.2) !important;
         }
 
-        .quotes-hover:hover .chapter-label,
-        .quotes-hover:hover .chapter-title {
-            color: #9B7CC8 !important;
-            transform: scale(1.05);
-        }
-
-        .concepts-hover:hover .node-circle {
-            background: #8B2626 !important;
-            box-shadow: 0 0 25px #8B2626, 0 0 50px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .concepts-hover:hover .chapter-label,
-        .concepts-hover:hover .chapter-title {
-            color: #8B2626 !important;
-            transform: scale(1.05);
-        }
-
-        .notes-hover:hover .node-circle {
-            background: #7BA08A !important;
-            box-shadow: 0 0 25px #7BA08A, 0 0 50px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .notes-hover:hover .chapter-label,
-        .notes-hover:hover .chapter-title {
-            color: #7BA08A !important;
-            transform: scale(1.05);
-        }
-
-        .treats-hover:hover .node-circle {
-            background: #9B7CC8 !important;
-            box-shadow: 0 0 25px #9B7CC8, 0 0 50px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .treats-hover:hover .chapter-label,
-        .treats-hover:hover .chapter-title {
-            color: #9B7CC8 !important;
+        .chapter-node:hover .chapter-label,
+        .chapter-node:hover .chapter-title {
+            color: var(--hover-color) !important;
             transform: scale(1.05);
         }
 
@@ -284,6 +256,7 @@ import '../styles/global.css';
 
 
         <a href="/astro-project-v2/notes/" class="chapter-node fade-in-node notes-hover"
+            data-hover-color="#7BA08A"
             style="top: 12%; left: 70%; translate: -50% 0; animation-delay: 0.4s;">
             <div class="node-circle" style="margin-bottom: 0;"></div>
             <div style="position: absolute; left: 100%; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 0.75rem; width: max-content;">
@@ -293,6 +266,7 @@ import '../styles/global.css';
         </a>
 
         <a href="/astro-project-v2/quotes" class="chapter-node fade-in-node quotes-hover"
+            data-hover-color="#9B7CC8"
             style="top: 29%; left: 83%; animation-delay: 0.6s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part II</span>
@@ -300,26 +274,28 @@ import '../styles/global.css';
         </a>
 
         <a href="/astro-project-v2/concepts" class="chapter-node fade-in-node concepts-hover"
+            data-hover-color="#8B2626"
             style="top: 70%; left: 78%; animation-delay: 0.8s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part III</span>
             <span class="chapter-title">Sophia Atlas</span>
         </a>
 
-        <a href="/astro-project-v2/frameworks" class="chapter-node fade-in-node treats-hover"
+        <a href="/astro-project-v2/frameworks" class="chapter-node fade-in-node research-hover"
+            data-hover-color="#B4BCC0"
             style="top: 77%; left: 70%; translate: -50% 0; animation-delay: 1.0s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part IV</span>
-            <span class="chapter-title">Frameworks & Dives</span>
+            <span class="chapter-title">Learning & Research</span>
         </a>
 
-        <a href="#" class="chapter-node fade-in-node" style="top: 70%; left: 47%; animation-delay: 1.2s;">
+        <a href="#" class="chapter-node fade-in-node" data-hover-color="#1a1a1a" style="top: 70%; left: 47%; animation-delay: 1.2s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part V</span>
             <span class="chapter-title">Cinema Annotations</span>
         </a>
 
-        <a href="#" class="chapter-node fade-in-node" style="top: 29%; left: 42%; animation-delay: 1.4s;">
+        <a href="#" class="chapter-node fade-in-node" data-hover-color="#1a1a1a" style="top: 29%; left: 42%; animation-delay: 1.4s;">
             <div class="node-circle"></div>
             <span class="chapter-label">Part VI</span>
             <span class="chapter-title">Reading Annotations</span>
@@ -334,7 +310,7 @@ import '../styles/global.css';
 
         const CONFIG = {
             maxPaths: 45,
-            color: 'rgba(42, 42, 42, {opacity})',
+            baseColor: 'rgba(42, 42, 42, {opacity})',
             strokeWidth: { min: 0.5, max: 1.5 },
             opacity: { min: 0.4, max: 0.8 },
             growthSpeed: 0.006,
@@ -388,6 +364,7 @@ import '../styles/global.css';
             initPoints() {
                 const targetNodes = Array.from(chapterNodes);
                 const randomNode = targetNodes[Math.floor(Math.random() * targetNodes.length)];
+                this.targetNodeCircle = randomNode; // Store reference for hover highlight
 
                 this.start = getCenter(hubNode);
                 this.end = getCenter(randomNode);
@@ -451,16 +428,33 @@ import '../styles/global.css';
                     if (t === this.progress) break;
                 }
 
-                ctx.strokeStyle = CONFIG.color.replace('{opacity}', this.opacity);
+                const isHovered = hoveredNodeId && (this.targetNodeCircle === hoveredNodeId);
+                const finalColor = isHovered ? hoverColor : CONFIG.baseColor;
+                
+                ctx.strokeStyle = finalColor.replace('{opacity}', this.opacity);
                 ctx.lineWidth = this.width;
                 ctx.lineCap = 'round';
 
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.shadowColor = isHovered ? finalColor.replace('{opacity}', '0.3') : 'rgba(0, 0, 0, 0.1)';
                 ctx.shadowBlur = 4;
 
                 ctx.stroke();
             }
         }
+
+        let hoveredNodeId = null;
+        let hoverColor = null;
+
+        document.querySelectorAll('.chapter-node').forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                hoveredNodeId = node.querySelector('.node-circle');
+                hoverColor = node.getAttribute('data-hover-color');
+            });
+            node.addEventListener('mouseleave', () => {
+                hoveredNodeId = null;
+                hoverColor = null;
+            });
+        });
 
         function animate() {
             const time = Date.now();
