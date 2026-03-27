@@ -24,8 +24,18 @@ const STAR_ROTATIONS = [0, 15, -10];
     <style>
         body {
             background-color: #FDFCF9;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 
+                0px 0px, 
+                40px 60px, 
+                80px 20px;
+            background-repeat: repeat;
             color: #2A2724;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .glass-nav { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
         .quotes-grid {
