@@ -117,12 +117,40 @@
         font-weight: 600 !important;
     }
 
-    #dive-modal h2, 
-    #dive-modal h3 {
-        font-family: 'EB Garamond', serif; font-size: 1.7rem; font-weight: 500; color: #111827;
-        margin-top: 48px; margin-bottom: 24px; padding-bottom: 12px;
-        border-bottom: 1px solid #E6DFD1; line-height: 1.2;
+    #modal-dive-body h2 {
+        font-family: 'EB Garamond', serif; font-size: 1.8rem; font-weight: 500; color: #111827;
+        margin-top: 50px; margin-bottom: 20px; padding-bottom: 14px;
+        border-bottom: 1.5px solid #E6DFD1; line-height: 1.1;
     }
+    #modal-dive-body h3 {
+        font-family: 'EB Garamond', serif; font-size: 1.6rem; font-weight: 500; color: #111827;
+        margin-top: 32px; margin-bottom: 16px; padding-bottom: 10px;
+        border-bottom: 1px solid rgba(230,223,209,0.7); line-height: 1.2;
+    }
+    #modal-dive-body h4 {
+        font-family: 'EB Garamond', serif; font-size: 1.3rem; font-weight: 500; color: #111827;
+        margin-top: 18px; margin-bottom: 10px; padding-bottom: 8px;
+        border-bottom: 1px solid rgba(230,223,209,0.4); line-height: 1.2;
+    }
+    #modal-dive-body h3 + h4 { margin-top: 8px; }
+
+    #modal-dive-body p { margin-bottom: 22px; }
+    #modal-dive-body li p { margin-bottom: 0; }
+    #modal-dive-body p:last-child { margin-bottom: 0; }
+
+    #modal-dive-body ul {
+        list-style-type: disc; padding-left: 1.5rem;
+        margin-top: 0.5rem; margin-bottom: 1.25rem;
+    }
+    #modal-dive-body ol {
+        list-style-type: decimal; padding-left: 1.5rem;
+        margin-top: 0.5rem; margin-bottom: 1.25rem;
+    }
+    #modal-dive-body li {
+        margin-bottom: 0.15rem !important;
+        padding-left: 0.5rem; line-height: 1.6;
+    }
+    #modal-dive-body li::marker { color: #B4BCC0; font-weight: 700; }
 </style>
 
 <div id="dive-modal">
@@ -149,7 +177,7 @@
                     </div>
                 </div>
 
-                <div id="modal-dive-body" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[900px] z-10 relative mb-20 prose prose-ink"></div>
+                <div id="modal-dive-body" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 max-w-[900px] z-10 relative mb-20"></div>
             </div>
         </div>
 
