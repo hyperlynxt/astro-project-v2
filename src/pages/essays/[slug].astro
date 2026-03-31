@@ -214,7 +214,7 @@ for (const n of linkedNotes) {
                 )}
             </header>
 
-            <div class="font-serif text-[1.3rem] leading-[1.8] text-gray-800 flex flex-col gap-[32px] fade-up shadow-sm bg-white/30 p-8 rounded-2xl border border-white/50 essay-body">
+            <div class="font-serif text-[1.3rem] leading-[1.8] text-gray-800 fade-up shadow-sm bg-white/30 p-8 rounded-2xl border border-white/50 essay-body">
                 <EssayContent />
             </div>
         </article>
@@ -244,9 +244,9 @@ for (const n of linkedNotes) {
                 font-size: 1.75rem;
                 font-weight: 500;
                 color: #111827;
-                margin-top: 48px;
-                margin-bottom: 18px;
-                padding-bottom: 12px;
+                margin-top: 32px;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
                 border-bottom: 1px solid rgba(230,223,209,0.7);
                 line-height: 1.2;
             }
@@ -255,11 +255,20 @@ for (const n of linkedNotes) {
                 font-size: 1.45rem;
                 font-weight: 500;
                 color: #111827;
-                margin-top: 36px;
-                margin-bottom: 14px;
-                padding-bottom: 10px;
+                margin-top: 18px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
                 border-bottom: 1px solid rgba(230,223,209,0.4);
                 line-height: 1.2;
+            }
+            .essay-body h3 + h4 {
+                margin-top: 10px;
+            }
+            .essay-body p {
+                margin-bottom: 24px;
+            }
+            .essay-body p:last-child {
+                margin-bottom: 0;
             }
             .essay-body h2:first-child, .essay-body h3:first-child, .essay-body h4:first-child {
                 margin-top: 0;

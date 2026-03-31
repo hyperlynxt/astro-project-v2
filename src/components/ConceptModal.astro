@@ -126,17 +126,47 @@
     }
 
     /* Essay-style subheadings for detailed description */
-    #modal-detailed-desc h2, 
+    #modal-detailed-desc h2 {
+        font-family: 'EB Garamond', serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #111827;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 1.5px solid #E6DFD1;
+        line-height: 1.1;
+    }
     #modal-detailed-desc h3 {
         font-family: 'EB Garamond', serif;
-        font-size: 1.7rem;
+        font-size: 1.6rem;
         font-weight: 500;
-        color: #111827; /* gray-900 */
-        margin-top: 48px;
-        margin-bottom: 24px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #E6DFD1;
+        color: #111827;
+        margin-top: 32px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(230,223,209,0.7);
         line-height: 1.2;
+    }
+    #modal-detailed-desc h4 {
+        font-family: 'EB Garamond', serif;
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #111827;
+        margin-top: 18px;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(230,223,209,0.4);
+        line-height: 1.2;
+    }
+    #modal-detailed-desc h3 + h4 {
+        margin-top: 8px;
+    }
+    #modal-detailed-desc p {
+        margin-bottom: 22px;
+    }
+    #modal-detailed-desc p:last-child {
+        margin-bottom: 0;
     }
 
     #modal-detailed-desc h2:first-child, 
@@ -202,7 +232,7 @@
                     </div>
                 </div>
 
-                <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 space-y-8 max-w-[900px] z-10 relative mb-20 prose prose-ink"></div>
+                <div id="modal-detailed-desc" class="font-serif text-xl md:text-[1.45rem] leading-[1.85] text-[#2A2724]/85 max-w-[900px] z-10 relative mb-20"></div>
 
                 <div id="modal-field-note-section" class="mb-12 max-w-[900px]" style="display:none;">
                     <div style="color:#8B2626;opacity:0.8;font-variant:small-caps;letter-spacing:0.1em;font-size:0.8rem;font-weight:700;font-style:normal;margin-bottom:0.5rem;">Notes of Myself</div>
