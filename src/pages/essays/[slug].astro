@@ -228,18 +228,40 @@ for (const n of linkedNotes) {
             scroll-behavior: smooth;
         }
 
-        .essay-body h2, .essay-body h3 {
+        .essay-body h2 {
                 font-family: 'EB Garamond', serif;
-                font-size: 1.7rem;
+                font-size: 2.2rem;
                 font-weight: 500;
-                color: #111827; /* gray-900 */
+                color: #111827;
+                margin-top: 64px;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 1.5px solid #E6DFD1;
+                line-height: 1.1;
+            }
+            .essay-body h3 {
+                font-family: 'EB Garamond', serif;
+                font-size: 1.75rem;
+                font-weight: 500;
+                color: #111827;
                 margin-top: 48px;
-                margin-bottom: 16px;
+                margin-bottom: 18px;
                 padding-bottom: 12px;
-                border-bottom: 1px solid #E6DFD1;
+                border-bottom: 1px solid rgba(230,223,209,0.7);
                 line-height: 1.2;
             }
-            .essay-body h2:first-child, .essay-body h3:first-child {
+            .essay-body h4 {
+                font-family: 'EB Garamond', serif;
+                font-size: 1.45rem;
+                font-weight: 500;
+                color: #111827;
+                margin-top: 36px;
+                margin-bottom: 14px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(230,223,209,0.4);
+                line-height: 1.2;
+            }
+            .essay-body h2:first-child, .essay-body h3:first-child, .essay-body h4:first-child {
                 margin-top: 0;
             }
         </style>
