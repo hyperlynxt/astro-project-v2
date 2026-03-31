@@ -43,9 +43,7 @@ La **Función de Utilidad Individual Extendida (FUIE)** es el conjunto de dimens
 La diferencia con el modelo clásico es triple:
 
 - **Opera sobre dimensiones de vida, no sobre bienes económicos.** Las variables de la FUIE son cosas como el estatus social, la conexión emocional, la autonomía, la estabilidad, el riesgo, la creatividad, la percepción de los demás. No son bienes que se compran en un mercado.
-
 - **Incluye preferencias inconscientes.** La FUIE no se limita a lo que la persona declara valorar. Muchas veces la función opera sin que el agente la haya articulado conscientemente. Las decisiones revelan la función; las palabras, muchas veces, la ocultan.
-
 - **Incorpora el efecto de las normas sociales.** Las normas sociales no solo influyen en la FUIE de cada persona, sino que afectan la manera en que esa función es juzgada externamente. Esto crea presiones sistemáticas que deforman las preferencias declaradas y, con el tiempo, las preferencias reales.
 
 #### La pregunta correcta
@@ -61,19 +59,12 @@ La FUIE de una persona se puede mapear a través de un conjunto de dimensiones. 
 #### Dimensiones posibles
 
 - Estatus y percepción social: cuánto pesa la opinión y la valoración de los demás en las decisiones.
-
 - Autonomía y libertad: cuánto valora la persona el control sobre su tiempo, su espacio y sus decisiones.
-
 - Seguridad y estabilidad: cuánto está dispuesta a sacrificar en términos de upside para reducir la varianza.
-
 - Conexión y relaciones: cuánto peso tienen los vínculos emocionales y la comunidad.
-
 - Acumulación económica: cuánto espacio ocupa el dinero como fin en sí mismo o como habilitador de otras dimensiones.
-
 - Valoración estética y corporal: cuánto peso tienen la apariencia, la vitalidad y la imagen.
-
 - Realización intelectual o creativa: cuánto pesa el desarrollo del pensamiento, la expresión o la producción de ideas.
-
 - Comunidad e impacto: cuánto peso tiene contribuir a algo más grande que uno mismo.
 
 #### Consecuencias de la ponderación
@@ -81,13 +72,9 @@ La FUIE de una persona se puede mapear a través de un conjunto de dimensiones. 
 Conocer la FUIE de una persona permite anticipar con precisión:
 
 - Qué tipo de problemas va a priorizar y cuáles va a ignorar.
-
 - Qué esfuerzo va a considerar razonable o excesivo para distintos tipos de objetivos.
-
 - Con qué tipo de personas va a conectar y a cuáles va a devaluar.
-
 - Cómo va a interpretar las decisiones y estilos de vida de los demás.
-
 - Qué riesgos está dispuesta a incorporar y cuáles le generan aversión desproporcionada.
 
 ### V. Ejemplos y Contextos
@@ -97,11 +84,8 @@ Conocer la FUIE de una persona permite anticipar con precisión:
 Una persona cuya FUIE prioriza el estatus social, la valoración estética y la percepción de los demás va a:
 
 - Esforzarse más para mantener una apariencia física que considere valorada por su entorno.
-
 - Preocuparse de manera desproporcionada por los problemas relacionados con esas dimensiones.
-
 - Prestarle menos atención a dimensiones que no tengan impacto en su posición social.
-
 - Evaluar a las demás personas, en buena medida, en función de los mismos parámetros que rigen su propia función.
 
 Esto último es relevante: la FUIE no solo determina las propias prioridades, sino también el lente a través del cual se interpreta a los demás. Una persona con alta ponderación en estatus tiende a asumir que los demás también maximizan en esa dimensión, aunque no sea el caso.
