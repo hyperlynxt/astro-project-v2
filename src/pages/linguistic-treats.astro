@@ -71,6 +71,7 @@ words.sort((a, b) => {
         .word-card:hover .type-badge { background: rgba(155,124,200,0.18); border-color: rgba(155,124,200,0.4); }
         .star-rating { display: flex; gap: 4px; color: #9B7CC8; }
         #modal-overlay { background: rgba(42,39,35,0.38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: opacity 0.35s ease; }
+        #filter-modal { transition: opacity 0.3s ease; }
         @keyframes cardIn    { from { opacity:0; transform: translateY(28px) scale(0.96); } to { opacity:1; transform: translateY(0) scale(1); } }
         @keyframes textReveal{ from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
         @keyframes drawStroke{ to { stroke-dashoffset: 0; } }
@@ -185,9 +186,6 @@ words.sort((a, b) => {
                     </svg>
                 </span>
             </h2>
-            <p class="font-serif italic text-lg md:text-xl text-[#8C8070] max-w-2xl mx-auto leading-relaxed">
-                Terms loved not for how they sound, but for what they name — gaps in thought, folds in meaning, semantic sleight of hand.
-            </p>
         </div>
     </section>
 
@@ -326,7 +324,7 @@ words.sort((a, b) => {
     </div>
 
     <!-- Filter Modal -->
-    <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-[#F3ECFF]/50 backdrop-blur-md">
+    <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-white/40 backdrop-blur-md">
         <div class="relative w-full max-w-[630px] rounded-[28px] border overflow-hidden flex flex-col max-h-[85vh]" style="background-color:#fff; background-image:url('https://www.transparenttextures.com/patterns/natural-paper.png'), linear-gradient(160deg, #FFFFFF 0%, #F6F1FF 100%); border-color: rgba(186,130,255,0.35); box-shadow: 0 0 3px rgba(186,130,255,0.22), 0 0 8px rgba(186,130,255,0.13), 0 0 14px rgba(186,130,255,0.08), 0 25px 60px -15px rgba(42,39,35,0.3);">
             <div class="px-7 pt-9 pb-6 border-b flex flex-col items-center justify-center backdrop-blur-md flex-shrink-0 relative" style="border-color: rgba(186,130,255,0.2); background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(243,236,255,0.7) 100%);">
                 <div class="text-center">
@@ -712,15 +710,36 @@ words.sort((a, b) => {
 
         function openFilterModal() {
             filterModal.style.display = 'flex';
+            filterModal.style.opacity = '0';
             document.body.style.overflow = 'hidden';
             toggleBottomBar(false);
             renderTagFilters(); updatePreviewCount();
             const p = filterModal.querySelector('.swoosh-path');
             if (p) { p.style.animation = 'none'; p.offsetHeight; p.style.animation = null; }
+            const box = filterModal.querySelector('.relative');
+            if (box) {
+                box.style.animation = 'none';
+                box.style.transform = '';
+                box.style.opacity = '';
+                box.offsetHeight;
+                box.classList.add('modal-card-initial');
+            }
+            setTimeout(() => {
+                filterModal.style.opacity = '1';
+                if (box) {
+                    setTimeout(() => {
+                        box.classList.remove('modal-card-initial');
+                        box.style.animation = 'none';
+                        box.style.transform = 'none';
+                        box.style.opacity = '1';
+                    }, 500);
+                }
+            }, 10);
         }
 
         function closeFilterModal() {
-            filterModal.style.display = 'none';
+            filterModal.style.opacity = '0';
+            setTimeout(() => { filterModal.style.display = 'none'; }, 280);
             if (overlay.style.display !== 'flex') {
                 document.body.style.overflow = '';
                 toggleBottomBar(true);

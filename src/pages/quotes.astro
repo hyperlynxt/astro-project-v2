@@ -134,6 +134,7 @@ const STAR_ROTATIONS = [0, 15, -10];
             -webkit-backdrop-filter: blur(8px);
             transition: opacity 0.35s ease;
         }
+        #filter-modal { transition: opacity 0.3s ease; }
         @keyframes cardIn {
             from { opacity: 0; transform: translateY(28px) scale(0.96); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -242,7 +243,6 @@ const STAR_ROTATIONS = [0, 15, -10];
                     </svg>
                 </span>
             </h2>
-            <p class="font-serif italic text-lg md:text-xl text-[#8C8070] max-w-2xl mx-auto leading-relaxed">Things worth keeping. Words that stayed.</p>
         </div>
     </section>
 
@@ -739,15 +739,36 @@ const STAR_ROTATIONS = [0, 15, -10];
 
         function openFilterModal() {
             filterModal.style.display = 'flex';
+            filterModal.style.opacity = '0';
             document.body.style.overflow = 'hidden';
             renderTagFilters();
             updatePreviewCount();
             const p = filterModal.querySelector('.swoosh-path');
             if (p) { p.style.animation = 'none'; p.offsetHeight; p.style.animation = null; }
+            const box = filterModal.querySelector('.relative');
+            if (box) {
+                box.style.animation = 'none';
+                box.style.transform = '';
+                box.style.opacity = '';
+                box.offsetHeight;
+                box.classList.add('modal-card-initial');
+            }
+            setTimeout(() => {
+                filterModal.style.opacity = '1';
+                if (box) {
+                    setTimeout(() => {
+                        box.classList.remove('modal-card-initial');
+                        box.style.animation = 'none';
+                        box.style.transform = 'none';
+                        box.style.opacity = '1';
+                    }, 500);
+                }
+            }, 10);
         }
 
         function closeFilterModal() {
-            filterModal.style.display = 'none';
+            filterModal.style.opacity = '0';
+            setTimeout(() => { filterModal.style.display = 'none'; }, 280);
             if (overlay.style.display !== 'flex') document.body.style.overflow = '';
         }
 
