@@ -42,10 +42,18 @@ words.sort((a, b) => {
         .word-card {
             cursor: pointer; background-color: #fff; border-radius: 22px; padding: 1.5rem 1.5rem 1.2rem;
             position: relative; overflow: hidden; border: 1px solid rgba(42,39,35,0.10);
-            box-shadow: 0 2px 12px rgba(42,39,35,0.06); transition: all 0.3s ease; display: flex; flex-direction: column;
+            box-shadow: 0 2px 12px rgba(42,39,35,0.06); transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.35s ease, transform 0.12s ease-out;
+            display: flex; flex-direction: column; will-change: transform; transform-style: preserve-3d;
         }
-        .word-card:hover { background: #F5F2EB; border-color: #D5CCB6; transform: translateY(-4px); box-shadow: 0 12px 24px -10px rgba(42,39,36,0.1); }
-        .word-card:hover .card-word { color: #9B7CC8; }
+        .word-card:hover {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F3ECFF 100%); border-color: #C9A6FF;
+            box-shadow:
+                0 0 5px rgba(186,130,255,0.55),
+                0 0 12px rgba(186,130,255,0.4),
+                0 0 20px rgba(186,130,255,0.22),
+                0 14px 30px -12px rgba(42,39,35,0.15);
+        }
+        .word-card:hover .card-word { color: #9B7CC8; text-shadow: 0 0 14px rgba(186,130,255,0.45); }
         .word-card:hover .card-definition { color: #9B7CC8; }
         .word-card:hover .card-type-icon { color: #9B7CC8; }
         .card-expand { position: absolute; top: 1.1rem; right: 1.1rem; opacity: 0; transform: scale(0.85); transition: opacity 0.25s ease, transform 0.25s ease; color: rgba(42,39,35,0.28); font-size: 0.75rem; line-height: 1; }
@@ -55,6 +63,8 @@ words.sort((a, b) => {
         .card-definition { font-family: 'EB Garamond', serif; font-size: 1.05rem; line-height: 1.65; color: rgba(42,39,35,0.50); flex-grow: 1; transition: color 0.3s ease; }
         .card-footer { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid rgba(42,39,35,0.06); display: flex; align-items: flex-end; justify-content: space-between; gap: 0.75rem; }
         .card-tag { background: rgba(42,39,35,0.04); color: rgba(42,39,35,0.5); font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; border-radius: 6px; }
+        .type-badge { background: rgba(155,124,200,0.12); color: #9B7CC8; border: 1px solid rgba(155,124,200,0.25); font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; transition: background 0.3s ease, border-color 0.3s ease; }
+        .word-card:hover .type-badge { background: rgba(155,124,200,0.18); border-color: rgba(155,124,200,0.4); }
         .star-rating { display: flex; gap: 4px; color: #9B7CC8; }
         #modal-overlay { background: rgba(42,39,35,0.38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: opacity 0.35s ease; }
         @keyframes cardIn    { from { opacity:0; transform: translateY(28px) scale(0.96); } to { opacity:1; transform: translateY(0) scale(1); } }
@@ -185,8 +195,6 @@ words.sort((a, b) => {
     <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-36">
         <div class="words-grid" id="words-grid">
             {words.map((entry) => {
-                const visibleTags = entry.data.tags.slice(0, 2);
-                const overflow = entry.data.tags.length > 2 ? entry.data.tags.length - 2 : 0;
                 return (
                     <article
                         class="word-card"
@@ -198,15 +206,6 @@ words.sort((a, b) => {
                         data-note={entry.data.note || ''}
                     >
                         <span class="card-expand">↗</span>
-                        <div class="card-type-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="7" cy="12" r="3"></circle>
-                                <path d="M10 9v6"></path>
-                                <circle cx="17" cy="12" r="3"></circle>
-                                <path d="M14 7v8"></path>
-                                <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1"></path>
-                            </svg>
-                        </div>
                         <div style="flex-grow:1;display:flex;align-items:center;justify-content:center;">
                             <p class="card-word">{entry.data.word}</p>
                         </div>
@@ -218,9 +217,8 @@ words.sort((a, b) => {
                                     </svg>
                                 ))}
                             </div>
-                            <div class="flex items-center gap-1.5 flex-wrap justify-end flex-shrink-0">
-                                {visibleTags.map(t => <span class="card-tag">{t}</span>)}
-                                {overflow > 0 && <span class="card-tag">+{overflow}</span>}
+                            <div class="flex items-center justify-end flex-shrink-0">
+                                <span class="type-badge">{entry.data.entry_type}</span>
                             </div>
                         </div>
                     </article>
@@ -244,6 +242,17 @@ words.sort((a, b) => {
                 <div id="modal-card" class="modal-card relative w-full rounded-[28px] overflow-hidden flex flex-col border border-[#2A2724]/[0.08] shadow-[0_25px_50px_-12px_rgba(42,39,36,0.25)]" style="max-height:92vh;">
                     <button id="close-modal-btn" class="absolute top-4 right-4 z-20 w-7 h-7 rounded-full border border-[#2A2724]/10 bg-white/60 text-[#2A2724]/35 hover:text-[#2A2724]/70 hover:border-[#2A2724]/25 flex items-center justify-center transition-all font-sans text-xs leading-none backdrop-blur-sm">✕</button>
                     <div class="flex-1 overflow-y-auto px-10 md:px-14 pt-14 pb-12 relative">
+                        <div class="flex justify-center mb-4">
+                            <div class="card-type-icon" style="margin-bottom:0;">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="7" cy="12" r="3"></circle>
+                                    <path d="M10 9v6"></path>
+                                    <circle cx="17" cy="12" r="3"></circle>
+                                    <path d="M14 7v8"></path>
+                                    <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1"></path>
+                                </svg>
+                            </div>
+                        </div>
                         <div class="flex justify-center mb-6">
                             <div id="modal-stars" class="star-rating px-1"></div>
                         </div>
@@ -468,6 +477,19 @@ words.sort((a, b) => {
                         modalCard.style.opacity = '1';
                     }, 550);
                 });
+            });
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const px = (e.clientX - rect.left) / rect.width;
+                const py = (e.clientY - rect.top) / rect.height;
+                const rotateY = (px - 0.5) * 8;
+                const rotateX = (0.5 - py) * 8;
+                card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
             });
         });
 

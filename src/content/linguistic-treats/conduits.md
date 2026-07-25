@@ -1,5 +1,6 @@
 ---
 word: Conduits
+entry_type: word
 definition: "Channels or means through which something is transmitted — people, structures, or systems that carry something along without originating it."
 note: "There's something philosophically interesting about conduit-ness. A conduit doesn't generate, it transmits. The metaphor quietly asks: are we ever the source, or always just passing something through?"
 tags: [Metaphor, Systems, Pragmatics]

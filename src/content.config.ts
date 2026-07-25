@@ -53,6 +53,7 @@ const linguisticTreats = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/linguistic-treats' }),
   schema: z.object({
     word: z.string(),
+    entry_type: z.enum(['word', 'phrase', 'suffix', 'prefix', 'wordplay']),
     definition: z.string(),
     note: z.string().optional(),
     tags: z.array(z.string()),
