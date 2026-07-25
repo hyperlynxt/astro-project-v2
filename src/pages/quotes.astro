@@ -2,7 +2,12 @@
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
-const quotes = await getCollection('quotes');
+const allQuotes = await getCollection('quotes');
+
+const newQuotes = allQuotes.filter(e => (e.data.stars || 0) === 0);
+newQuotes.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime());
+
+const quotes = allQuotes.filter(e => (e.data.stars || 0) > 0);
 quotes.sort((a, b) => {
     if (b.data.stars !== a.data.stars) {
         return b.data.stars - a.data.stars;
@@ -80,6 +85,10 @@ const STAR_ROTATIONS = [0, 15, -10];
         }
         @media (min-width: 640px)  { .quotes-grid:not(.masonry-ready) { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .quotes-grid:not(.masonry-ready) { grid-template-columns: repeat(3, 1fr); } }
+
+        .simple-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; align-items: start; }
+        @media (min-width: 640px)  { .simple-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .simple-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .quote-card:hover {
             background: linear-gradient(135deg, #FFFFFF 0%, #E9F8EE 100%);
@@ -245,6 +254,49 @@ const STAR_ROTATIONS = [0, 15, -10];
             </h2>
         </div>
     </section>
+
+    {newQuotes.length > 0 && (
+      <>
+        <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Last Added</span>
+            <span id="new-count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{newQuotes.length} entries</span>
+        </div>
+
+        <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-10">
+            <div class="simple-grid" id="new-quotes-grid">
+                {newQuotes.map((entry) => (
+                    <article
+                        class="quote-card"
+                        data-text={entry.data?.text?.toLowerCase() || ""}
+                        data-author={entry.data?.author || ""}
+                        data-tags={entry.data?.tags?.join(',') || ""}
+                        data-stars={entry.data?.stars || 0}
+                        data-summary={entry.data?.summary || ''}
+                        data-source={entry.data?.source || ''}
+                        data-fulltext={entry.data?.text || ""}
+                    >
+                        <span class="card-expand">↗</span>
+                        <div class="card-body" style="flex-grow:1;display:flex;align-items:center;justify-content:center;">
+                            <p class="font-serif text-[1.45rem] leading-[1.75] text-[#2A2724] text-center" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;">{entry.data?.text || ""}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="min-w-0">
+                                <div class="star-rating mb-1.5">
+                                    {Array.from({ length: entry.data.stars }).map((_, i) => (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform:rotate(15deg)" : i === 2 ? "transform:rotate(-10deg)" : ""}>
+                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                        </svg>
+                                    ))}
+                                </div>
+                                <p class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/70 truncate">{entry.data.author || 'Unknown'}</p>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </main>
+      </>
+    )}
 
     <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
         <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">The Collection</span>
@@ -540,7 +592,7 @@ const STAR_ROTATIONS = [0, 15, -10];
         // Card click → open modal
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                currentVisibleCards = Array.from(quotesGrid.querySelectorAll('.quote-card')).filter(c => c.style.display !== 'none');
+                currentVisibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
                 currentCardIndex = currentVisibleCards.indexOf(card);
                 
                 document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
@@ -716,8 +768,10 @@ const STAR_ROTATIONS = [0, 15, -10];
             cardsArr.forEach(c => { c.style.display = cardMatchesFilters(c) ? '' : 'none'; });
             const visible = cardsArr.filter(c => c.style.display !== 'none');
             const isDesc = filterState.sortOrder === 'desc';
+
+            const collectionVisible = visible.filter(c => quotesGrid.contains(c));
             if (filterState.sort !== 'default') {
-                visible.sort((a, b) => {
+                collectionVisible.sort((a, b) => {
                     let cmp = 0;
                     if (filterState.sort === 'alphabetical') {
                         cmp = a.dataset.fulltext.localeCompare(b.dataset.fulltext);
@@ -730,11 +784,22 @@ const STAR_ROTATIONS = [0, 15, -10];
                     }
                     return isDesc ? -cmp : cmp;
                 });
-                visible.forEach(c => quotesGrid.appendChild(c.parentElement));
+                collectionVisible.forEach(c => quotesGrid.appendChild(c.parentElement));
             }
-            const total = cards.length;
-            document.getElementById('count-label').textContent =
-                visible.length === total ? `${total} entries` : `${visible.length} of ${total} entries`;
+
+            const updateSectionCount = (gridId, labelId, selectAll) => {
+                const grid = document.getElementById(gridId);
+                if (!grid) return;
+                const sectionCards = selectAll ? Array.from(grid.querySelectorAll('.quote-card')) : Array.from(grid.children);
+                const total = sectionCards.length;
+                const visibleCount = sectionCards.filter(c => c.style.display !== 'none').length;
+                const label = document.getElementById(labelId);
+                if (label) {
+                    label.textContent = visibleCount === total ? `${total} entries` : `${visibleCount} of ${total} entries`;
+                }
+            };
+            updateSectionCount('quotes-grid', 'count-label', true);
+            updateSectionCount('new-quotes-grid', 'new-count-label', false);
         }
 
         function openFilterModal() {
@@ -792,7 +857,10 @@ const STAR_ROTATIONS = [0, 15, -10];
                 s.classList.toggle('active', isActive);
             });
             cards.forEach(c => { c.style.display = ''; });
-            document.getElementById('count-label').textContent = `${cards.length} entries`;
+            const mainGrid = document.getElementById('quotes-grid');
+            const newGrid = document.getElementById('new-quotes-grid');
+            if (mainGrid) document.getElementById('count-label').textContent = `${mainGrid.querySelectorAll('.quote-card').length} entries`;
+            if (newGrid) document.getElementById('new-count-label').textContent = `${newGrid.children.length} entries`;
         }
 
         document.getElementById('quotes-search').addEventListener('input', e => {
