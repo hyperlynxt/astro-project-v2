@@ -2,7 +2,11 @@
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
-const words = await getCollection('linguisticTreats');
+const allWords = await getCollection('linguisticTreats');
+const newWords = allWords.filter(e => (e.data.stars || 0) === 0);
+newWords.sort((a, b) => new Date(b.data.date_added).getTime() - new Date(a.data.date_added).getTime());
+
+const words = allWords.filter(e => (e.data.stars || 0) > 0);
 words.sort((a, b) => {
   const starsA = a.data.stars || 0;
   const starsB = b.data.stars || 0;
@@ -187,6 +191,48 @@ words.sort((a, b) => {
         </div>
     </section>
 
+    {newWords.length > 0 && (
+      <>
+        <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
+            <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">Last Added</span>
+            <span id="new-count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{newWords.length} entries</span>
+        </div>
+
+        <main class="max-w-[1400px] mx-auto px-6 md:px-10 pb-10">
+            <div class="words-grid" id="new-words-grid">
+                {newWords.map((entry) => (
+                    <article
+                        class="word-card"
+                        data-word={entry.data.word.toLowerCase()}
+                        data-tags={entry.data.tags.join(',')}
+                        data-stars={entry.data.stars}
+                        data-fullword={entry.data.word}
+                        data-definition={entry.data.definition}
+                        data-note={entry.data.note || ''}
+                    >
+                        <span class="card-expand">↗</span>
+                        <div style="flex-grow:1;display:flex;align-items:center;justify-content:center;">
+                            <p class="card-word">{entry.data.word}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="star-rating">
+                                {Array.from({ length: entry.data.stars }).map((_, i) => (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style={i === 1 ? "transform:rotate(15deg)" : i === 2 ? "transform:rotate(-10deg)" : ""}>
+                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" fill-opacity="0.2"></path>
+                                    </svg>
+                                ))}
+                            </div>
+                            <div class="flex items-center justify-end flex-shrink-0">
+                                <span class="type-badge">{entry.data.entry_type}</span>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </main>
+      </>
+    )}
+
     <div class="max-w-[1400px] mx-auto px-6 md:px-10 mb-6 flex items-center justify-between pb-3" style="border-bottom: 1px solid rgba(42,39,35,0.08);">
         <span class="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#2A2724]/40">The Lexicon</span>
         <span id="count-label" class="font-serif italic text-[#2A2724]/35 text-sm">{words.length} entries</span>
@@ -331,10 +377,10 @@ words.sort((a, b) => {
                             <svg class="w-3.5 h-3.5 text-[#9B7CC8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                             <h3 class="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-[#2A2724]/50">Minimum Stars</h3>
                         </div>
-                        <span class="font-['Reenie_Beanie'] text-lg text-[#9B7CC8] hand-label">1+ stars</span>
+                        <span class="font-['Reenie_Beanie'] text-lg text-[#9B7CC8] hand-label">0+ stars</span>
                     </div>
                     <div class="flex gap-3 p-3.5 bg-[#FDFCF9] border border-[#2A2724]/10 rounded-2xl w-fit shadow-inner" id="filter-utility-stars">
-                        <button data-rating="1" class="star-filter active active:scale-95">
+                        <button data-rating="1" class="star-filter active:scale-95">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
                                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"></path>
                             </svg>
@@ -455,7 +501,7 @@ words.sort((a, b) => {
 
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                currentVisibleCards = Array.from(wordsGrid.querySelectorAll('.word-card')).filter(c => c.style.display !== 'none');
+                currentVisibleCards = Array.from(document.querySelectorAll('.word-card')).filter(c => c.style.display !== 'none');
                 currentCardIndex = currentVisibleCards.indexOf(card);
                 
                 document.getElementById('modal-prev-btn').style.display = currentVisibleCards.length > 1 ? 'flex' : 'none';
@@ -545,7 +591,7 @@ words.sort((a, b) => {
             }
         });
 
-        let filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 1 };
+        let filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 0 };
 
         const allTags = [...new Set(Array.from(cards).flatMap(c =>
             c.getAttribute('data-tags') ? c.getAttribute('data-tags').split(',').map(t => t.trim()) : []
@@ -640,11 +686,21 @@ words.sort((a, b) => {
                 });
             }
             
-            sortTarget.forEach(c => wordsGrid.appendChild(c));
-            
-            const total = cards.length;
-            document.getElementById('count-label').textContent =
-                visible.length === total ? `${total} entries` : `${visible.length} of ${total} entries`;
+            sortTarget.forEach(c => c.parentElement.appendChild(c));
+
+            const updateSectionCount = (gridId, labelId) => {
+                const grid = document.getElementById(gridId);
+                if (!grid) return;
+                const sectionCards = Array.from(grid.querySelectorAll('.word-card'));
+                const total = sectionCards.length;
+                const visibleCount = sectionCards.filter(c => c.style.display !== 'none').length;
+                const label = document.getElementById(labelId);
+                if (label) {
+                    label.textContent = visibleCount === total ? `${total} entries` : `${visibleCount} of ${total} entries`;
+                }
+            };
+            updateSectionCount('words-grid', 'count-label');
+            updateSectionCount('new-words-grid', 'new-count-label');
         }
 
         function openFilterModal() {
@@ -667,7 +723,7 @@ words.sort((a, b) => {
         function applyFilterSystem() { applyFilters(); closeFilterModal(); }
 
         function clearAllFilters() {
-            filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 1 };
+            filterState = { query: '', sort: 'default', sortOrder: 'desc', tags: [], minStars: 0 };
             document.getElementById('words-search').value = '';
             renderTagFilters(); updatePreviewCount();
             document.querySelectorAll('.sort-btn').forEach((b, i) => {
@@ -676,11 +732,14 @@ words.sort((a, b) => {
                 if (i === 0) { b.classList.add('bg-[#9B7CC8]', 'text-white', 'shadow-lg'); b.classList.remove('bg-white', 'text-[#2A2724]/70', 'border-[#2A2724]/20'); }
             });
             document.querySelectorAll('.star-filter').forEach(s => {
-                const isActive = parseInt(s.dataset.rating) <= 1;
+                const isActive = parseInt(s.dataset.rating) <= 0;
                 s.classList.toggle('active', isActive);
             });
             cards.forEach(c => { c.style.display = ''; });
-            document.getElementById('count-label').textContent = `${cards.length} entries`;
+            const newGrid = document.getElementById('new-words-grid');
+            const mainGrid = document.getElementById('words-grid');
+            if (newGrid) document.getElementById('new-count-label').textContent = `${newGrid.querySelectorAll('.word-card').length} entries`;
+            if (mainGrid) document.getElementById('count-label').textContent = `${mainGrid.querySelectorAll('.word-card').length} entries`;
         }
 
         document.getElementById('words-search').addEventListener('input', e => {
