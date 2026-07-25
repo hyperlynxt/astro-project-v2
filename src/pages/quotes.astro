@@ -348,7 +348,7 @@ const STAR_ROTATIONS = [0, 15, -10];
 
     <!-- Filter Modal -->
     <div id="filter-modal" style="display:none;" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-[#E9F8EE]/50 backdrop-blur-md">
-        <div class="relative w-full max-w-[630px] rounded-[28px] border overflow-hidden flex flex-col max-h-[85vh]" style="background-color:#fff; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'), linear-gradient(160deg, #FFFFFF 0%, #F3FBF6 100%); border-color: rgba(120,214,162,0.35); box-shadow: 0 0 6px rgba(120,214,162,0.4), 0 0 16px rgba(120,214,162,0.25), 0 0 32px rgba(120,214,162,0.15), 0 25px 60px -15px rgba(42,39,35,0.3);">
+        <div class="relative w-full max-w-[630px] rounded-[28px] border overflow-hidden flex flex-col max-h-[85vh]" style="background-color:#fff; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'), linear-gradient(160deg, #FFFFFF 0%, #F3FBF6 100%); border-color: rgba(120,214,162,0.35); box-shadow: 0 0 3px rgba(120,214,162,0.22), 0 0 8px rgba(120,214,162,0.13), 0 0 14px rgba(120,214,162,0.08), 0 25px 60px -15px rgba(42,39,35,0.3);">
             <div class="px-7 pt-9 pb-6 border-b flex flex-col items-center justify-center backdrop-blur-md flex-shrink-0 relative" style="border-color: rgba(120,214,162,0.2); background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(233,248,238,0.7) 100%);">
                 <div class="text-center">
                     <h2 class="text-3xl md:text-4xl font-serif font-medium text-[#2A2724] relative inline-block">
@@ -730,7 +730,7 @@ const STAR_ROTATIONS = [0, 15, -10];
                     }
                     return isDesc ? -cmp : cmp;
                 });
-                visible.forEach(c => quotesGrid.appendChild(c));
+                visible.forEach(c => quotesGrid.appendChild(c.parentElement));
             }
             const total = cards.length;
             document.getElementById('count-label').textContent =
