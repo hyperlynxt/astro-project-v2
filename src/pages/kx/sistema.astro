@@ -1,0 +1,288 @@
+---
+import '../../styles/global.css';
+import { getCollection } from 'astro:content';
+
+const modulos = await getCollection('kxModulos');
+const piezas = await getCollection('kxPiezas');
+
+const ACTUAL_ESTADOS = ['construyendo', 'activo', 'finalizado', 'pausado', 'deprecado'];
+const VISION_ESTADOS = ['idea', 'disenado'];
+
+const ESTADO_META = {
+  idea:         { label: 'idea',         color: '#8c8070' },
+  disenado:     { label: 'diseñado',     color: '#9B7CC8' },
+  construyendo: { label: 'construyendo', color: '#B08D57' },
+  activo:       { label: 'live',         color: '#7BA08A' },
+  finalizado:   { label: 'finalizado',   color: '#2A4747' },
+  pausado:      { label: 'pausado',      color: '#B4BCC0' },
+  deprecado:    { label: 'deprecado',    color: '#8c8070' },
+};
+
+const TIPO_LABEL = {
+  skill: 'skill',
+  flujo: 'flujo',
+  template: 'template',
+  convencion: 'convención',
+  integracion: 'integración',
+};
+
+function piezasDe(moduloId) {
+  return piezas.filter((p) => p.data.modulo === moduloId).sort((a, b) => a.data.id.localeCompare(b.data.id));
+}
+
+const modulosActual = modulos.filter((m) => ACTUAL_ESTADOS.includes(m.data.estado));
+const modulosVision = modulos.filter((m) => VISION_ESTADOS.includes(m.data.estado));
+
+const totalActivo = piezas.filter((p) => p.data.estado === 'activo').length;
+const totalConstruyendo = piezas.filter((p) => p.data.estado === 'construyendo').length;
+const totalIdea = modulos.filter((m) => m.data.estado === 'idea').length;
+const totalModulos = modulos.length;
+const totalPiezas = piezas.length;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Sistema — kx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FCFAF5; --ink: #23211d; --ink-soft: #55503f; --ink-faint: #8c8070;
+            --line: #ddd4bf; --teal: #2A4747; --gold: #B08D57; --seal: #8B2626;
+            --panel: #F5F1E6; --panel-2: #EFE9D9;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+            color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.1rem 2rem; border-bottom: 1px solid var(--line);
+        }
+        .brand {
+            display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none;
+            font-family: "Reenie Beanie", cursive; font-size: 1.6rem; color: var(--ink);
+        }
+        .brand small { font-family: "Inter", sans-serif; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); }
+        .crumbs { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .crumbs a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .crumbs a:hover { color: var(--teal); border-color: var(--teal); }
+        .crumbs .current { color: var(--ink); }
+
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
+
+        .hero { padding: 3.5rem 0 1.5rem; }
+        .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+        .hero h1 { font-size: clamp(2.3rem, 5.5vw, 3.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 0.7rem; }
+        .hero .lede { font-style: italic; color: var(--ink-soft); font-size: 1.15rem; max-width: 58ch; margin: 0; line-height: 1.5; }
+
+        .stats { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 2.2rem 0 2rem; }
+        .stat { padding: 1.2rem 1rem; text-align: center; border-left: 1px solid var(--line); }
+        .stat:first-child { border-left: none; }
+        .stat b { display: block; font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 600; color: var(--teal); line-height: 1; margin-bottom: 0.35rem; }
+        .stat span { font-family: "Inter", sans-serif; font-size: 0.66rem; letter-spacing: 0.04em; color: var(--ink-soft); line-height: 1.3; display: block; }
+
+        /* toggle */
+        .toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--panel); margin-bottom: 2rem; }
+        .toggle button {
+            font-family: "Inter", sans-serif; font-size: 0.82rem; font-weight: 600;
+            border: none; background: none; padding: 0.55rem 1.3rem; border-radius: 999px;
+            cursor: pointer; color: var(--ink-soft); transition: all 0.2s ease;
+        }
+        .toggle button.on { background: var(--ink); color: var(--bg); }
+
+        .panel { display: none; }
+        .panel.on { display: block; }
+
+        .mod-section { margin-bottom: 2rem; }
+        .mod-head {
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 1rem 1.3rem; background: var(--panel); border: 1px solid var(--line);
+            border-radius: 8px 8px 0 0;
+        }
+        .mod-head-left { display: flex; align-items: baseline; gap: 0.8rem; }
+        .mod-head h2 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        .mod-desc { font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-soft); margin: 0.3rem 0 0; max-width: 60ch; line-height: 1.5; }
+
+        .pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-family: "Inter", sans-serif; font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+            padding: 0.28rem 0.65rem; border-radius: 999px; white-space: nowrap;
+        }
+        .pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+        .piezas-list { border: 1px solid var(--line); border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; }
+        .pieza-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 0.75rem 1.3rem; border-top: 1px solid var(--line); background: var(--bg);
+        }
+        .pieza-row:first-child { border-top: none; }
+        .pieza-row.deprecado { opacity: 0.5; }
+        .pieza-row.deprecado .pieza-titulo { text-decoration: line-through; }
+        .pieza-left { display: flex; align-items: baseline; gap: 0.7rem; min-width: 0; }
+        .pieza-id { font-family: "JetBrains Mono", monospace; font-size: 0.68rem; color: var(--ink-faint); flex-shrink: 0; }
+        .pieza-titulo { font-family: "Inter", sans-serif; font-weight: 600; font-size: 0.88rem; }
+        .pieza-tipo { font-family: "Inter", sans-serif; font-size: 0.68rem; color: var(--ink-faint); flex-shrink: 0; }
+        .pieza-desc { font-family: "Inter", sans-serif; font-size: 0.76rem; color: var(--ink-soft); margin: 0.15rem 0 0; line-height: 1.4; max-width: 62ch; }
+        .pieza-empty { padding: 1rem 1.3rem; font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-faint); font-style: italic; background: var(--bg); border-top: 1px solid var(--line); }
+
+        .footnav { margin: 5rem 0 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; font-family: "Inter", sans-serif; font-size: 0.8rem; }
+        .footnav a { text-decoration: none; color: var(--ink-soft); }
+        .footnav a:hover { color: var(--teal); }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
+        <nav class="crumbs">
+            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">sistema</span>
+        </nav>
+    </div>
+
+    <div class="wrap">
+        <section class="hero">
+            <div class="kicker">dashboard del sistema</div>
+            <h1>Cómo viene el sistema</h1>
+            <p class="lede">
+                Lo mismo, visto desde dos ángulos: lo que ya existe en algún estado concreto,
+                y lo que todavía es idea o diseño. Se alimenta solo cuando cambia un archivo.
+            </p>
+        </section>
+
+        <div class="stats">
+            <div class="stat"><b>{totalModulos}</b><span>módulos</span></div>
+            <div class="stat"><b>{totalPiezas}</b><span>piezas totales</span></div>
+            <div class="stat"><b>{totalActivo}</b><span>piezas activas</span></div>
+            <div class="stat"><b>{totalConstruyendo}</b><span>en construcción</span></div>
+            <div class="stat"><b>{totalIdea}</b><span>módulos en idea</span></div>
+        </div>
+
+        <div class="toggle" id="toggle">
+            <button class="on" data-view="actual">Estado actual</button>
+            <button data-view="vision">Visión</button>
+        </div>
+
+        <div class="panel on" id="panel-actual">
+            {modulosActual.length === 0 && <p style="font-family:Inter,sans-serif;color:var(--ink-faint);font-style:italic;">Ningún módulo en estado actual todavía.</p>}
+            {modulosActual.map((m) => {
+                const meta = ESTADO_META[m.data.estado];
+                const ps = piezasDe(m.id);
+                return (
+                    <div class="mod-section">
+                        <div class="mod-head">
+                            <div class="mod-head-left">
+                                <h2>{m.data.titulo}</h2>
+                            </div>
+                            <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}>
+                                <span class="dot" style={`background:${meta.color}`}></span>
+                                {meta.label}
+                            </span>
+                        </div>
+                        <p class="mod-desc" style="margin: 0.6rem 1.3rem 0.9rem;">{m.data.descripcion}</p>
+                        <div class="piezas-list">
+                            {ps.length === 0 && <div class="pieza-empty">Sin piezas registradas todavía.</div>}
+                            {ps.map((p) => {
+                                const pmeta = ESTADO_META[p.data.estado];
+                                return (
+                                    <div class={`pieza-row ${p.data.estado === 'deprecado' ? 'deprecado' : ''}`}>
+                                        <div>
+                                            <div class="pieza-left">
+                                                <span class="pieza-id">{p.data.id}</span>
+                                                <span class="pieza-titulo">{p.data.titulo}</span>
+                                                <span class="pieza-tipo">· {TIPO_LABEL[p.data.tipo]}</span>
+                                            </div>
+                                            <p class="pieza-desc">{p.data.descripcion}</p>
+                                        </div>
+                                        <span class="pill" style={`background:${pmeta.color}22; color:${pmeta.color};`}>
+                                            <span class="dot" style={`background:${pmeta.color}`}></span>
+                                            {pmeta.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+
+        <div class="panel" id="panel-vision">
+            {modulosVision.length === 0 && <p style="font-family:Inter,sans-serif;color:var(--ink-faint);font-style:italic;">Nada en visión todavía.</p>}
+            {modulosVision.map((m) => {
+                const meta = ESTADO_META[m.data.estado];
+                const ps = piezasDe(m.id);
+                return (
+                    <div class="mod-section">
+                        <div class="mod-head">
+                            <div class="mod-head-left">
+                                <h2>{m.data.titulo}</h2>
+                            </div>
+                            <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}>
+                                <span class="dot" style={`background:${meta.color}`}></span>
+                                {meta.label}
+                            </span>
+                        </div>
+                        <p class="mod-desc" style="margin: 0.6rem 1.3rem 0.9rem;">{m.data.descripcion}</p>
+                        <div class="piezas-list">
+                            {ps.length === 0 && <div class="pieza-empty">Todavía sin piezas concretas — es pura visión.</div>}
+                            {ps.map((p) => {
+                                const pmeta = ESTADO_META[p.data.estado];
+                                return (
+                                    <div class="pieza-row">
+                                        <div>
+                                            <div class="pieza-left">
+                                                <span class="pieza-id">{p.data.id}</span>
+                                                <span class="pieza-titulo">{p.data.titulo}</span>
+                                                <span class="pieza-tipo">· {TIPO_LABEL[p.data.tipo]}</span>
+                                            </div>
+                                            <p class="pieza-desc">{p.data.descripcion}</p>
+                                        </div>
+                                        <span class="pill" style={`background:${pmeta.color}22; color:${pmeta.color};`}>
+                                            <span class="dot" style={`background:${pmeta.color}`}></span>
+                                            {pmeta.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+
+        <div class="footnav">
+            <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
+            <a href="/astro-project-v2/kx/tareas/">ver tareas &rarr;</a>
+        </div>
+    </div>
+
+    <script is:inline>
+        const toggle = document.getElementById('toggle');
+        const panelActual = document.getElementById('panel-actual');
+        const panelVision = document.getElementById('panel-vision');
+        toggle.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            toggle.querySelectorAll('button').forEach((b) => b.classList.remove('on'));
+            btn.classList.add('on');
+            const view = btn.dataset.view;
+            panelActual.classList.toggle('on', view === 'actual');
+            panelVision.classList.toggle('on', view === 'vision');
+        });
+    </script>
+</body>
+</html>

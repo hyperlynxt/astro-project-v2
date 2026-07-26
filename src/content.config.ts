@@ -143,5 +143,107 @@ const researchDives = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives };
+const ESTADOS = ['idea', 'disenado', 'construyendo', 'activo', 'finalizado', 'pausado', 'deprecado'] as const;
+
+const kxModulos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-modulos' }),
+  schema: z.object({
+    titulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    origen: z.string().optional(),
+    href: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxPiezas = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-piezas' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    tipo: z.enum(['skill', 'flujo', 'template', 'convencion', 'integracion']),
+    modulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    ruta: z.string().optional(),
+    origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxTareas = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-tareas' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    tipo: z.enum(['decidir', 'pensar', 'construir', 'escribir']),
+    estado: z.enum(['abierta', 'bloqueada', 'cerrada']),
+    modulo: z.string().optional(),
+    descripcion: z.string(),
+    bloqueadaPor: z.array(z.string()).optional(),
+    origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxWorkflows = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-workflows' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    categoria: z.enum(['contenido', 'sistema']),
+    pasos: z.array(z.string()),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxCuadrantes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-cuadrantes' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxStack = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-stack' }),
+  schema: z.object({
+    titulo: z.string(),
+    categoria: z.enum(['software', 'hardware']),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxIntegraciones = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-integraciones' }),
+  schema: z.object({
+    titulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    ruta: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxFuncionalidades = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-funcionalidades' }),
+  schema: z.object({
+    titulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    actualizado: z.date(),
+  }),
+});
+
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives, kxModulos, kxPiezas, kxTareas, kxWorkflows, kxCuadrantes, kxStack, kxIntegraciones, kxFuncionalidades };
 

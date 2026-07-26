@@ -1,0 +1,320 @@
+---
+import '../styles/global.css';
+
+const { frontmatter } = Astro.props;
+const title = frontmatter?.title ?? 'kx';
+const subtitle = frontmatter?.subtitle ?? '';
+---
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · kx system</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style is:global>
+        :root {
+            --bg: #FCFAF5;
+            --ink: #23211d;
+            --ink-soft: #55503f;
+            --line: #ddd4bf;
+            --teal: #2A4747;
+            --gold: #B08D57;
+            --seal: #8B2626;
+            --panel: #F5F1E6;
+            --code-bg: #1f2521;
+            --code-ink: #dce4dc;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+            color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a { color: var(--teal); }
+
+        /* ── top bar ── */
+        .kx-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 2rem;
+            background: rgba(252, 250, 245, 0.86);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .kx-brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            text-decoration: none;
+            font-family: "Reenie Beanie", cursive;
+            font-size: 1.6rem;
+            color: var(--ink);
+        }
+
+        .kx-brand small {
+            font-family: "Inter", sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+
+        .kx-crumbs {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+        .kx-crumbs a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .kx-crumbs a:hover { color: var(--teal); border-color: var(--teal); }
+
+        /* ── doc shell ── */
+        .kx-shell {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 3.5rem 1.75rem 8rem;
+        }
+
+        .kx-kicker {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.9rem;
+        }
+
+        .kx-title {
+            font-size: clamp(2.1rem, 5vw, 3.2rem);
+            font-weight: 500;
+            line-height: 1.08;
+            letter-spacing: -0.01em;
+            margin: 0 0 0.6rem;
+        }
+
+        .kx-subtitle {
+            font-style: italic;
+            color: var(--ink-soft);
+            font-size: 1.25rem;
+            margin: 0 0 2.6rem;
+        }
+
+        .kx-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.2rem;
+            font-family: "Inter", sans-serif;
+            font-size: 0.75rem;
+            color: var(--ink-soft);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 0.9rem 0;
+            margin-bottom: 3rem;
+        }
+        .kx-meta span b { color: var(--ink); font-weight: 600; }
+
+        /* ── prose ── */
+        .kx-prose h1 { font-size: 2rem; margin: 3rem 0 1rem; font-weight: 500; }
+        .kx-prose h2 {
+            font-size: 1.55rem;
+            margin: 3.2rem 0 1.1rem;
+            font-weight: 500;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+        .kx-prose h3 {
+            font-size: 1.2rem;
+            margin: 2.2rem 0 0.8rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+        .kx-prose h4 {
+            font-family: "Inter", sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin: 1.8rem 0 0.6rem;
+            color: var(--gold);
+        }
+        .kx-prose p { line-height: 1.75; font-size: 1.08rem; margin: 0 0 1.15rem; color: var(--ink); }
+        .kx-prose ul, .kx-prose ol { line-height: 1.75; font-size: 1.05rem; margin: 0 0 1.3rem; padding-left: 1.4rem; }
+        .kx-prose li { margin-bottom: 0.4rem; }
+        .kx-prose li > ul, .kx-prose li > ol { margin-top: 0.4rem; margin-bottom: 0.4rem; }
+        .kx-prose strong { color: var(--ink); font-weight: 700; }
+        .kx-prose em { color: var(--ink-soft); }
+        .kx-prose hr { border: none; border-top: 1px solid var(--line); margin: 3rem 0; }
+
+        .kx-prose blockquote {
+            margin: 1.6rem 0;
+            padding: 0.9rem 1.4rem;
+            border-left: 3px solid var(--gold);
+            background: var(--panel);
+            color: var(--ink-soft);
+            font-style: italic;
+            border-radius: 0 4px 4px 0;
+        }
+        .kx-prose blockquote p:last-child { margin-bottom: 0; }
+
+        .kx-prose code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.86em;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            color: var(--seal);
+        }
+
+        .kx-prose pre {
+            background: var(--code-bg);
+            color: var(--code-ink);
+            padding: 1.2rem 1.4rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.6rem 0;
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+        .kx-prose pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: inherit;
+            font-size: 1em;
+        }
+
+        .kx-prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.8rem 0;
+            font-size: 0.92rem;
+            font-family: "Inter", sans-serif;
+        }
+        .kx-prose thead th {
+            text-align: left;
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            padding: 0.6rem 0.8rem;
+            border-bottom: 2px solid var(--ink);
+        }
+        .kx-prose tbody td {
+            padding: 0.65rem 0.8rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+        .kx-prose tbody tr:hover { background: var(--panel); }
+
+        .kx-prose .mermaid {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 1.4rem;
+            margin: 1.8rem 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .kx-prose a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+        .kx-prose a:hover { text-decoration-color: var(--teal); }
+
+        /* ── footer nav ── */
+        .kx-footnav {
+            margin-top: 5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            font-family: "Inter", sans-serif;
+            font-size: 0.8rem;
+        }
+        .kx-footnav a { text-decoration: none; color: var(--ink-soft); }
+        .kx-footnav a:hover { color: var(--teal); }
+    </style>
+</head>
+<body>
+    <div class="kx-topbar">
+        <a href="/astro-project-v2/kx/" class="kx-brand">& <small>kx system</small></a>
+        <nav class="kx-crumbs">
+            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a>
+        </nav>
+    </div>
+
+    <article class="kx-shell">
+        <div class="kx-kicker">{frontmatter?.kicker ?? 'módulo del sistema'}</div>
+        <h1 class="kx-title">{title}</h1>
+        {subtitle && <p class="kx-subtitle">{subtitle}</p>}
+
+        {frontmatter && (
+            <div class="kx-meta">
+                {frontmatter.estado && <span>Estado <b>{frontmatter.estado}</b></span>}
+                {frontmatter.fecha && <span>Última revisión <b>{frontmatter.fecha}</b></span>}
+                {frontmatter.fuente && <span>Fuente <b>{frontmatter.fuente}</b></span>}
+            </div>
+        )}
+
+        <div class="kx-prose">
+            <slot />
+        </div>
+
+        <div class="kx-footnav">
+            <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
+            <a href="/astro-project-v2/">interlynkx</a>
+        </div>
+    </article>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+        const blocks = document.querySelectorAll('pre[data-language="mermaid"], pre code.language-mermaid');
+        blocks.forEach((block) => {
+            const pre = block.tagName === 'PRE' ? block : block.closest('pre');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mermaid';
+            wrapper.textContent = pre.textContent;
+            pre.replaceWith(wrapper);
+        });
+
+        if (document.querySelector('.mermaid')) {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                themeVariables: {
+                    background: '#F5F1E6',
+                    primaryColor: '#F5F1E6',
+                    primaryTextColor: '#23211d',
+                    primaryBorderColor: '#B08D57',
+                    lineColor: '#55503f',
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: '13px'
+                }
+            });
+        }
+    </script>
+</body>
+</html>

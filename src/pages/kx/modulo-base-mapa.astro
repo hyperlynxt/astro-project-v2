@@ -1,0 +1,701 @@
+---
+import '../../styles/global.css';
+
+const DOC = '/astro-project-v2/kx/modulo-base/';
+
+const chambers = [
+  {
+    n: '00.1', name: 'Contexto', sub: 'el sujeto', color: '#7BA08A',
+    line: 'Quién sos, cómo trabajás, qué te frena.',
+    href: `${DOC}#22-estructura-de-carpetas-concreta`,
+  },
+  {
+    n: '00.2', name: 'Estructura', sub: 'el sustrato', color: '#B08D57',
+    line: 'Cómo funciona el sistema, skills, convenciones.',
+    href: `${DOC}#22-estructura-de-carpetas-concreta`,
+  },
+  {
+    n: '00.3', name: 'Conocimiento', sub: 'el mundo', color: '#9B7CC8',
+    line: 'Lo que se sabe afuera, patrones vanguardistas.',
+    href: `${DOC}#22-estructura-de-carpetas-concreta`,
+  },
+  {
+    n: '00.4', name: 'Bitácora', sub: 'el motor', color: '#8B2626',
+    line: 'Qué pasó: sesiones, pendientes, patch notes.',
+    href: `${DOC}#22-estructura-de-carpetas-concreta`,
+  },
+];
+
+const clusters = [
+  {
+    label: 'el sujeto', color: '#7BA08A',
+    plans: [
+      { id: 'P03', title: 'Contexto personal', hook: 'Quién sos, cómo trabajás — la carpeta de mayor retorno.', href: `${DOC}#p03-contexto-personal` },
+      { id: 'P12', title: 'Matriz de dispositivos', hook: 'Qué se puede hacer, dónde, con qué fricción.', href: `${DOC}#p12-matriz-de-dispositivos-contextos-y-fricción` },
+      { id: 'P15', title: 'Dictado como entrada', hook: 'La capa que define la fricción de todo lo demás.', href: `${DOC}#p15-dictado-como-capa-de-entrada-consolidada` },
+    ],
+  },
+  {
+    label: 'el sustrato', color: '#B08D57',
+    plans: [
+      { id: 'P04', title: 'Wiki de skills', hook: 'Saber que una skill existe sin leerla entera.', href: `${DOC}#p04-estructura-viva-del-sistema-wiki-de-skills-y-sidecars` },
+      { id: 'P11', title: 'Terminología', hook: 'La terminología es la API del sistema.', href: `${DOC}#p11-terminología-y-ontología-del-sistema` },
+      { id: 'P16', title: 'Scaffolding automático', hook: 'Crear una skill crea su ecosistema, sola.', href: `${DOC}#p16-scaffolding-automático-crear-una-cosa-crea-su-ecosistema` },
+    ],
+  },
+  {
+    label: 'el mundo', color: '#9B7CC8',
+    plans: [
+      { id: 'P05', title: 'Conocimiento vanguardista', hook: 'Patrones de práctica emergente, no resúmenes.', href: `${DOC}#p05-conocimiento-técnico-vanguardista` },
+      { id: 'P06', title: 'NotebookLM: sí o no', hook: 'El lente explora; la bóveda es la memoria.', href: `${DOC}#p06-notebooklm-sí-o-no-criterio-de-ruteo-del-material-externo` },
+    ],
+  },
+  {
+    label: 'el motor', color: '#8B2626',
+    plans: [
+      { id: 'P01', title: 'Sesión sistémica', hook: 'El ritual de grabar pensando en voz alta.', href: `${DOC}#p01-la-unidad-sesión-de-pensamiento-sistémico` },
+      { id: 'P02', title: 'Destilar sesiones', hook: 'De sesión hablada a pendientes, ideas y specs.', href: `${DOC}#p02-skill-de-destilación-de-sesiones-sistémicas` },
+      { id: 'P07', title: 'Backlog trazable', hook: 'Un pendiente con su contexto completo linkeado.', href: `${DOC}#p07-backlog-sistémico-trazable` },
+      { id: 'P08', title: 'Auditoría semanal', hook: 'El sensor que detecta lo que no notaste.', href: `${DOC}#p08-auditoría-sistémica-semanal-con-el-modelo-más-capaz` },
+      { id: 'P09', title: 'Patch notes', hook: 'Memoria para vos y para la IA, sesión a sesión.', href: `${DOC}#p09-patch-notes-sesión-día-semana` },
+      { id: 'P10', title: 'Digest de pensamiento', hook: 'En qué pensaste, no qué hiciste.', href: `${DOC}#p10-digest-de-pensamiento` },
+      { id: 'P14', title: 'Economía de tokens', hook: 'Ventana, límite semanal, créditos — cada uno con su política.', href: `${DOC}#p14-economía-de-tokens-sesiones-y-créditos` },
+    ],
+  },
+  {
+    label: 'transversal', color: '#55503f',
+    plans: [
+      { id: 'P13', title: 'Portabilidad', hook: 'El corazón de Iron Man: se saca y se pone en otro sistema.', href: `${DOC}#p13-portabilidad-el-núcleo-como-paquete-transplantable` },
+      { id: 'P17', title: 'Prototipos', hook: 'Un lugar para probar sin ensuciar el sistema.', href: `${DOC}#p17-bajar-la-distancia-entre-idea-y-prototipo` },
+      { id: 'P18', title: 'Git y visualización', hook: 'Diagramas como texto, versionables, sin HTML que mantener.', href: `${DOC}#p18-git-github-y-visualización-html` },
+    ],
+  },
+];
+
+const leverage = [
+  { level: 'Parámetros', tier: 'bajo', tag: 'plugins, modelo, niveles' },
+  { level: 'Estructura de stocks', tier: 'medio', tag: 'las carpetas del núcleo' },
+  { level: 'Bucles de balance', tier: 'medio-alto', tag: 'status report, patch notes' },
+  { level: 'Bucles reforzadores', tier: 'alto', tag: 'contexto escrito, scaffolding', hot: true },
+  { level: 'Flujo de información', tier: 'alto', tag: 'wiki de skills, índices', hot: true },
+  { level: 'Reglas del sistema', tier: 'muy alto', tag: 'naming, contrato de tokens' },
+  { level: 'Auto-organización', tier: 'muy alto', tag: 'crear = integrarse solo', hot: true },
+  { level: 'Objetivos y paradigma', tier: 'máximo', tag: 'los cinco drivers escritos' },
+];
+
+const roadmap = [
+  { fase: 'Fase 0', tiempo: '4–6 h · un fin de semana', items: ['estructura del núcleo', 'los cinco drivers', 'glosario', 'wiki de skills', 'backlog migrado'], href: `${DOC}#fase-0--fundación-un-fin-de-semana-4-a-6-horas` },
+  { fase: 'Fase 1', tiempo: '4–5 h · semana 2', items: ['template de sesión', 'skill de destilación', 'historia de sistemas', 'patch note de sesión'], href: `${DOC}#fase-1--el-motor-segunda-semana-4-a-5-horas` },
+  { fase: 'Fase 2', tiempo: '3–4 h · semana 3', items: ['skill de auditoría', 'sidecars de skills', 'primer ritual semanal'], href: `${DOC}#fase-2--el-gobierno-tercera-semana-3-a-4-horas` },
+  { fase: 'Fase 3', tiempo: 'semana 4+', items: ['conocimiento externo', 'scaffolding automático', 'manifiesto + trasplante'], href: `${DOC}#fase-3--el-mundo-y-la-escala-cuarta-semana-en-adelante` },
+  { fase: 'Fase 4', tiempo: 'cuando haya ganas', items: ['digest de pensamiento', 'prototipos', 'dashboard'], href: `${DOC}#fase-4--refinamiento-cuando-haya-ganas` },
+];
+
+const risks = [
+  { title: 'Construir en vez de usar', line: 'Se siente productivo y no lo es.' },
+  { title: 'Sobre-estructuración', line: 'Taxonomías antes de tener qué clasificar.' },
+  { title: 'Desincronización', line: 'La wiki dice una cosa, la skill hace otra.' },
+  { title: 'El pantano de captura', line: 'Se captura más de lo que se destila.' },
+  { title: 'Acoplamiento del núcleo', line: 'No sobrevive a un trasplante.' },
+  { title: 'Semanas sin ritual', line: 'El sistema tiene que tolerarlas.' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Módulo Base — mapa visual · kx system</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FCFAF5;
+            --ink: #23211d;
+            --ink-soft: #55503f;
+            --ink-faint: #8c8070;
+            --line: #ddd4bf;
+            --teal: #2A4747;
+            --gold: #B08D57;
+            --seal: #8B2626;
+            --panel: #F5F1E6;
+            --panel-2: #EFE9D9;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+            color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── topbar ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 2rem;
+            border-bottom: 1px solid var(--line);
+        }
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            text-decoration: none;
+            font-family: "Reenie Beanie", cursive;
+            font-size: 1.6rem;
+            color: var(--ink);
+        }
+        .brand small {
+            font-family: "Inter", sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+        .crumbs {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .crumbs a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .crumbs a:hover { color: var(--teal); border-color: var(--teal); }
+        .crumbs .current { color: var(--ink); }
+
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* ── hero ── */
+        .hero { padding: 3.5rem 0 2.5rem; }
+        .kicker {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.9rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.3rem, 5.5vw, 3.6rem);
+            font-weight: 500;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+            margin: 0 0 0.7rem;
+        }
+        .hero .lede {
+            font-style: italic;
+            color: var(--ink-soft);
+            font-size: 1.2rem;
+            max-width: 56ch;
+            margin: 0 0 1.6rem;
+            line-height: 1.5;
+        }
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: "Inter", sans-serif;
+            font-size: 0.8rem;
+            text-decoration: none;
+            color: var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 2px;
+        }
+        .hero-cta:hover { color: var(--teal); border-color: var(--teal); }
+
+        /* ── stat strip ── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            margin: 2.5rem 0;
+        }
+        .stat {
+            padding: 1.4rem 1rem;
+            text-align: center;
+            border-left: 1px solid var(--line);
+        }
+        .stat:first-child { border-left: none; }
+        .stat b {
+            display: block;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 600;
+            color: var(--teal);
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+        .stat span {
+            font-family: "Inter", sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            color: var(--ink-soft);
+            line-height: 1.3;
+            display: block;
+        }
+
+        /* ── section heading ── */
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: 4rem 0 1.5rem;
+        }
+        .section-head h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        .section-head .num {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+        }
+        .section-note {
+            font-family: "Inter", sans-serif;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            margin: -0.8rem 0 1.6rem;
+            max-width: 60ch;
+        }
+
+        /* ── diagnóstico: flujo con fugas ── */
+        .flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 1.6rem;
+        }
+        .flow-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 90px;
+            align-items: center;
+            gap: 1rem;
+        }
+        .flow-label {
+            font-family: "Inter", sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .flow-bar-track {
+            height: 10px;
+            background: var(--panel-2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .flow-bar-fill { height: 100%; border-radius: 6px; }
+        .flow-status {
+            font-family: "Inter", sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            text-align: right;
+        }
+        .flow-status.ok { color: #4d7a5f; }
+        .flow-status.missing { color: var(--seal); }
+
+        /* ── cámaras ── */
+        .chambers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 640px) { .chambers { grid-template-columns: 1fr; } }
+        .chamber {
+            display: block;
+            text-decoration: none;
+            color: var(--ink);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--chamber-color, var(--gold));
+            border-radius: 8px;
+            padding: 1.3rem 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .chamber:hover { transform: translateX(3px); }
+        .chamber-top {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .chamber-dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--chamber-color, var(--gold));
+            flex-shrink: 0;
+        }
+        .chamber-n {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.68rem;
+            color: var(--ink-faint);
+        }
+        .chamber h3 { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.15rem; }
+        .chamber .sub {
+            font-family: "Inter", sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--chamber-color, var(--gold));
+            margin-bottom: 0.6rem;
+        }
+        .chamber p {
+            font-family: "Inter", sans-serif;
+            font-size: 0.86rem;
+            line-height: 1.5;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        /* ── planes: clusters ── */
+        .cluster { margin-bottom: 2rem; }
+        .cluster-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 0.8rem;
+        }
+        .cluster-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.7rem;
+        }
+        .plan-card {
+            display: block;
+            text-decoration: none;
+            color: var(--ink);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.9rem 1.05rem;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .plan-card:hover { border-color: var(--cluster-color, var(--gold)); transform: translateY(-2px); }
+        .plan-id {
+            display: inline-block;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--cluster-color, var(--gold));
+            margin-bottom: 0.35rem;
+        }
+        .plan-card h4 {
+            font-size: 0.98rem;
+            font-weight: 600;
+            margin: 0 0 0.3rem;
+        }
+        .plan-card p {
+            font-family: "Inter", sans-serif;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        /* ── escalera de apalancamiento ── */
+        .ladder { display: flex; flex-direction: column-reverse; gap: 0.5rem; }
+        .rung {
+            display: grid;
+            grid-template-columns: 170px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+        }
+        .rung.hot {
+            background: #FBF3E3;
+            border-color: var(--gold);
+        }
+        .rung-level {
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+        .rung-tag {
+            font-family: "Inter", sans-serif;
+            font-size: 0.76rem;
+            color: var(--ink-soft);
+        }
+        .rung-tier {
+            font-family: "Inter", sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            white-space: nowrap;
+        }
+        .rung.hot .rung-tier { color: var(--gold); font-weight: 600; }
+
+        /* ── roadmap ── */
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.8rem;
+        }
+        @media (max-width: 860px) { .roadmap { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .roadmap { grid-template-columns: 1fr; } }
+        .phase {
+            display: block;
+            text-decoration: none;
+            color: var(--ink);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 1.1rem 1.1rem 1.2rem;
+            position: relative;
+        }
+        .phase:hover { border-color: var(--teal); }
+        .phase-n {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--teal);
+            margin-bottom: 0.2rem;
+        }
+        .phase-t {
+            font-family: "Inter", sans-serif;
+            font-size: 0.68rem;
+            color: var(--ink-faint);
+            margin-bottom: 0.8rem;
+        }
+        .phase ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+        .phase li {
+            font-family: "Inter", sans-serif;
+            font-size: 0.76rem;
+            color: var(--ink-soft);
+            line-height: 1.35;
+            padding-left: 0.8rem;
+            position: relative;
+        }
+        .phase li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0.5em;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        /* ── riesgos ── */
+        .risks {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+        @media (max-width: 700px) { .risks { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 460px) { .risks { grid-template-columns: 1fr; } }
+        .risk {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--seal);
+            border-radius: 6px;
+            padding: 0.9rem 1.05rem;
+        }
+        .risk h4 { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.25rem; }
+        .risk p {
+            font-family: "Inter", sans-serif;
+            font-size: 0.76rem;
+            color: var(--ink-soft);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* ── footer nav ── */
+        .footnav {
+            margin: 5rem 0 4rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            font-family: "Inter", sans-serif;
+            font-size: 0.8rem;
+        }
+        .footnav a { text-decoration: none; color: var(--ink-soft); }
+        .footnav a:hover { color: var(--teal); }
+        .footnav .primary { color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+        .footnav .primary:hover { color: var(--teal); border-color: var(--teal); }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
+        <nav class="crumbs">
+            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">mapa</span>
+        </nav>
+    </div>
+
+    <div class="wrap">
+        <section class="hero">
+            <div class="kicker">módulo 00 · vista visual</div>
+            <h1>Módulo Base, de un vistazo</h1>
+            <p class="lede">
+                Lo mismo que el análisis completo, pero como mapa: números, cámaras,
+                dieciocho planes agrupados, y el camino sugerido para construirlo.
+            </p>
+            <a class="hero-cta" href={DOC}>leer el análisis completo &rarr;</a>
+        </section>
+
+        <div class="stats">
+            <div class="stat"><b>18</b><span>planes de acción</span></div>
+            <div class="stat"><b>4</b><span>cámaras del núcleo</span></div>
+            <div class="stat"><b>5</b><span>drivers del sistema</span></div>
+            <div class="stat"><b>2</b><span>flujos que faltan</span></div>
+            <div class="stat"><b>5</b><span>fases de roadmap</span></div>
+        </div>
+
+        <div class="section-head">
+            <h2>El diagnóstico, en una imagen</h2>
+            <span class="num">§1.4</span>
+        </div>
+        <p class="section-note">
+            Entra mucho, sale poco. Sin destilación ni purga, la captura se convierte en acumulación.
+        </p>
+        <div class="flow">
+            <div class="flow-row">
+                <span class="flow-label">Captura</span>
+                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 95%; background: #6f9c7d;"></div></div>
+                <span class="flow-status ok">existe</span>
+            </div>
+            <div class="flow-row">
+                <span class="flow-label">Destilación</span>
+                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 4%; background: var(--seal);"></div></div>
+                <span class="flow-status missing">no existe</span>
+            </div>
+            <div class="flow-row">
+                <span class="flow-label">Gobierno</span>
+                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 4%; background: var(--seal);"></div></div>
+                <span class="flow-status missing">no existe</span>
+            </div>
+            <div class="flow-row">
+                <span class="flow-label">Purga</span>
+                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 0%; background: var(--seal);"></div></div>
+                <span class="flow-status missing">no existe</span>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Las cuatro cámaras del Núcleo</h2>
+            <span class="num">§2.2</span>
+        </div>
+        <p class="section-note">
+            El sustrato, el sujeto, el mundo, y la bitácora que los mueve. El corazón de Iron Man.
+        </p>
+        <div class="chambers">
+            {chambers.map((c) => (
+                <a class="chamber" href={c.href} style={`--chamber-color: ${c.color}`}>
+                    <div class="chamber-top">
+                        <span class="chamber-dot"></span>
+                        <span class="chamber-n">{c.n}</span>
+                    </div>
+                    <h3>{c.name}</h3>
+                    <div class="sub">{c.sub}</div>
+                    <p>{c.line}</p>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Los dieciocho planes</h2>
+            <span class="num">§3</span>
+        </div>
+        <p class="section-note">
+            Agrupados por a qué cámara del núcleo alimentan. Cada tarjeta lleva directo a su plan completo.
+        </p>
+        {clusters.map((cl) => (
+            <div class="cluster">
+                <div class="cluster-head">
+                    <span class="cluster-dot" style={`background:${cl.color}`}></span>
+                    {cl.label}
+                </div>
+                <div class="plan-grid">
+                    {cl.plans.map((p) => (
+                        <a class="plan-card" href={p.href} style={`--cluster-color: ${cl.color}`}>
+                            <span class="plan-id">{p.id}</span>
+                            <h4>{p.title}</h4>
+                            <p>{p.hook}</p>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        ))}
+
+        <div class="section-head">
+            <h2>Dónde apalancar primero</h2>
+            <span class="num">§1.6</span>
+        </div>
+        <p class="section-note">
+            De abajo hacia arriba: parámetros cambian poco, paradigma cambia todo. Lo dorado es donde más rinde cada hora.
+        </p>
+        <div class="ladder">
+            {leverage.map((r) => (
+                <div class={`rung ${r.hot ? 'hot' : ''}`}>
+                    <span class="rung-level">{r.level}</span>
+                    <span class="rung-tag">{r.tag}</span>
+                    <span class="rung-tier">{r.tier}</span>
+                </div>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>El roadmap</h2>
+            <span class="num">§5</span>
+        </div>
+        <p class="section-note">
+            La fase 0 sola ya justifica el esfuerzo, incluso si nunca se hace el resto.
+        </p>
+        <div class="roadmap">
+            {roadmap.map((ph) => (
+                <a class="phase" href={ph.href}>
+                    <div class="phase-n">{ph.fase}</div>
+                    <div class="phase-t">{ph.tiempo}</div>
+                    <ul>
+                        {ph.items.map((it) => <li>{it}</li>)}
+                    </ul>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Riesgos a vigilar</h2>
+            <span class="num">§6</span>
+        </div>
+        <div class="risks">
+            {risks.map((r) => (
+                <div class="risk">
+                    <h4>{r.title}</h4>
+                    <p>{r.line}</p>
+                </div>
+            ))}
+        </div>
+
+        <div class="footnav">
+            <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
+            <a class="primary" href={DOC}>leer el análisis completo &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>

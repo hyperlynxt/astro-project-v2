@@ -1,0 +1,287 @@
+---
+import '../../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>kx system — hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FCFAF5;
+            --ink: #23211d;
+            --ink-soft: #55503f;
+            --line: #ddd4bf;
+            --teal: #2A4747;
+            --gold: #B08D57;
+            --seal: #8B2626;
+            --panel: #F5F1E6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+            color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .kx-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 2rem;
+            border-bottom: 1px solid var(--line);
+        }
+        .kx-brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            text-decoration: none;
+            font-family: "Reenie Beanie", cursive;
+            font-size: 1.6rem;
+            color: var(--ink);
+        }
+        .kx-brand small {
+            font-family: "Inter", sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+        .kx-crumbs {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .kx-crumbs a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .kx-crumbs a:hover { color: var(--teal); border-color: var(--teal); }
+
+        .hero {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 4.5rem 1.75rem 2.5rem;
+        }
+        .hero .kicker {
+            font-family: "Inter", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 3.6rem);
+            font-weight: 500;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+            margin: 0 0 1.1rem;
+        }
+        .hero h1 em { font-style: italic; color: var(--teal); }
+        .hero p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: var(--ink-soft);
+            max-width: 62ch;
+        }
+
+        .grid {
+            max-width: 780px;
+            margin: 1rem auto 0;
+            padding: 0 1.75rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .module-card {
+            display: block;
+            text-decoration: none;
+            color: var(--ink);
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 10px;
+            padding: 1.5rem 1.75rem;
+            transition: border-color 0.25s ease, transform 0.25s ease;
+        }
+        .module-card.is-stub {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .module-links {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 1rem;
+            padding-top: 0.9rem;
+            border-top: 1px solid var(--line);
+        }
+        .module-links a {
+            font-family: "Inter", sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--teal);
+            border-bottom: 1px solid transparent;
+        }
+        .module-links a:hover { border-color: var(--teal); }
+        .module-links a:first-child { color: var(--gold); }
+        .module-links a:first-child:hover { border-color: var(--gold); }
+
+        .dash-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 0.5rem; }
+        @media (max-width: 760px) { .dash-row { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 560px) { .dash-row { grid-template-columns: 1fr; } }
+        .dash-card {
+            display: block; text-decoration: none; color: var(--ink);
+            background: var(--ink); background: linear-gradient(135deg, #2A2722, #1c1a17);
+            border-radius: 10px; padding: 1.4rem 1.6rem;
+            transition: transform 0.25s ease;
+        }
+        .dash-card:hover { transform: translateY(-3px); }
+        .dash-kicker {
+            font-family: "Inter", sans-serif; font-size: 0.64rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.5rem;
+        }
+        .dash-card h3 { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.4rem; color: #FCFAF5; }
+        .dash-card p { font-family: "Inter", sans-serif; font-size: 0.82rem; color: #d9d3c4; margin: 0; line-height: 1.5; }
+
+        .module-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.4rem;
+        }
+        .module-id {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.72rem;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+        }
+        .module-status {
+            font-family: "Inter", sans-serif;
+            font-size: 0.66rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+        .module-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 0 0 0.4rem;
+        }
+        .module-desc {
+            font-family: "Inter", sans-serif;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        .section-label {
+            font-family: "Inter", sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin: 2.5rem 0 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+        }
+        .grid > .section-label:first-child { border-top: none; padding-top: 0; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="kx-topbar">
+        <a href="/astro-project-v2/kx/" class="kx-brand">& <small>kx system</small></a>
+        <nav class="kx-crumbs">
+            <a href="/astro-project-v2/">interlynkx</a> / kx
+        </nav>
+    </div>
+
+    <section class="hero">
+        <div class="kicker">back end</div>
+        <h1>ground up <em>kx</em> system</h1>
+        <p>
+            El andamiaje detrás de interlynkx: cómo está construido el sistema que produce todo
+            lo demás en esta página. Sesiones de pensamiento, arquitectura de contexto, skills,
+            flujos. Este hub crece a medida que se van diseñando y documentando los módulos.
+        </p>
+    </section>
+
+    <div class="grid">
+        <div class="section-label">dashboard</div>
+        <div class="dash-row">
+            <a class="dash-card" href="/astro-project-v2/kx/sistema/">
+                <span class="dash-kicker">estado actual + visión</span>
+                <h3>Sistema</h3>
+                <p>Módulos y piezas: qué existe, en qué estado, qué es todavía solo idea.</p>
+            </a>
+            <a class="dash-card" href="/astro-project-v2/kx/tareas/">
+                <span class="dash-kicker">backlog</span>
+                <h3>Tareas</h3>
+                <p>Qué queda, agrupado por quién lo puede desbloquear.</p>
+            </a>
+            <a class="dash-card" href="/astro-project-v2/kx/anatomia/">
+                <span class="dash-kicker">por tipo de objeto</span>
+                <h3>Anatomía</h3>
+                <p>Módulos, skills, templates, stack, integraciones — todo cortado horizontal, actual vs. proyectado.</p>
+            </a>
+        </div>
+
+        <div class="section-label">00 · núcleo — contexto e infraestructura</div>
+
+        <div class="module-card">
+            <div class="module-row">
+                <span class="module-id">00 · módulo base</span>
+                <span class="module-status">propuesta v1</span>
+            </div>
+            <h3 class="module-title">Análisis sistémico y planes de acción</h3>
+            <p class="module-desc">
+                Diagnóstico completo del módulo de contexto e infraestructura: stocks y flujos,
+                bucles de realimentación, la arquitectura del Núcleo, y dieciocho planes de
+                acción concretos, uno por idea, con software, fases y criterios de éxito.
+            </p>
+            <div class="module-links">
+                <a href="/astro-project-v2/kx/modulo-base-mapa/">mapa visual</a>
+                <a href="/astro-project-v2/kx/modulo-base/">análisis completo</a>
+            </div>
+        </div>
+
+        <div class="section-label">próximos módulos</div>
+
+        <div class="module-card is-stub">
+            <div class="module-row">
+                <span class="module-id">01 · sesiones</span>
+                <span class="module-status">sin documentar</span>
+            </div>
+            <h3 class="module-title">Sesiones de pensamiento sistémico</h3>
+            <p class="module-desc">Pipeline de destilación: de sesión dictada a contexto, pendientes y specs.</p>
+        </div>
+
+        <div class="module-card is-stub">
+            <div class="module-row">
+                <span class="module-id">02 · skills</span>
+                <span class="module-status">sin documentar</span>
+            </div>
+            <h3 class="module-title">Wiki de skills y flujos</h3>
+            <p class="module-desc">Catálogo vivo de todo lo que el sistema sabe ejecutar.</p>
+        </div>
+    </div>
+</body>
+</html>
