@@ -32,13 +32,16 @@ const ESTADO_LABEL: Record<string, string> = {
   activo: 'live', finalizado: 'finalizado', pausado: 'pausado', deprecado: 'deprecado',
 };
 const ESTADO_COLOR: Record<string, string> = {
-  idea: '#A39985', disenado: '#7C6FC4', construyendo: '#C6862E',
-  activo: '#2F8F94', finalizado: '#1F6367', pausado: '#B8657A', deprecado: '#A39985',
+  idea: 'var(--st-idea)', disenado: 'var(--st-disenado)', construyendo: 'var(--st-construyendo)',
+  activo: 'var(--st-activo)', finalizado: 'var(--st-finalizado)', pausado: 'var(--st-pausado)', deprecado: 'var(--st-idea)',
 };
 ---
 
 <html lang="es">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
@@ -51,29 +54,62 @@ const ESTADO_COLOR: Record<string, string> = {
             --ink: #26241F; --ink-soft: #6B6459; --ink-faint: #A39985;
             --paper: #FFFFFF; --cream: #FDFCF9; --line: #ECE7DC; --line-soft: #F2EEE4;
             --teal: #2F8F94; --teal-deep: #1F6367; --teal-tint: #E9F7F7; --teal-mid: #BFE9EA;
-            --gold: #B08D57;
+            --gold: #B08D57; --nav-bg: rgba(253,252,249,0.82);
+            --st-idea: #A39985; --st-disenado: #7C6FC4; --st-construyendo: #C6862E;
+            --st-activo: #2F8F94; --st-finalizado: #1F6367; --st-pausado: #B8657A;
+        }
+        html.theme-dark {
+            --ink: #EDE9DD; --ink-soft: #B7AF9C; --ink-faint: #857D6C;
+            --paper: #211E18; --cream: #15130E; --line: #37342A; --line-soft: #2B271E;
+            --teal: #4FD8DD; --teal-deep: #8CEBEE; --teal-tint: rgba(79,216,221,0.12); --teal-mid: rgba(79,216,221,0.4);
+            --gold: #E6BA76; --nav-bg: rgba(21,19,14,0.85);
+            --st-idea: #A79B87; --st-disenado: #A69AF0; --st-construyendo: #E6A94E;
+            --st-activo: #4FD8DD; --st-finalizado: #8CEBEE; --st-pausado: #E68CA3;
         }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            margin: 0; background: var(--cream); color: var(--ink);
+            margin: 0; background-color: var(--cream); color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
         }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position:
+                0px 0px,
+                40px 60px,
+                80px 20px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
         a { color: inherit; }
+        .nav, .wrap { position: relative; z-index: 1; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(38,36,31,0.12); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(128,120,100,0.15); border-radius: 10px; }
 
         .nav {
             position: sticky; top: 0; z-index: 40;
             display: flex; align-items: center; justify-content: space-between;
             height: 78px; padding: 0 2.2rem;
-            background: rgba(253,252,249,0.82);
+            background: var(--nav-bg);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--line);
         }
         .nav-left { display: flex; align-items: center; gap: 1.2rem; }
+        .nav-right-group { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+            cursor: pointer; font-size: 1rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal-mid); transform: translateY(-1px); }
         .nav-brand {
             font-family: "Inter", sans-serif; font-weight: 800; font-size: 0.98rem;
             letter-spacing: -0.01em; text-decoration: none; color: var(--ink);
@@ -137,12 +173,16 @@ const ESTADO_COLOR: Record<string, string> = {
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="nav">
         <div class="nav-left">
             <a href="/astro-project-v2/kx/" class="nav-brand"><span class="dot"></span>kx atlas system</a>
             <span class="crumb">/ <a href="/astro-project-v2/kx/areas/">áreas</a> / {area.label.toLowerCase()}</span>
         </div>
-        <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
+        <div class="nav-right-group">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+            <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
+        </div>
     </div>
 
     <div class="wrap">
@@ -170,7 +210,7 @@ const ESTADO_COLOR: Record<string, string> = {
                                 </div>
                                 <div class="prow-right">
                                     <span class="prow-fecha">{fechaCorta(p.data.actualizado)}</span>
-                                    <span class="prow-chip"><span class="dot" style={`background: ${ESTADO_COLOR[p.data.estado] ?? '#A39985'}`}></span>{ESTADO_LABEL[p.data.estado] ?? p.data.estado}</span>
+                                    <span class="prow-chip"><span class="dot" style={`background: ${ESTADO_COLOR[p.data.estado] ?? 'var(--st-idea)'}`}></span>{ESTADO_LABEL[p.data.estado] ?? p.data.estado}</span>
                                 </div>
                             </div>
                         ))}
@@ -188,7 +228,7 @@ const ESTADO_COLOR: Record<string, string> = {
                                     </div>
                                     <div class="prow-right">
                                         <span class="prow-fecha">{fechaCorta(p.data.actualizado)}</span>
-                                        <span class="prow-chip"><span class="dot" style={`background: ${ESTADO_COLOR[p.data.estado] ?? '#A39985'}`}></span>{ESTADO_LABEL[p.data.estado] ?? p.data.estado}</span>
+                                        <span class="prow-chip"><span class="dot" style={`background: ${ESTADO_COLOR[p.data.estado] ?? 'var(--st-idea)'}`}></span>{ESTADO_LABEL[p.data.estado] ?? p.data.estado}</span>
                                     </div>
                                 </div>
                             ))}
@@ -241,5 +281,16 @@ const ESTADO_COLOR: Record<string, string> = {
             <a href="/astro-project-v2/kx/">volver al hub</a>
         </div>
     </div>
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+    </script>
 </body>
 </html>

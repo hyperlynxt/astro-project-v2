@@ -5,10 +5,10 @@ import { AREAS, AREA_DE_TIPO_PIEZA } from '../../../lib/kx';
 const piezas = await getCollection('kxPiezas');
 
 const PALETA = [
-  { c: '#2F8F94', tint: '#E9F7F7', mid: '#BFE9EA', glow: 'rgba(47,143,148,0.35)' },
-  { c: '#C6862E', tint: '#FBF3E4', mid: '#F0D9A8', glow: 'rgba(198,134,46,0.32)' },
-  { c: '#B8657A', tint: '#FBEDF0', mid: '#F0C6D0', glow: 'rgba(184,101,122,0.3)' },
-  { c: '#7C6FC4', tint: '#F0EEFB', mid: '#D6CFF2', glow: 'rgba(124,111,196,0.32)' },
+  { c: 'var(--pal-1)', tint: 'var(--pal-1-tint)', mid: 'var(--pal-1-mid)', glow: 'var(--pal-1-glow)' },
+  { c: 'var(--pal-2)', tint: 'var(--pal-2-tint)', mid: 'var(--pal-2-mid)', glow: 'var(--pal-2-glow)' },
+  { c: 'var(--pal-3)', tint: 'var(--pal-3-tint)', mid: 'var(--pal-3-mid)', glow: 'var(--pal-3-glow)' },
+  { c: 'var(--pal-4)', tint: 'var(--pal-4-tint)', mid: 'var(--pal-4-mid)', glow: 'var(--pal-4-glow)' },
 ];
 
 const areasConDatos = AREAS.map((a, i) => {
@@ -20,6 +20,9 @@ const areasConDatos = AREAS.map((a, i) => {
 
 <html lang="es">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
@@ -32,26 +35,63 @@ const areasConDatos = AREAS.map((a, i) => {
             --ink: #26241F; --ink-soft: #6B6459; --ink-faint: #A39985;
             --paper: #FFFFFF; --cream: #FDFCF9; --line: #ECE7DC;
             --teal: #2F8F94; --teal-deep: #1F6367; --teal-tint: #E9F7F7; --teal-mid: #BFE9EA;
-            --gold: #B08D57;
+            --gold: #B08D57; --nav-bg: rgba(253,252,249,0.82);
+            --pal-1: #2F8F94; --pal-1-tint: #E9F7F7; --pal-1-mid: #BFE9EA; --pal-1-glow: rgba(47,143,148,0.35);
+            --pal-2: #C6862E; --pal-2-tint: #FBF3E4; --pal-2-mid: #F0D9A8; --pal-2-glow: rgba(198,134,46,0.32);
+            --pal-3: #B8657A; --pal-3-tint: #FBEDF0; --pal-3-mid: #F0C6D0; --pal-3-glow: rgba(184,101,122,0.3);
+            --pal-4: #7C6FC4; --pal-4-tint: #F0EEFB; --pal-4-mid: #D6CFF2; --pal-4-glow: rgba(124,111,196,0.32);
+        }
+        html.theme-dark {
+            --ink: #EDE9DD; --ink-soft: #B7AF9C; --ink-faint: #857D6C;
+            --paper: #211E18; --cream: #15130E; --line: #37342A;
+            --teal: #4FD8DD; --teal-deep: #8CEBEE; --teal-tint: rgba(79,216,221,0.12); --teal-mid: rgba(79,216,221,0.4);
+            --gold: #E6BA76; --nav-bg: rgba(21,19,14,0.85);
+            --pal-1: #4FD8DD; --pal-1-tint: rgba(79,216,221,0.10); --pal-1-mid: rgba(79,216,221,0.4); --pal-1-glow: rgba(79,216,221,0.55);
+            --pal-2: #E6A94E; --pal-2-tint: rgba(230,169,78,0.10); --pal-2-mid: rgba(230,169,78,0.4); --pal-2-glow: rgba(230,169,78,0.5);
+            --pal-3: #E68CA3; --pal-3-tint: rgba(230,140,163,0.10); --pal-3-mid: rgba(230,140,163,0.4); --pal-3-glow: rgba(230,140,163,0.5);
+            --pal-4: #A69AF0; --pal-4-tint: rgba(166,154,240,0.10); --pal-4-mid: rgba(166,154,240,0.4); --pal-4-glow: rgba(166,154,240,0.5);
         }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            margin: 0; background: var(--cream); color: var(--ink);
+            margin: 0; background-color: var(--cream); color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
         }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position:
+                0px 0px,
+                40px 60px,
+                80px 20px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
         a { color: inherit; }
+        .nav, .wrap { position: relative; z-index: 1; }
 
         .nav {
             position: sticky; top: 0; z-index: 40;
             display: flex; align-items: center; justify-content: space-between;
             height: 78px; padding: 0 2.2rem;
-            background: rgba(253,252,249,0.82);
+            background: var(--nav-bg);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--line);
         }
         .nav-left { display: flex; align-items: center; gap: 1.2rem; }
+        .nav-right-group { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+            cursor: pointer; font-size: 1rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal-mid); transform: translateY(-1px); }
         .nav-brand {
             font-family: "Inter", sans-serif; font-weight: 800; font-size: 0.98rem;
             letter-spacing: -0.01em; text-decoration: none; color: var(--ink);
@@ -80,9 +120,9 @@ const areasConDatos = AREAS.map((a, i) => {
         .area-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--ac); opacity: 0.85; }
         .area-card:hover {
             transform: translateY(-4px);
-            background: linear-gradient(160deg, #FFFFFF 0%, var(--ac-tint) 130%);
+            background: linear-gradient(160deg, var(--paper) 0%, var(--ac-tint) 130%);
             border-color: var(--ac-mid);
-            box-shadow: 0 18px 34px -16px var(--ac-glow);
+            box-shadow: 0 0 0 1px var(--ac-mid), 0 18px 40px -14px var(--ac-glow);
         }
         .area-card h3 { font-size: 1.14rem; font-weight: 600; margin: 0.3rem 0 0.35rem; }
         .area-card p { font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-soft); margin: 0; line-height: 1.5; min-height: 2.4em; }
@@ -101,12 +141,16 @@ const areasConDatos = AREAS.map((a, i) => {
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="nav">
         <div class="nav-left">
             <a href="/astro-project-v2/kx/" class="nav-brand"><span class="dot"></span>kx atlas system</a>
             <span class="crumb">/ áreas</span>
         </div>
-        <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
+        <div class="nav-right-group">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+            <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
+        </div>
     </div>
 
     <div class="wrap">
@@ -134,5 +178,16 @@ const areasConDatos = AREAS.map((a, i) => {
             <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
         </div>
     </div>
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+    </script>
 </body>
 </html>

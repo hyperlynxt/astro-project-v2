@@ -5,22 +5,22 @@ const DOC = '/astro-project-v2/kx/modulo-base/';
 
 const chambers = [
   {
-    n: '00.1', name: 'Contexto', sub: 'el sujeto', color: '#7BA08A',
+    n: '00.1', name: 'Contexto', sub: 'el sujeto', color: 'var(--st-activo)',
     line: 'Quién sos, cómo trabajás, qué te frena.',
     href: `${DOC}#22-estructura-de-carpetas-concreta`,
   },
   {
-    n: '00.2', name: 'Estructura', sub: 'el sustrato', color: '#B08D57',
+    n: '00.2', name: 'Estructura', sub: 'el sustrato', color: 'var(--gold)',
     line: 'Cómo funciona el sistema, skills, convenciones.',
     href: `${DOC}#22-estructura-de-carpetas-concreta`,
   },
   {
-    n: '00.3', name: 'Conocimiento', sub: 'el mundo', color: '#9B7CC8',
+    n: '00.3', name: 'Conocimiento', sub: 'el mundo', color: 'var(--st-disenado)',
     line: 'Lo que se sabe afuera, patrones vanguardistas.',
     href: `${DOC}#22-estructura-de-carpetas-concreta`,
   },
   {
-    n: '00.4', name: 'Bitácora', sub: 'el motor', color: '#8B2626',
+    n: '00.4', name: 'Bitácora', sub: 'el motor', color: 'var(--seal)',
     line: 'Qué pasó: sesiones, pendientes, patch notes.',
     href: `${DOC}#22-estructura-de-carpetas-concreta`,
   },
@@ -28,7 +28,7 @@ const chambers = [
 
 const clusters = [
   {
-    label: 'el sujeto', color: '#7BA08A',
+    label: 'el sujeto', color: 'var(--st-activo)',
     plans: [
       { id: 'P03', title: 'Contexto personal', hook: 'Quién sos, cómo trabajás — la carpeta de mayor retorno.', href: `${DOC}#p03-contexto-personal` },
       { id: 'P12', title: 'Matriz de dispositivos', hook: 'Qué se puede hacer, dónde, con qué fricción.', href: `${DOC}#p12-matriz-de-dispositivos-contextos-y-fricción` },
@@ -36,7 +36,7 @@ const clusters = [
     ],
   },
   {
-    label: 'el sustrato', color: '#B08D57',
+    label: 'el sustrato', color: 'var(--gold)',
     plans: [
       { id: 'P04', title: 'Wiki de skills', hook: 'Saber que una skill existe sin leerla entera.', href: `${DOC}#p04-estructura-viva-del-sistema-wiki-de-skills-y-sidecars` },
       { id: 'P11', title: 'Terminología', hook: 'La terminología es la API del sistema.', href: `${DOC}#p11-terminología-y-ontología-del-sistema` },
@@ -44,14 +44,14 @@ const clusters = [
     ],
   },
   {
-    label: 'el mundo', color: '#9B7CC8',
+    label: 'el mundo', color: 'var(--st-disenado)',
     plans: [
       { id: 'P05', title: 'Conocimiento vanguardista', hook: 'Patrones de práctica emergente, no resúmenes.', href: `${DOC}#p05-conocimiento-técnico-vanguardista` },
       { id: 'P06', title: 'NotebookLM: sí o no', hook: 'El lente explora; la bóveda es la memoria.', href: `${DOC}#p06-notebooklm-sí-o-no-criterio-de-ruteo-del-material-externo` },
     ],
   },
   {
-    label: 'el motor', color: '#8B2626',
+    label: 'el motor', color: 'var(--seal)',
     plans: [
       { id: 'P01', title: 'Sesión sistémica', hook: 'El ritual de grabar pensando en voz alta.', href: `${DOC}#p01-la-unidad-sesión-de-pensamiento-sistémico` },
       { id: 'P02', title: 'Destilar sesiones', hook: 'De sesión hablada a pendientes, ideas y specs.', href: `${DOC}#p02-skill-de-destilación-de-sesiones-sistémicas` },
@@ -63,7 +63,7 @@ const clusters = [
     ],
   },
   {
-    label: 'transversal', color: '#55503f',
+    label: 'transversal', color: 'var(--ink-soft)',
     plans: [
       { id: 'P13', title: 'Portabilidad', hook: 'El corazón de Iron Man: se saca y se pone en otro sistema.', href: `${DOC}#p13-portabilidad-el-núcleo-como-paquete-transplantable` },
       { id: 'P17', title: 'Prototipos', hook: 'Un lugar para probar sin ensuciar el sistema.', href: `${DOC}#p17-bajar-la-distancia-entre-idea-y-prototipo` },
@@ -104,6 +104,9 @@ const risks = [
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
@@ -123,21 +126,44 @@ const risks = [
             --seal: #8B2626;
             --panel: #F5F1E6;
             --panel-2: #EFE9D9;
+            --st-idea: #8c8070; --st-disenado: #9B7CC8; --st-construyendo: #B08D57;
+            --st-activo: #7BA08A; --st-finalizado: #2A4747; --st-pausado: #B4BCC0;
+            --teal-glow: rgba(42,71,71,0.25); --tint-warn: #FBF3E3;
+        }
+        html.theme-dark {
+            --bg: #15130E;
+            --ink: #EDE9DD;
+            --ink-soft: #B7AF9C;
+            --ink-faint: #857D6C;
+            --line: #37342A;
+            --teal: #4FD8DD;
+            --gold: #E6BA76;
+            --seal: #FF7A6B;
+            --panel: #201D16;
+            --panel-2: #29251C;
+            --st-idea: #A79B87; --st-disenado: #B79FFF; --st-construyendo: #E6BA76;
+            --st-activo: #8FE8BC; --st-finalizado: #4FD8DD; --st-pausado: #C7D3D8;
+            --teal-glow: rgba(79,216,221,0.45); --tint-warn: rgba(230,186,118,0.1);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             background-color: var(--bg);
-            background-image:
-                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-position: 0px 0px, 40px 60px;
-            background-repeat: repeat;
             color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
+        .topbar, .wrap { position: relative; z-index: 1; }
 
         /* ── topbar ── */
         .topbar {
@@ -147,6 +173,15 @@ const risks = [
             padding: 1.1rem 2rem;
             border-bottom: 1px solid var(--line);
         }
+        .topbar-right { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+            cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal); transform: translateY(-1px); }
         .brand {
             display: flex;
             align-items: baseline;
@@ -234,6 +269,7 @@ const risks = [
             color: var(--teal);
             line-height: 1;
             margin-bottom: 0.4rem;
+            text-shadow: 0 0 16px var(--teal-glow);
         }
         .stat span {
             font-family: "Inter", sans-serif;
@@ -307,7 +343,7 @@ const risks = [
             text-transform: uppercase;
             text-align: right;
         }
-        .flow-status.ok { color: #4d7a5f; }
+        .flow-status.ok { color: var(--st-activo); }
         .flow-status.missing { color: var(--seal); }
 
         /* ── cámaras ── */
@@ -426,7 +462,7 @@ const risks = [
             border: 1px solid var(--line);
         }
         .rung.hot {
-            background: #FBF3E3;
+            background: var(--tint-warn);
             border-color: var(--gold);
         }
         .rung-level {
@@ -541,11 +577,15 @@ const risks = [
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="topbar">
         <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
-        <nav class="crumbs">
-            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">mapa</span>
-        </nav>
+        <div class="topbar-right">
+            <nav class="crumbs">
+                <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">mapa</span>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+        </div>
     </div>
 
     <div class="wrap">
@@ -577,7 +617,7 @@ const risks = [
         <div class="flow">
             <div class="flow-row">
                 <span class="flow-label">Captura</span>
-                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 95%; background: #6f9c7d;"></div></div>
+                <div class="flow-bar-track"><div class="flow-bar-fill" style="width: 95%; background: var(--st-activo);"></div></div>
                 <span class="flow-status ok">existe</span>
             </div>
             <div class="flow-row">
@@ -697,5 +737,16 @@ const risks = [
             <a class="primary" href={DOC}>leer el análisis completo &rarr;</a>
         </div>
     </div>
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+    </script>
 </body>
 </html>

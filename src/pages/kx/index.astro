@@ -52,10 +52,10 @@ const seMovioUltimo = todosLosObjetos
 
 // ── entrar por área ──
 const PALETA = [
-  { c: '#2F8F94', tint: '#E9F7F7', mid: '#BFE9EA', glow: 'rgba(47,143,148,0.35)' },
-  { c: '#C6862E', tint: '#FBF3E4', mid: '#F0D9A8', glow: 'rgba(198,134,46,0.32)' },
-  { c: '#B8657A', tint: '#FBEDF0', mid: '#F0C6D0', glow: 'rgba(184,101,122,0.3)' },
-  { c: '#7C6FC4', tint: '#F0EEFB', mid: '#D6CFF2', glow: 'rgba(124,111,196,0.32)' },
+  { c: 'var(--pal-1)', tint: 'var(--pal-1-tint)', mid: 'var(--pal-1-mid)', glow: 'var(--pal-1-glow)' },
+  { c: 'var(--pal-2)', tint: 'var(--pal-2-tint)', mid: 'var(--pal-2-mid)', glow: 'var(--pal-2-glow)' },
+  { c: 'var(--pal-3)', tint: 'var(--pal-3-tint)', mid: 'var(--pal-3-mid)', glow: 'var(--pal-3-glow)' },
+  { c: 'var(--pal-4)', tint: 'var(--pal-4-tint)', mid: 'var(--pal-4-mid)', glow: 'var(--pal-4-glow)' },
 ];
 const areasConDatos = AREAS.map((a, i) => {
   const piezasArea = piezas.filter((p) => AREA_DE_TIPO_PIEZA[p.data.tipo] === a.slug);
@@ -91,6 +91,11 @@ const ESTADO_LABEL: Record<string, string> = {
 
 <html lang="es">
 <head>
+    <script is:inline>
+        try {
+            if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark');
+        } catch (e) {}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
@@ -111,18 +116,65 @@ const ESTADO_LABEL: Record<string, string> = {
             --teal-deep: #1F6367;
             --teal-tint: #E9F7F7;
             --teal-mid: #BFE9EA;
+            --teal-glow: rgba(47,143,148,0.28);
             --gold: #B08D57;
+            --nav-bg: rgba(253,252,249,0.82);
+            --pal-1: #2F8F94; --pal-1-tint: #E9F7F7; --pal-1-mid: #BFE9EA; --pal-1-glow: rgba(47,143,148,0.35);
+            --pal-2: #C6862E; --pal-2-tint: #FBF3E4; --pal-2-mid: #F0D9A8; --pal-2-glow: rgba(198,134,46,0.32);
+            --pal-3: #B8657A; --pal-3-tint: #FBEDF0; --pal-3-mid: #F0C6D0; --pal-3-glow: rgba(184,101,122,0.3);
+            --pal-4: #7C6FC4; --pal-4-tint: #F0EEFB; --pal-4-mid: #D6CFF2; --pal-4-glow: rgba(124,111,196,0.32);
+            --danger: #C86A6A;
+        }
+        html.theme-dark {
+            --ink: #EDE9DD;
+            --ink-soft: #B7AF9C;
+            --ink-faint: #857D6C;
+            --paper: #211E18;
+            --cream: #15130E;
+            --line: #37342A;
+            --line-soft: #2B271E;
+            --teal: #4FD8DD;
+            --teal-deep: #8CEBEE;
+            --teal-tint: rgba(79,216,221,0.12);
+            --teal-mid: rgba(79,216,221,0.4);
+            --teal-glow: rgba(79,216,221,0.45);
+            --gold: #E6BA76;
+            --nav-bg: rgba(21,19,14,0.85);
+            --pal-1: #4FD8DD; --pal-1-tint: rgba(79,216,221,0.10); --pal-1-mid: rgba(79,216,221,0.4); --pal-1-glow: rgba(79,216,221,0.55);
+            --pal-2: #E6A94E; --pal-2-tint: rgba(230,169,78,0.10); --pal-2-mid: rgba(230,169,78,0.4); --pal-2-glow: rgba(230,169,78,0.5);
+            --pal-3: #E68CA3; --pal-3-tint: rgba(230,140,163,0.10); --pal-3-mid: rgba(230,140,163,0.4); --pal-3-glow: rgba(230,140,163,0.5);
+            --pal-4: #A69AF0; --pal-4-tint: rgba(166,154,240,0.10); --pal-4-mid: rgba(166,154,240,0.4); --pal-4-glow: rgba(166,154,240,0.5);
+            --danger: var(--danger);
         }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             margin: 0;
-            background: var(--cream);
+            background-color: var(--cream);
             color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position:
+                0px 0px,
+                40px 60px,
+                80px 20px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay {
+            filter: invert(1) grayscale(1) brightness(1.7);
+            mix-blend-mode: screen;
+            opacity: 0.5;
+        }
+        .nav, .wrap { position: relative; z-index: 1; }
         a { color: inherit; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -133,11 +185,20 @@ const ESTADO_LABEL: Record<string, string> = {
             position: sticky; top: 0; z-index: 40;
             display: flex; align-items: center; justify-content: space-between;
             height: 78px; padding: 0 2.2rem;
-            background: rgba(253,252,249,0.82);
+            background: var(--nav-bg);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--line);
         }
         .nav-left { display: flex; align-items: center; gap: 2.2rem; }
+        .nav-right-group { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+            cursor: pointer; font-size: 1rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal-mid); transform: translateY(-1px); }
         .nav-brand {
             font-family: "Inter", sans-serif; font-weight: 800; font-size: 0.98rem;
             letter-spacing: -0.01em; text-decoration: none; color: var(--ink);
@@ -184,9 +245,9 @@ const ESTADO_LABEL: Record<string, string> = {
         .pulse-card:hover {
             transform: translateY(-4px);
             border-color: var(--teal-mid);
-            box-shadow: 0 0 0 1px var(--teal-mid), 0 16px 32px -14px var(--teal-glow, rgba(47,143,148,0.28));
+            box-shadow: 0 0 0 1px var(--teal-mid), 0 16px 32px -14px var(--teal-glow);
         }
-        .pulse-card b { display: block; font-size: clamp(1.7rem, 3.2vw, 2.3rem); font-weight: 600; color: var(--teal-deep); line-height: 1; margin-bottom: 0.5rem; }
+        .pulse-card b { display: block; font-size: clamp(1.7rem, 3.2vw, 2.3rem); font-weight: 600; color: var(--teal-deep); line-height: 1; margin-bottom: 0.5rem; text-shadow: 0 0 16px var(--teal-glow); }
         .pulse-card span { font-family: "Inter", sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; color: var(--ink-soft); }
 
         /* ── section head ── */
@@ -232,13 +293,13 @@ const ESTADO_LABEL: Record<string, string> = {
 
         /* ── decisiones ── */
         .decisiones {
-            background: var(--paper); border: 1px solid var(--line); border-left: 4px solid #C86A6A; border-radius: 20px;
+            background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--danger); border-radius: 20px;
             padding: 0.3rem 1.6rem; margin-top: 1.1rem;
         }
         .drow { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-top: 1px solid var(--line-soft); }
         .drow:first-child { border-top: none; }
         .drow .t { font-family: "Inter", sans-serif; font-size: 0.88rem; font-weight: 600; }
-        .drow .b { font-family: "Inter", sans-serif; font-size: 0.64rem; font-weight: 700; color: #C86A6A; white-space: nowrap; }
+        .drow .b { font-family: "Inter", sans-serif; font-size: 0.64rem; font-weight: 700; color: var(--danger); white-space: nowrap; }
 
         /* ── areas ── */
         .areas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
@@ -256,9 +317,9 @@ const ESTADO_LABEL: Record<string, string> = {
         }
         .area-card:hover {
             transform: translateY(-4px);
-            background: linear-gradient(160deg, #FFFFFF 0%, var(--ac-tint) 130%);
+            background: linear-gradient(160deg, var(--paper) 0%, var(--ac-tint) 130%);
             border-color: var(--ac-mid);
-            box-shadow: 0 18px 34px -16px var(--ac-glow);
+            box-shadow: 0 0 0 1px var(--ac-mid), 0 18px 40px -14px var(--ac-glow);
         }
         .area-card h3 { font-size: 1.14rem; font-weight: 600; margin: 0.3rem 0 0.35rem; }
         .area-card p { font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-soft); margin: 0; line-height: 1.5; min-height: 2.4em; }
@@ -274,7 +335,7 @@ const ESTADO_LABEL: Record<string, string> = {
             padding: 1.6rem 1.8rem; box-shadow: 0 2px 10px rgba(38,36,31,0.045);
             transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
-        .doc-card:hover { border-color: var(--teal-mid); box-shadow: 0 16px 32px -18px rgba(47,143,148,0.28); }
+        .doc-card:hover { border-color: var(--teal-mid); box-shadow: 0 16px 32px -18px var(--teal-glow); }
         .doc-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
         .doc-id { font-family: "JetBrains Mono", monospace; font-size: 0.72rem; color: var(--teal-deep); font-weight: 600; letter-spacing: 0.02em; }
         .doc-status { font-family: "Inter", sans-serif; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); text-align: right; }
@@ -312,7 +373,7 @@ const ESTADO_LABEL: Record<string, string> = {
             background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1.05rem 1.2rem;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        a.vista-card:hover { transform: translateY(-3px); border-color: var(--teal-mid); box-shadow: 0 14px 26px -16px rgba(47,143,148,0.3); }
+        a.vista-card:hover { transform: translateY(-3px); border-color: var(--teal-mid); box-shadow: 0 14px 26px -16px var(--teal-glow); }
         .vista-card.stub { opacity: 0.42; cursor: default; }
         .vista-card h4 { font-size: 0.96rem; font-weight: 600; margin: 0 0 0.3rem; }
         .vista-card p { font-family: "Inter", sans-serif; font-size: 0.75rem; color: var(--ink-soft); margin: 0; line-height: 1.4; }
@@ -329,6 +390,7 @@ const ESTADO_LABEL: Record<string, string> = {
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="nav">
         <div class="nav-left">
             <a href="/astro-project-v2/kx/" class="nav-brand"><span class="dot"></span>kx atlas system</a>
@@ -340,7 +402,10 @@ const ESTADO_LABEL: Record<string, string> = {
                 <a href="/astro-project-v2/kx/areas/">Áreas</a>
             </nav>
         </div>
-        <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
+        <div class="nav-right-group">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+            <a href="/astro-project-v2/" class="nav-right">hyperlynkx | teo</a>
+        </div>
     </div>
 
     <div class="wrap">
@@ -522,5 +587,16 @@ const ESTADO_LABEL: Record<string, string> = {
             <span>dibujado el {fechaCorta(new Date())}</span>
         </div>
     </div>
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+    </script>
 </body>
 </html>

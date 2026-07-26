@@ -14,13 +14,13 @@ const ACTUAL_ESTADOS = ['construyendo', 'activo', 'finalizado', 'pausado', 'depr
 const VISION_ESTADOS = ['idea', 'disenado'];
 
 const ESTADO_META = {
-  idea:         { label: 'idea',         color: '#8c8070' },
-  disenado:     { label: 'diseñado',     color: '#9B7CC8' },
-  construyendo: { label: 'construyendo', color: '#B08D57' },
-  activo:       { label: 'live',         color: '#7BA08A' },
-  finalizado:   { label: 'finalizado',   color: '#2A4747' },
-  pausado:      { label: 'pausado',      color: '#B4BCC0' },
-  deprecado:    { label: 'deprecado',    color: '#8c8070' },
+  idea:         { label: 'idea',         color: 'var(--st-idea)' },
+  disenado:     { label: 'diseñado',     color: 'var(--st-disenado)' },
+  construyendo: { label: 'construyendo', color: 'var(--st-construyendo)' },
+  activo:       { label: 'live',         color: 'var(--st-activo)' },
+  finalizado:   { label: 'finalizado',   color: 'var(--st-finalizado)' },
+  pausado:      { label: 'pausado',      color: 'var(--st-pausado)' },
+  deprecado:    { label: 'deprecado',    color: 'var(--st-idea)' },
 };
 
 const skills = piezas.filter((p) => p.data.tipo === 'skill');
@@ -71,6 +71,9 @@ const TAXONOMIA_NAMING = [
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
@@ -83,20 +86,45 @@ const TAXONOMIA_NAMING = [
             --bg: #FCFAF5; --ink: #23211d; --ink-soft: #55503f; --ink-faint: #8c8070;
             --line: #ddd4bf; --teal: #2A4747; --gold: #B08D57; --seal: #8B2626;
             --panel: #F5F1E6; --panel-2: #EFE9D9;
+            --st-idea: #8c8070; --st-disenado: #9B7CC8; --st-construyendo: #B08D57;
+            --st-activo: #7BA08A; --st-finalizado: #2A4747; --st-pausado: #B4BCC0;
+            --topbar-bg: rgba(252,250,245,0.9);
+        }
+        html.theme-dark {
+            --bg: #15130E; --ink: #EDE9DD; --ink-soft: #B7AF9C; --ink-faint: #857D6C;
+            --line: #37342A; --teal: #4FD8DD; --gold: #E6BA76; --seal: #FF7A6B;
+            --panel: #201D16; --panel-2: #29251C;
+            --st-idea: #A79B87; --st-disenado: #B79FFF; --st-construyendo: #E6BA76;
+            --st-activo: #8FE8BC; --st-finalizado: #4FD8DD; --st-pausado: #C7D3D8;
+            --topbar-bg: rgba(21,19,14,0.9);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             background-color: var(--bg);
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-position: 0px 0px, 40px 60px;
-            background-repeat: repeat;
             color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(252,250,245,0.9); backdrop-filter: blur(8px); z-index: 50; }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
+        .wrap { position: relative; z-index: 1; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--topbar-bg); backdrop-filter: blur(8px); z-index: 50; }
+        .topbar-right { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+            cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal); transform: translateY(-1px); }
         .brand { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; font-family: "Reenie Beanie", cursive; font-size: 1.6rem; color: var(--ink); }
         .brand small { font-family: "Inter", sans-serif; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); }
         .crumbs { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -164,7 +192,7 @@ const TAXONOMIA_NAMING = [
 
         /* taxonomia (estático) */
         .taxo-block {
-            background: #f0ece0; border: 1px solid var(--line); border-radius: 10px; padding: 1.6rem 1.8rem;
+            background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 1.6rem 1.8rem;
         }
         .taxo-sub { font-size: 1.02rem; font-weight: 700; margin: 1.6rem 0 0.7rem; color: var(--teal); }
         .taxo-sub:first-child { margin-top: 0; }
@@ -182,11 +210,15 @@ const TAXONOMIA_NAMING = [
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="topbar">
         <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
-        <nav class="crumbs">
-            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">anatomía</span>
-        </nav>
+        <div class="topbar-right">
+            <nav class="crumbs">
+                <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">anatomía</span>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+        </div>
     </div>
 
     <div class="wrap">
@@ -218,7 +250,7 @@ const TAXONOMIA_NAMING = [
                             <div class="obj-card">
                                 <div class="obj-top">
                                     <h3 class="obj-title">{m.data.titulo}</h3>
-                                    <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
+                                    <span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
                                 </div>
                                 <p class="obj-desc">{m.data.descripcion}</p>
                                 {m.data.href && <a class="obj-link" href={m.data.href}>ver página &rarr;</a>}
@@ -235,7 +267,7 @@ const TAXONOMIA_NAMING = [
                             <div class="obj-card">
                                 <div class="obj-top">
                                     <h3 class="obj-title">{m.data.titulo}</h3>
-                                    <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
+                                    <span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
                                 </div>
                                 <p class="obj-desc">{m.data.descripcion}</p>
                             </div>
@@ -256,7 +288,7 @@ const TAXONOMIA_NAMING = [
                             <div class="obj-card">
                                 <div class="obj-top">
                                     <span class="obj-id">{p.data.id}</span>
-                                    <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
+                                    <span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
                                 </div>
                                 <h3 class="obj-title">{p.data.titulo}</h3>
                                 <p class="obj-desc">{p.data.descripcion}</p>
@@ -272,7 +304,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[p.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 <h3 class="obj-title">{p.data.titulo}</h3>
                                 <p class="obj-desc">{p.data.descripcion}</p>
                             </div>
@@ -291,7 +323,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[p.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 <h3 class="obj-title">{p.data.titulo}</h3>
                                 <p class="obj-desc">{p.data.descripcion}</p>
                             </div>
@@ -306,7 +338,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[p.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><span class="obj-id">{p.data.id}</span><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 <h3 class="obj-title">{p.data.titulo}</h3>
                                 <p class="obj-desc">{p.data.descripcion}</p>
                             </div>
@@ -326,7 +358,7 @@ const TAXONOMIA_NAMING = [
                     const meta = ESTADO_META[c.data.estado];
                     return (
                         <div class="obj-card">
-                            <div class="obj-top"><h3 class="obj-title">{c.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                            <div class="obj-top"><h3 class="obj-title">{c.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                             <p class="obj-desc">{c.data.descripcion}</p>
                         </div>
                     );
@@ -344,7 +376,7 @@ const TAXONOMIA_NAMING = [
                     const meta = ESTADO_META[w.data.estado];
                     return (
                         <div class="obj-card">
-                            <div class="obj-top"><h3 class="obj-title">{w.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                            <div class="obj-top"><h3 class="obj-title">{w.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                             <p class="obj-desc">{w.data.descripcion}</p>
                         </div>
                     );
@@ -409,7 +441,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[s.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 {s.data.descripcion && <p class="obj-desc">{s.data.descripcion}</p>}
                             </div>
                         );
@@ -423,7 +455,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[s.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 {s.data.descripcion && <p class="obj-desc">{s.data.descripcion}</p>}
                             </div>
                         );
@@ -442,7 +474,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[s.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 {s.data.descripcion && <p class="obj-desc">{s.data.descripcion}</p>}
                             </div>
                         );
@@ -456,7 +488,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[s.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{s.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 {s.data.descripcion && <p class="obj-desc">{s.data.descripcion}</p>}
                             </div>
                         );
@@ -475,7 +507,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[i.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{i.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{i.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 <p class="obj-desc">{i.data.descripcion}</p>
                                 {i.data.ruta && <a class="obj-link" href={i.data.ruta}>ver página &rarr;</a>}
                             </div>
@@ -490,7 +522,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[i.data.estado];
                         return (
                             <div class="obj-card">
-                                <div class="obj-top"><h3 class="obj-title">{i.data.titulo}</h3><span class="pill" style={`background:${meta.color}22; color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
+                                <div class="obj-top"><h3 class="obj-title">{i.data.titulo}</h3><span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color};`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span></div>
                                 <p class="obj-desc">{i.data.descripcion}</p>
                             </div>
                         );
@@ -508,7 +540,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[f.data.estado];
                         return (
                             <div class="tile">
-                                <span class="pill" style={`background:${meta.color}22; color:${meta.color}; align-self:flex-start;`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
+                                <span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color}; align-self:flex-start;`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
                                 <h3 class="tile-title">{f.data.titulo}</h3>
                                 <p class="tile-desc">{f.data.descripcion}</p>
                             </div>
@@ -523,7 +555,7 @@ const TAXONOMIA_NAMING = [
                         const meta = ESTADO_META[f.data.estado];
                         return (
                             <div class="tile">
-                                <span class="pill" style={`background:${meta.color}22; color:${meta.color}; align-self:flex-start;`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
+                                <span class="pill" style={`background:color-mix(in srgb, ${meta.color} 16%, transparent); color:${meta.color}; align-self:flex-start;`}><span class="dot" style={`background:${meta.color}`}></span>{meta.label}</span>
                                 <h3 class="tile-title">{f.data.titulo}</h3>
                                 <p class="tile-desc">{f.data.descripcion}</p>
                             </div>
@@ -540,6 +572,16 @@ const TAXONOMIA_NAMING = [
     </div>
 
     <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+
         const toggle = document.getElementById('toggle');
         const actualSlots = document.querySelectorAll('[data-slot$="-actual"]');
         const visionSlots = document.querySelectorAll('[data-slot$="-vision"]');

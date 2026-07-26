@@ -5,19 +5,19 @@ const DOC = '/astro-project-v2/kx/kx-core/';
 
 const capas = [
   {
-    n: '01', name: 'Estado', sub: 'mutable · se sobrescribe', color: '#7BA08A',
+    n: '01', name: 'Estado', sub: 'mutable · se sobrescribe', color: 'var(--st-activo)',
     q: '¿Qué hay ahora?',
     donde: 'colecciones kx-* en la página',
     href: `${DOC}#11-la-consecuencia-real-tres-semánticas-de-mutación`,
   },
   {
-    n: '02', name: 'Eventos', sub: 'append-only · nunca se pisa', color: '#B08D57',
+    n: '02', name: 'Eventos', sub: 'append-only · nunca se pisa', color: 'var(--gold)',
     q: '¿Qué pasó y cuándo?',
     donde: '02 - Ensamblaje/Patch Notes/, un mes por archivo',
     href: `${DOC}#21-el-sistema-no-tiene-log-de-eventos`,
   },
   {
-    n: '03', name: 'Prosa', sub: 'autorada · se reescribe despacio', color: '#9B7CC8',
+    n: '03', name: 'Prosa', sub: 'autorada · se reescribe despacio', color: 'var(--st-disenado)',
     q: '¿Por qué es así?',
     donde: 'archivos de área en la bóveda',
     href: `${DOC}#12-la-regla-dura-que-sostiene-todo-esto`,
@@ -26,22 +26,22 @@ const capas = [
 
 const categorias = [
   {
-    n: '01', name: 'Estructura', sub: 'se sobrescribe', color: '#7BA08A',
+    n: '01', name: 'Estructura', sub: 'se sobrescribe', color: 'var(--st-activo)',
     line: '¿Qué existe y cómo está armado? Once áreas.',
     href: `${DOC}#1-el-reencuadre-las-cuatro-categorías-no-son-cuatro-temas`,
   },
   {
-    n: '02', name: 'Ensamblaje', sub: 'se agrega', color: '#B08D57',
+    n: '02', name: 'Ensamblaje', sub: 'se agrega', color: 'var(--gold)',
     line: '¿Qué pasó y qué sigue? Patch notes, sesiones, tareas.',
     href: `${DOC}#36-tareas-y-pendientes-son-lo-mismo`,
   },
   {
-    n: '03', name: 'Contexto Personal', sub: 'lo escribe Teo', color: '#9B7CC8',
+    n: '03', name: 'Contexto Personal', sub: 'lo escribe Teo', color: 'var(--st-disenado)',
     line: '¿Para quién es esto y bajo qué restricciones? La IA no escribe acá.',
     href: `${DOC}#37-las-áreas-de-contexto-personal`,
   },
   {
-    n: '--', name: 'Conocimiento', sub: 'afuera del módulo', color: '#B4BCC0',
+    n: '--', name: 'Conocimiento', sub: 'afuera del módulo', color: 'var(--st-pausado)',
     line: 'Materia prima que el sistema procesa. Módulo aparte, no categoría.',
     href: `${DOC}#9-qué-no-se-hace-ahora-a-propósito`,
   },
@@ -49,7 +49,7 @@ const categorias = [
 
 const areas = [
   {
-    label: '01 · estructura', color: '#7BA08A', href: `${DOC}#31-las-once-áreas-de-estructura`,
+    label: '01 · estructura', color: 'var(--st-activo)', href: `${DOC}#31-las-once-áreas-de-estructura`,
     items: [
       { id: 'a1', title: 'modulos', hook: 'Los módulos y su relación.' },
       { id: 'a2', title: 'capas', hook: 'La escalera: sistema, módulo, pieza, artefacto.' },
@@ -65,7 +65,7 @@ const areas = [
     ],
   },
   {
-    label: '02 · ensamblaje', color: '#B08D57', href: `${DOC}#36-tareas-y-pendientes-son-lo-mismo`,
+    label: '02 · ensamblaje', color: 'var(--gold)', href: `${DOC}#36-tareas-y-pendientes-son-lo-mismo`,
     items: [
       { id: 'b1', title: 'Patch Notes/', hook: 'El log. Un archivo por mes, subdividido por días.' },
       { id: 'b2', title: 'Sesiones/', hook: 'Una sola clase de sesión, sin propósito declarado.' },
@@ -73,7 +73,7 @@ const areas = [
     ],
   },
   {
-    label: '03 · contexto personal', color: '#9B7CC8', href: `${DOC}#37-las-áreas-de-contexto-personal`,
+    label: '03 · contexto personal', color: 'var(--st-disenado)', href: `${DOC}#37-las-áreas-de-contexto-personal`,
     items: [
       { id: 'c1', title: 'Cuadrantes.md', hook: 'Qué hay adentro de cada cuadrante.' },
       { id: 'c2', title: 'Areas de Vida.md', hook: 'Para bullet journal y sesiones emocionales.' },
@@ -112,11 +112,11 @@ const vocab = [
 ];
 
 const bucles = [
-  { id: 'R1', kind: 'refuerzo', accion: 'alimentarlo', color: '#7BA08A', title: 'El motor', line: 'Ves el sistema, dictás mejor, mejor destilado, ves más.', href: `${DOC}#r1--el-motor-refuerzo-alimentarlo` },
-  { id: 'R2', kind: 'refuerzo', accion: 'cortarlo', color: '#8B2626', title: 'La metaestructura que miente', line: 'Prosa con inventario, queda vieja, desconfiás, nadie la toca.', href: `${DOC}#r2--la-degradación-de-la-metaestructura-refuerzo-cortarlo` },
-  { id: 'R3', kind: 'refuerzo', accion: 'cortarlo', color: '#8B2626', title: 'El costo de destilar', line: 'Más colecciones, destilar cuesta más, destilás menos.', href: `${DOC}#r3--el-costo-de-destilar-refuerzo-cortarlo` },
-  { id: 'B1', kind: 'balance', accion: 'respetarlo', color: '#2A4747', title: 'La fricción de captura', line: 'Cada campo nuevo al dictar baja el caudal de entrada.', href: `${DOC}#b1--la-fricción-de-captura-balance-respetarlo` },
-  { id: 'B2', kind: 'balance', accion: 'para eso sirve', color: '#2A4747', title: 'El log que crece', line: 'El semanal abstracto es el amortiguador del diario.', href: `${DOC}#b2--el-log-que-crece-balance-para-qué-sirve-el-semanal` },
+  { id: 'R1', kind: 'refuerzo', accion: 'alimentarlo', color: 'var(--st-activo)', title: 'El motor', line: 'Ves el sistema, dictás mejor, mejor destilado, ves más.', href: `${DOC}#r1--el-motor-refuerzo-alimentarlo` },
+  { id: 'R2', kind: 'refuerzo', accion: 'cortarlo', color: 'var(--seal)', title: 'La metaestructura que miente', line: 'Prosa con inventario, queda vieja, desconfiás, nadie la toca.', href: `${DOC}#r2--la-degradación-de-la-metaestructura-refuerzo-cortarlo` },
+  { id: 'R3', kind: 'refuerzo', accion: 'cortarlo', color: 'var(--seal)', title: 'El costo de destilar', line: 'Más colecciones, destilar cuesta más, destilás menos.', href: `${DOC}#r3--el-costo-de-destilar-refuerzo-cortarlo` },
+  { id: 'B1', kind: 'balance', accion: 'respetarlo', color: 'var(--teal)', title: 'La fricción de captura', line: 'Cada campo nuevo al dictar baja el caudal de entrada.', href: `${DOC}#b1--la-fricción-de-captura-balance-respetarlo` },
+  { id: 'B2', kind: 'balance', accion: 'para eso sirve', color: 'var(--teal)', title: 'El log que crece', line: 'El semanal abstracto es el amortiguador del diario.', href: `${DOC}#b2--el-log-que-crece-balance-para-qué-sirve-el-semanal` },
 ];
 
 const leverage = [
@@ -162,6 +162,9 @@ const fallas = [
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
@@ -181,27 +184,59 @@ const fallas = [
             --seal: #8B2626;
             --panel: #F5F1E6;
             --panel-2: #EFE9D9;
+            --st-idea: #8c8070; --st-disenado: #9B7CC8; --st-construyendo: #B08D57;
+            --st-activo: #7BA08A; --st-finalizado: #2A4747; --st-pausado: #B4BCC0;
+            --teal-glow: rgba(42,71,71,0.25); --tint-ok: #E9F0E9; --tint-warn: #FBF3E3; --badge-ink: #FCFAF5;
+        }
+        html.theme-dark {
+            --bg: #15130E;
+            --ink: #EDE9DD;
+            --ink-soft: #B7AF9C;
+            --ink-faint: #857D6C;
+            --line: #37342A;
+            --teal: #4FD8DD;
+            --gold: #E6BA76;
+            --seal: #FF7A6B;
+            --panel: #201D16;
+            --panel-2: #29251C;
+            --st-idea: #A79B87; --st-disenado: #B79FFF; --st-construyendo: #E6BA76;
+            --st-activo: #8FE8BC; --st-finalizado: #4FD8DD; --st-pausado: #C7D3D8;
+            --teal-glow: rgba(79,216,221,0.45); --tint-ok: rgba(143,232,188,0.08); --tint-warn: rgba(230,186,118,0.1); --badge-ink: #15130E;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             background-color: var(--bg);
-            background-image:
-                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
-                url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-position: 0px 0px, 40px 60px;
-            background-repeat: repeat;
             color: var(--ink);
             font-family: "EB Garamond", serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
+        .topbar, .wrap { position: relative; z-index: 1; }
 
         /* ── topbar ── */
         .topbar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 1.1rem 2rem; border-bottom: 1px solid var(--line);
         }
+        .topbar-right { display: flex; align-items: center; gap: 1.1rem; }
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+            cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: var(--teal); transform: translateY(-1px); }
         .brand {
             display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none;
             font-family: "Reenie Beanie", cursive; font-size: 1.6rem; color: var(--ink);
@@ -249,6 +284,7 @@ const fallas = [
         .stat b {
             display: block; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600;
             color: var(--teal); line-height: 1; margin-bottom: 0.4rem;
+            text-shadow: 0 0 16px var(--teal-glow);
         }
         .stat span {
             font-family: "Inter", sans-serif; font-size: 0.68rem; letter-spacing: 0.05em;
@@ -389,7 +425,7 @@ const fallas = [
             letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
             padding: 0.2rem 0.35rem; border-radius: 4px;
         }
-        .test-verdict.yes { color: #3d6b4e; background: #E4EEE5; }
+        .test-verdict.yes { color: var(--st-activo); background: var(--tint-ok); }
         .test-verdict.no { color: var(--ink-faint); background: var(--panel-2); }
         .test-why { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-soft); line-height: 1.4; }
 
@@ -432,7 +468,7 @@ const fallas = [
             padding: 0.65rem 1rem; border-radius: 6px; background: var(--panel); border: 1px solid var(--line);
         }
         @media (max-width: 700px) { .rung { grid-template-columns: 1fr auto; } .rung .rung-tag { grid-column: 1 / -1; } }
-        .rung.hot { background: #FBF3E3; border-color: var(--gold); }
+        .rung.hot { background: var(--tint-warn); border-color: var(--gold); }
         .rung-level { font-weight: 600; font-size: 0.92rem; }
         .rung-tag { font-family: "Inter", sans-serif; font-size: 0.76rem; color: var(--ink-soft); }
         .rung-tier {
@@ -450,14 +486,14 @@ const fallas = [
             border: 1px solid var(--line); border-radius: 8px; padding: 1.1rem 1.1rem 1.2rem; position: relative;
         }
         .phase:hover { border-color: var(--teal); }
-        .phase.hecha { background: #E9F0E9; border-color: #7BA08A; }
-        .phase.proxima { background: #FBF3E3; border-color: var(--gold); }
-        .phase-badge.hechabadge { background: #5F8570; }
-        .phase-badge.next { background: var(--teal); }
+        .phase.hecha { background: var(--tint-ok); border-color: var(--st-activo); }
+        .phase.proxima { background: var(--tint-warn); border-color: var(--gold); }
+        .phase-badge.hechabadge { background: var(--st-activo); color: var(--badge-ink); }
+        .phase-badge.next { background: var(--teal); color: var(--badge-ink); }
         .phase-badge {
             position: absolute; top: -9px; right: 10px; font-family: "Inter", sans-serif;
             font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-            background: var(--gold); color: #FCFAF5; padding: 0.15rem 0.45rem; border-radius: 3px;
+            background: var(--gold); color: var(--badge-ink); padding: 0.15rem 0.45rem; border-radius: 3px;
         }
         .phase-n { font-family: "Inter", sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--teal); margin-bottom: 0.1rem; }
         .phase-name { font-size: 1.02rem; font-weight: 600; margin-bottom: 0.15rem; }
@@ -496,7 +532,7 @@ const fallas = [
             text-transform: uppercase; text-align: center; padding: 0.22rem 0.35rem; border-radius: 4px;
         }
         .dec-badge.asum { color: var(--ink-faint); background: var(--panel-2); }
-        .dec-badge.tuya { color: #FCFAF5; background: var(--seal); }
+        .dec-badge.tuya { color: var(--badge-ink); background: var(--seal); }
 
         /* ── fallas ── */
         .risks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
@@ -522,11 +558,15 @@ const fallas = [
     </style>
 </head>
 <body>
+    <div class="paper-overlay" aria-hidden="true"></div>
     <div class="topbar">
         <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
-        <nav class="crumbs">
-            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">kx core · mapa</span>
-        </nav>
+        <div class="topbar-right">
+            <nav class="crumbs">
+                <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">kx core · mapa</span>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+        </div>
     </div>
 
     <div class="wrap">
@@ -650,9 +690,9 @@ const fallas = [
                         <p>{b.hook}</p>
                     </div>
                     <div class="gap-bar">
-                        <i style={`width: ${b.cerrada ? 100 : b.peso}%; background: ${b.cerrada ? '#7BA08A' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : '#B4BCC0'}`}></i>
+                        <i style={`width: ${b.cerrada ? 100 : b.peso}%; background: ${b.cerrada ? 'var(--st-activo)' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : 'var(--st-pausado)'}`}></i>
                     </div>
-                    <span class="gap-sev" style={`color: ${b.cerrada ? '#3d6b4e' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : 'var(--ink-faint)'}`}>{b.sev}</span>
+                    <span class="gap-sev" style={`color: ${b.cerrada ? 'var(--st-activo)' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : 'var(--ink-faint)'}`}>{b.sev}</span>
                 </a>
             ))}
         </div>
@@ -798,5 +838,16 @@ const fallas = [
             <a class="primary" href={DOC}>leer el plan completo &rarr;</a>
         </div>
     </div>
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+    </script>
 </body>
 </html>
