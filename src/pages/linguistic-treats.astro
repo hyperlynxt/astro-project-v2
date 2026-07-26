@@ -204,7 +204,10 @@ words.sort((a, b) => {
         html.theme-dark [class*="[#A39985]"],
         html.theme-dark [class*="[#8C8070]"] { color: var(--dwd-ink-faint) !important; border-color: var(--dwd-ink-faint) !important; }
         html.theme-dark [class*="[#E8E2D2]"] { border-color: var(--dwd-line) !important; background-color: var(--dwd-line) !important; }
-        html.theme-dark [class*="[#9B7CC8]"] { color: var(--dwd-accent) !important; background-color: var(--dwd-accent) !important; border-color: var(--dwd-accent) !important; }
+        html.theme-dark [class*="text-[#9B7CC8]"] { color: var(--dwd-accent) !important; }
+        html.theme-dark [class*="bg-[#9B7CC8]"] { background-color: var(--dwd-accent) !important; }
+        html.theme-dark [class*="border-[#9B7CC8]"] { border-color: var(--dwd-accent) !important; }
+        html.theme-dark .draw-line path { stroke: var(--dwd-accent) !important; }
         html.theme-dark [class*="hover:bg-[#7A5BA8]"]:hover { background-color: var(--dwd-accent-deep) !important; }
         html.theme-dark [class*="[#C9A6FF]"] { border-color: var(--dwd-accent-mid) !important; }
         html.theme-dark [class*="[#F6F1FF]"],
@@ -265,6 +268,9 @@ words.sort((a, b) => {
         html.theme-dark #bottom-bar { background-color: var(--dwd-card) !important; border-color: var(--dwd-line) !important; }
         html.theme-dark #clear-filter-btn { background-color: transparent !important; }
         html.theme-dark #clear-filter-btn:hover { background-color: var(--dwd-accent-tint) !important; }
+        html.theme-dark #modal-tags-attribution span:first-child { color: var(--dwd-accent) !important; }
+        html.theme-dark #modal-tags-list { color: var(--dwd-gold) !important; }
+        html.theme-dark #modal-note-section > div:first-child { color: var(--dwd-accent) !important; }
     </style>
 </head>
 <body class="min-h-screen">
