@@ -6,7 +6,6 @@ const tareas = await getCollection('kxTareas');
 const modulos = await getCollection('kxModulos');
 
 const moduloTitulo = (id) => modulos.find((m) => m.id === id)?.data.titulo ?? id;
-const tareaTitulo = (id) => tareas.find((t) => t.data.id === id)?.data.titulo ?? id;
 
 const TIPOS = [
   { key: 'decidir', label: 'Decidir', hint: 'solo vos', color: '#8B2626' },
@@ -15,10 +14,18 @@ const TIPOS = [
   { key: 'escribir', label: 'Escribir', hint: 'vos dictando', color: '#B08D57' },
 ];
 
+const ACLARAR = { key: 'aclarar', label: 'Aclarar', hint: 'input crudo, no se entiende bien', color: '#8c8070' };
+
 const ESTADO_META = {
   abierta: { label: 'abierta', color: '#B08D57' },
   bloqueada: { label: 'bloqueada', color: '#8B2626' },
   cerrada: { label: 'cerrada', color: '#7BA08A' },
+};
+
+const PRIORIDAD_META = {
+  alta: { label: 'alta', color: '#8B2626' },
+  media: { label: 'media', color: '#B08D57' },
+  baja: { label: 'baja', color: '#8c8070' },
 };
 
 function porTipo(tipo) {
@@ -30,16 +37,32 @@ function porTipo(tipo) {
     });
 }
 
+const tareasPM = tareas.filter((t) => t.data.tipo !== 'aclarar');
+const tareasAclarar = porTipo('aclarar');
+
 // decisiones abiertas que bloquean algo
-const decisionesAbiertas = tareas.filter((t) => t.data.tipo === 'decidir' && t.data.estado !== 'cerrada');
+const decisionesAbiertas = tareasPM.filter((t) => t.data.tipo === 'decidir' && t.data.estado !== 'cerrada');
 const bloqueosPorDecision = decisionesAbiertas.map((d) => ({
   decision: d,
-  bloquea: tareas.filter((t) => t.data.bloqueadaPor?.includes(d.data.id)),
+  bloquea: tareasPM.filter((t) => t.data.bloqueadaPor?.includes(d.data.id)),
 })).filter((b) => b.bloquea.length > 0);
 
-const totalAbiertas = tareas.filter((t) => t.data.estado !== 'cerrada').length;
-const totalCerradas = tareas.filter((t) => t.data.estado === 'cerrada').length;
-const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').length;
+const totalAbiertas = tareasPM.filter((t) => t.data.estado !== 'cerrada').length;
+const totalCerradas = tareasPM.filter((t) => t.data.estado === 'cerrada').length;
+const totalBloqueadas = tareasPM.filter((t) => t.data.estado === 'bloqueada').length;
+const totalAltaPrioridad = tareasPM.filter((t) => t.data.prioridad === 'alta' && t.data.estado !== 'cerrada').length;
+
+const modulosEnUso = [...new Set(tareasPM.map((t) => t.data.modulo).filter(Boolean))]
+  .map((id) => ({ id, titulo: moduloTitulo(id) }))
+  .sort((a, b) => a.titulo.localeCompare(b.titulo));
+
+function cardAttrs(t) {
+  return {
+    'data-modulo': t.data.modulo ?? '',
+    'data-prioridad': t.data.prioridad ?? '',
+    'data-estado': t.data.estado,
+  };
+}
 ---
 
 <!DOCTYPE html>
@@ -78,18 +101,40 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
         .crumbs a:hover { color: var(--teal); border-color: var(--teal); }
         .crumbs .current { color: var(--ink); }
 
-        .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+        .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
 
         .hero { padding: 3.5rem 0 1.5rem; }
         .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
         .hero h1 { font-size: clamp(2.3rem, 5.5vw, 3.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 0.7rem; }
-        .hero .lede { font-style: italic; color: var(--ink-soft); font-size: 1.15rem; max-width: 58ch; margin: 0; line-height: 1.5; }
+        .hero .lede { font-style: italic; color: var(--ink-soft); font-size: 1.15rem; max-width: 62ch; margin: 0; line-height: 1.5; }
 
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 2.2rem 0 2rem; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 2.2rem 0 1.5rem; }
         .stat { padding: 1.2rem 1rem; text-align: center; border-left: 1px solid var(--line); }
         .stat:first-child { border-left: none; }
         .stat b { display: block; font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 600; color: var(--teal); line-height: 1; margin-bottom: 0.35rem; }
+        .stat.warn b { color: var(--seal); }
         .stat span { font-family: "Inter", sans-serif; font-size: 0.66rem; letter-spacing: 0.04em; color: var(--ink-soft); line-height: 1.3; display: block; }
+        @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+        .filters {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem;
+            background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+            padding: 0.9rem 1.2rem; margin-bottom: 2.2rem;
+            font-family: "Inter", sans-serif;
+        }
+        .filter-group { display: flex; align-items: center; gap: 0.5rem; }
+        .filter-group label { font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+        .filter-group select {
+            font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink);
+            background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.3rem 0.5rem;
+        }
+        .filter-toggle { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--ink-soft); cursor: pointer; user-select: none; }
+        .filter-toggle input { accent-color: var(--teal); }
+        .filter-reset {
+            margin-left: auto; font-size: 0.72rem; color: var(--teal); text-decoration: none;
+            border-bottom: 1px solid var(--teal); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; padding: 0;
+        }
+        .filter-count { font-size: 0.72rem; color: var(--ink-faint); }
 
         .blockers {
             background: #FBF0EC; border: 1px solid var(--seal); border-radius: 10px;
@@ -108,12 +153,13 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
         }
 
         .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-        @media (max-width: 900px) { .board { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1000px) { .board { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 560px) { .board { grid-template-columns: 1fr; } }
 
         .col-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.8rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--col-color); }
         .col-head h2 { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--col-color); }
         .col-head .hint { font-family: "Inter", sans-serif; font-size: 0.64rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+        .col-empty { font-family: "Inter", sans-serif; font-size: 0.72rem; color: var(--ink-faint); font-style: italic; padding: 0.6rem 0; }
 
         .card {
             background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
@@ -121,14 +167,29 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
         }
         .card.cerrada { opacity: 0.5; }
         .card.cerrada .card-title { text-decoration: line-through; }
+        .card.hidden-by-filter { display: none; }
         .card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem; }
         .card-id { font-family: "JetBrains Mono", monospace; font-size: 0.62rem; color: var(--ink-faint); }
+        .card-pills { display: flex; gap: 0.3rem; }
         .pill { display: inline-flex; align-items: center; gap: 0.35rem; font-family: "Inter", sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 999px; white-space: nowrap; }
         .pill .dot { width: 5px; height: 5px; border-radius: 50%; }
         .card-title { font-family: "Inter", sans-serif; font-weight: 600; font-size: 0.85rem; line-height: 1.35; margin: 0 0 0.4rem; }
         .card-desc { font-family: "Inter", sans-serif; font-size: 0.74rem; color: var(--ink-soft); line-height: 1.45; margin: 0 0 0.5rem; }
+        .card-quote {
+            font-family: "EB Garamond", serif; font-style: italic; font-size: 0.8rem; color: var(--ink-soft);
+            border-left: 2px solid var(--line); padding-left: 0.6rem; margin: 0 0 0.5rem;
+        }
         .card-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; font-family: "Inter", sans-serif; font-size: 0.62rem; color: var(--ink-faint); }
         .card-tag { background: var(--panel-2); padding: 0.15rem 0.5rem; border-radius: 4px; }
+
+        .aclarar-section { margin-top: 3rem; }
+        .aclarar-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.5rem; padding-bottom: 0.6rem; border-bottom: 2px dashed var(--ink-faint); }
+        .aclarar-head h2 { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--ink-faint); }
+        .aclarar-note { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-soft); max-width: 60ch; margin: 0 0 1.2rem; line-height: 1.5; }
+        .aclarar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        @media (max-width: 900px) { .aclarar-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .aclarar-grid { grid-template-columns: 1fr; } }
+        .card.aclarar { border-style: dashed; border-color: var(--ink-faint); }
 
         .footnav { margin: 5rem 0 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; font-family: "Inter", sans-serif; font-size: 0.8rem; }
         .footnav a { text-decoration: none; color: var(--ink-soft); }
@@ -145,11 +206,12 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
 
     <div class="wrap">
         <section class="hero">
-            <div class="kicker">backlog del sistema</div>
+            <div class="kicker">backlog del sistema · vista de project management</div>
             <h1>Qué queda</h1>
             <p class="lede">
                 Agrupado por quién la puede desbloquear, no por cuándo se anotó. Las decisiones
-                que están bloqueando algo van primero.
+                que están bloqueando algo van primero. Filtrá por módulo o prioridad para enfocar
+                una sola parte del sistema a la vez.
             </p>
         </section>
 
@@ -157,6 +219,32 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
             <div class="stat"><b>{totalAbiertas}</b><span>tareas abiertas</span></div>
             <div class="stat"><b>{totalBloqueadas}</b><span>bloqueadas</span></div>
             <div class="stat"><b>{totalCerradas}</b><span>cerradas</span></div>
+            <div class={`stat ${totalAltaPrioridad > 0 ? 'warn' : ''}`}><b>{totalAltaPrioridad}</b><span>prioridad alta, abiertas</span></div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="f-modulo">módulo</label>
+                <select id="f-modulo">
+                    <option value="">todos</option>
+                    {modulosEnUso.map((m) => <option value={m.id}>{m.titulo}</option>)}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="f-prioridad">prioridad</label>
+                <select id="f-prioridad">
+                    <option value="">todas</option>
+                    <option value="alta">alta</option>
+                    <option value="media">media</option>
+                    <option value="baja">baja</option>
+                </select>
+            </div>
+            <label class="filter-toggle">
+                <input type="checkbox" id="f-ocultar-cerradas" checked />
+                ocultar cerradas
+            </label>
+            <span class="filter-count" id="f-count"></span>
+            <button class="filter-reset" id="f-reset" type="button">reset</button>
         </div>
 
         {bloqueosPorDecision.length > 0 && (
@@ -175,40 +263,120 @@ const totalBloqueadas = tareas.filter((t) => t.data.estado === 'bloqueada').leng
         )}
 
         <div class="board">
-            {TIPOS.map((tipo) => (
-                <div class="col" style={`--col-color: ${tipo.color}`}>
-                    <div class="col-head">
-                        <h2>{tipo.label}</h2>
-                        <span class="hint">{tipo.hint}</span>
+            {TIPOS.map((tipo) => {
+                const items = porTipo(tipo.key);
+                return (
+                    <div class="col" style={`--col-color: ${tipo.color}`}>
+                        <div class="col-head">
+                            <h2>{tipo.label}</h2>
+                            <span class="hint">{tipo.hint}</span>
+                        </div>
+                        {items.length === 0 && <p class="col-empty">nada acá</p>}
+                        {items.map((t) => {
+                            const meta = ESTADO_META[t.data.estado];
+                            const prio = t.data.prioridad ? PRIORIDAD_META[t.data.prioridad] : null;
+                            return (
+                                <div class={`card ${t.data.estado === 'cerrada' ? 'cerrada' : ''}`} {...cardAttrs(t)}>
+                                    <div class="card-top">
+                                        <span class="card-id">{t.data.id}</span>
+                                        <div class="card-pills">
+                                            {prio && (
+                                                <span class="pill" style={`background:${prio.color}22; color:${prio.color};`}>
+                                                    <span class="dot" style={`background:${prio.color}`}></span>
+                                                    {prio.label}
+                                                </span>
+                                            )}
+                                            <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}>
+                                                <span class="dot" style={`background:${meta.color}`}></span>
+                                                {meta.label}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="card-title">{t.data.titulo}</p>
+                                    <p class="card-desc">{t.data.descripcion}</p>
+                                    <div class="card-meta">
+                                        {t.data.modulo && <span class="card-tag">{moduloTitulo(t.data.modulo)}</span>}
+                                        {t.data.bloqueadaPor?.map((bid) => <span class="card-tag">bloqueada por {bid}</span>)}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                    {porTipo(tipo.key).map((t) => {
-                        const meta = ESTADO_META[t.data.estado];
-                        return (
-                            <div class={`card ${t.data.estado === 'cerrada' ? 'cerrada' : ''}`}>
-                                <div class="card-top">
-                                    <span class="card-id">{t.data.id}</span>
-                                    <span class="pill" style={`background:${meta.color}22; color:${meta.color};`}>
-                                        <span class="dot" style={`background:${meta.color}`}></span>
-                                        {meta.label}
-                                    </span>
-                                </div>
-                                <p class="card-title">{t.data.titulo}</p>
-                                <p class="card-desc">{t.data.descripcion}</p>
-                                <div class="card-meta">
-                                    {t.data.modulo && <span class="card-tag">{moduloTitulo(t.data.modulo)}</span>}
-                                    {t.data.bloqueadaPor?.map((bid) => <span class="card-tag">bloqueada por {bid}</span>)}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            ))}
+                );
+            })}
         </div>
+
+        {tareasAclarar.length > 0 && (
+            <section class="aclarar-section">
+                <div class="aclarar-head">
+                    <h2>Aclarar</h2>
+                    <span class="hint" style="font-family: 'Inter', sans-serif; font-size: 0.64rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em;">
+                        {tareasAclarar.length} sin triage
+                    </span>
+                </div>
+                <p class="aclarar-note">
+                    Input dictado tan chico o cortado que no se termina de entender qué se quiso decir.
+                    No son tareas todavía — son la cita cruda, esperando que Teo las retome y las convierta
+                    en algo de las cuatro columnas de arriba, o las descarte.
+                </p>
+                <div class="aclarar-grid">
+                    {tareasAclarar.map((t) => (
+                        <div class="card aclarar" {...cardAttrs(t)}>
+                            <div class="card-top">
+                                <span class="card-id">{t.data.id}</span>
+                            </div>
+                            <p class="card-title">{t.data.titulo}</p>
+                            {t.data.notaOriginal && <p class="card-quote">"{t.data.notaOriginal}"</p>}
+                            <p class="card-desc">{t.data.descripcion}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )}
 
         <div class="footnav">
             <a href="/astro-project-v2/kx/sistema/">&larr; ver sistema</a>
             <a href="/astro-project-v2/kx/">volver al hub &rarr;</a>
         </div>
     </div>
+
+    <script>
+        const selModulo = document.getElementById('f-modulo');
+        const selPrioridad = document.getElementById('f-prioridad');
+        const chkOcultarCerradas = document.getElementById('f-ocultar-cerradas');
+        const btnReset = document.getElementById('f-reset');
+        const countLabel = document.getElementById('f-count');
+        const cards = Array.from(document.querySelectorAll('.card'));
+
+        function applyFilters() {
+            const modulo = selModulo.value;
+            const prioridad = selPrioridad.value;
+            const ocultarCerradas = chkOcultarCerradas.checked;
+            let visible = 0;
+
+            cards.forEach((card) => {
+                const matchesModulo = !modulo || card.dataset.modulo === modulo;
+                const matchesPrioridad = !prioridad || card.dataset.prioridad === prioridad;
+                const matchesEstado = !ocultarCerradas || card.dataset.estado !== 'cerrada';
+                const show = matchesModulo && matchesPrioridad && matchesEstado;
+                card.classList.toggle('hidden-by-filter', !show);
+                if (show) visible += 1;
+            });
+
+            countLabel.textContent = `${visible} de ${cards.length} visibles`;
+        }
+
+        selModulo.addEventListener('change', applyFilters);
+        selPrioridad.addEventListener('change', applyFilters);
+        chkOcultarCerradas.addEventListener('change', applyFilters);
+        btnReset.addEventListener('click', () => {
+            selModulo.value = '';
+            selPrioridad.value = '';
+            chkOcultarCerradas.checked = true;
+            applyFilters();
+        });
+
+        applyFilters();
+    </script>
 </body>
 </html>

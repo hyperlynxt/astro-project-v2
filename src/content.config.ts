@@ -177,10 +177,12 @@ const kxTareas = defineCollection({
   schema: z.object({
     id: z.string(),
     titulo: z.string(),
-    tipo: z.enum(['decidir', 'pensar', 'construir', 'escribir']),
+    tipo: z.enum(['decidir', 'pensar', 'construir', 'escribir', 'aclarar']),
     estado: z.enum(['abierta', 'bloqueada', 'cerrada']),
     modulo: z.string().optional(),
+    prioridad: z.enum(['alta', 'media', 'baja']).optional(),
     descripcion: z.string(),
+    notaOriginal: z.string().optional(),
     bloqueadaPor: z.array(z.string()).optional(),
     origen: z.string().optional(),
     actualizado: z.date(),
