@@ -58,17 +58,17 @@ export function areaDePieza(p: { data: { tipo: string } }): AreaSlug | null {
 // Archivo de área correspondiente en la bóveda, solo para mostrar como referencia de texto
 // (la bóveda no es navegable desde el sitio).
 export const AREA_ARCHIVO_BOVEDA: Record<AreaSlug, string> = {
-  modulos: '01 - Estructura/Modulos.md',
-  capas: '01 - Estructura/Capas.md',
-  skills: '01 - Estructura/Skills.md',
-  instancias: '01 - Estructura/Instancias.md',
-  flujos: '01 - Estructura/Flujos.md',
-  convenciones: '01 - Estructura/Convenciones.md',
-  taxonomia: '01 - Estructura/Taxonomia.md',
-  integraciones: '01 - Estructura/Integraciones.md',
-  cuadrantes: '01 - Estructura/Cuadrantes.md',
-  pagina: '01 - Estructura/Pagina.md',
-  mapas: '01 - Estructura/Mapas.md',
+  modulos: '01 - Matriz/Mapa de Modulos.md',
+  capas: '01 - Matriz/Mapa de Capas.md',
+  skills: '01 - Matriz/Mapa de Skills.md',
+  instancias: '01 - Matriz/Mapa de Instancias.md',
+  flujos: '01 - Matriz/Mapa de Flujos.md',
+  convenciones: '01 - Matriz/Mapa de Convenciones.md',
+  taxonomia: '01 - Matriz/Mapa de Taxonomia.md',
+  integraciones: '01 - Matriz/Mapa de Integraciones.md',
+  cuadrantes: '01 - Matriz/Mapa de Cuadrantes.md',
+  pagina: '01 - Matriz/Mapa de Pagina.md',
+  mapas: '01 - Matriz/Mapa de Mapas.md',
 };
 
 // Fechas: los schemas usan z.date(), así que llegan como objetos Date.

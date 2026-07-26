@@ -1,42 +1,138 @@
 ---
 import { getCollection } from 'astro:content';
-import KxBase from '../../../layouts/KxBase.astro';
-import AreaCard from '../../../components/kx/AreaCard.astro';
 import { AREAS, AREA_DE_TIPO_PIEZA } from '../../../lib/kx';
 
 const piezas = await getCollection('kxPiezas');
 
-const areasConDatos = AREAS.map((a) => {
+const PALETA = [
+  { c: '#2F8F94', tint: '#E9F7F7', mid: '#BFE9EA', glow: 'rgba(47,143,148,0.35)' },
+  { c: '#C6862E', tint: '#FBF3E4', mid: '#F0D9A8', glow: 'rgba(198,134,46,0.32)' },
+  { c: '#B8657A', tint: '#FBEDF0', mid: '#F0C6D0', glow: 'rgba(184,101,122,0.3)' },
+  { c: '#7C6FC4', tint: '#F0EEFB', mid: '#D6CFF2', glow: 'rgba(124,111,196,0.32)' },
+];
+
+const areasConDatos = AREAS.map((a, i) => {
   const piezasArea = piezas.filter((p) => AREA_DE_TIPO_PIEZA[p.data.tipo] === a.slug);
   const piezasVivas = piezasArea.filter((p) => ['activo', 'construyendo'].includes(p.data.estado)).length;
-  return { ...a, piezasVivas };
+  return { ...a, piezasVivas, pal: PALETA[i % PALETA.length] };
 });
 ---
 
-<KxBase title="Áreas" crumb="áreas">
-    <section class="hero">
-        <div class="kicker">01 · estructura</div>
-        <h1>Las once áreas</h1>
-        <p class="lede">
-            El eje con el que se pide el trabajo en este sistema. Cada área tiene su archivo de prosa
-            en la bóveda y, cuando aplica, sus piezas cargadas como objetos.
-        </p>
-    </section>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Áreas · kx atlas system</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #26241F; --ink-soft: #6B6459; --ink-faint: #A39985;
+            --paper: #FFFFFF; --cream: #FDFCF9; --line: #ECE7DC;
+            --teal: #2F8F94; --teal-deep: #1F6367; --teal-tint: #E9F7F7; --teal-mid: #BFE9EA;
+            --gold: #B08D57;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; background: var(--cream); color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        a { color: inherit; }
 
-    <div class="areas-grid">
-        {areasConDatos.map((a) => (
-            <AreaCard label={a.label} linea={a.linea} href={`/astro-project-v2/kx/areas/${a.slug}/`} piezasVivas={a.piezasVivas} />
-        ))}
+        .nav {
+            position: sticky; top: 0; z-index: 40;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 78px; padding: 0 2.2rem;
+            background: rgba(253,252,249,0.82);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav-left { display: flex; align-items: center; gap: 1.2rem; }
+        .nav-brand {
+            font-family: "Inter", sans-serif; font-weight: 800; font-size: 0.98rem;
+            letter-spacing: -0.01em; text-decoration: none; color: var(--ink);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 10px rgba(47,143,148,0.55); }
+        .crumb { font-family: "Inter", sans-serif; font-size: 0.82rem; color: var(--ink-faint); }
+        .nav-right { font-family: "Reenie Beanie", cursive; font-size: 1.65rem; color: var(--teal); text-decoration: none; }
+
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.6rem; }
+
+        .hero { padding: 3.4rem 0 2.2rem; max-width: 62ch; }
+        .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+        .hero h1 { font-size: clamp(2.4rem, 5.5vw, 3.4rem); font-weight: 500; line-height: 1.05; margin: 0 0 0.9rem; }
+        .hero .lede { font-size: 1.08rem; line-height: 1.62; color: var(--ink-soft); margin: 0; }
+
+        .areas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding-bottom: 4rem; }
+        @media (max-width: 820px) { .areas-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .areas-grid { grid-template-columns: 1fr; } }
+        .area-card {
+            display: block; text-decoration: none; color: var(--ink);
+            background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
+            padding: 1.35rem 1.5rem; position: relative; overflow: hidden;
+            transition: transform 0.22s cubic-bezier(0.22,1,0.36,1), border-color 0.22s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .area-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--ac); opacity: 0.85; }
+        .area-card:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(160deg, #FFFFFF 0%, var(--ac-tint) 130%);
+            border-color: var(--ac-mid);
+            box-shadow: 0 18px 34px -16px var(--ac-glow);
+        }
+        .area-card h3 { font-size: 1.14rem; font-weight: 600; margin: 0.3rem 0 0.35rem; }
+        .area-card p { font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-soft); margin: 0; line-height: 1.5; min-height: 2.4em; }
+        .area-count {
+            display: inline-flex; margin-top: 0.85rem; font-family: "JetBrains Mono", monospace; font-size: 0.68rem;
+            font-weight: 600; color: var(--ac); background: var(--ac-tint); padding: 0.25rem 0.6rem; border-radius: 999px;
+        }
+
+        .footer {
+            margin: 1rem 0 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
+            font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-faint);
+        }
+        .footer a { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
+        .footer a:hover { color: var(--teal-deep); }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-left">
+            <a href="/astro-project-v2/kx/" class="nav-brand"><span class="dot"></span>kx atlas system</a>
+            <span class="crumb">/ áreas</span>
+        </div>
+        <a href="/astro-project-v2/" class="nav-right">hyperlynxt | teo</a>
     </div>
-</KxBase>
 
-<style>
-    .hero { padding: 3.5rem 0 1.5rem; max-width: 62ch; }
-    .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
-    .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.2rem); font-weight: 500; line-height: 1.05; margin: 0 0 0.7rem; }
-    .hero .lede { font-size: 1.05rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+    <div class="wrap">
+        <section class="hero">
+            <div class="kicker">01 · matriz</div>
+            <h1>Las once áreas</h1>
+            <p class="lede">
+                El eje con el que se pide el trabajo en este sistema. Cada área tiene su archivo de prosa
+                en la bóveda y, cuando aplica, sus piezas cargadas como objetos.
+            </p>
+        </section>
 
-    .areas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
-    @media (max-width: 820px) { .areas-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px) { .areas-grid { grid-template-columns: 1fr; } }
-</style>
+        <div class="areas-grid">
+            {areasConDatos.map((a) => (
+                <a class="area-card" href={`/astro-project-v2/kx/areas/${a.slug}/`}
+                   style={`--ac: ${a.pal.c}; --ac-tint: ${a.pal.tint}; --ac-mid: ${a.pal.mid}; --ac-glow: ${a.pal.glow};`}>
+                    <h3>{a.label}</h3>
+                    <p>{a.linea}</p>
+                    {a.piezasVivas > 0 && <span class="area-count">{a.piezasVivas} {a.piezasVivas === 1 ? 'pieza' : 'piezas'}</span>}
+                </a>
+            ))}
+        </div>
+
+        <div class="footer">
+            <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
+        </div>
+    </div>
+</body>
+</html>
