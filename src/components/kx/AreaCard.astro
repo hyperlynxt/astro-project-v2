@@ -1,0 +1,38 @@
+---
+interface Props {
+  label: string;
+  linea: string;
+  href: string;
+  piezasVivas?: number;
+  tareasAbiertas?: number;
+}
+
+const { label, linea, href, piezasVivas, tareasAbiertas } = Astro.props;
+const tieneContador = (piezasVivas ?? 0) > 0 || (tareasAbiertas ?? 0) > 0;
+---
+
+<a class="area-card" href={href}>
+    <h3>{label}</h3>
+    <p>{linea}</p>
+    {tieneContador && (
+        <div class="counters">
+            {(piezasVivas ?? 0) > 0 && <span>{piezasVivas} {piezasVivas === 1 ? 'pieza' : 'piezas'}</span>}
+            {(tareasAbiertas ?? 0) > 0 && <span>{tareasAbiertas} {tareasAbiertas === 1 ? 'tarea' : 'tareas'}</span>}
+        </div>
+    )}
+</a>
+
+<style>
+    .area-card {
+        display: block; text-decoration: none; color: var(--ink);
+        background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+        padding: 1.1rem 1.3rem; transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .area-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .area-card h3 { font-size: 1.02rem; font-weight: 600; margin: 0 0 0.3rem; }
+    .area-card p { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-soft); margin: 0; line-height: 1.45; }
+    .counters {
+        display: flex; gap: 0.7rem; margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--line);
+        font-family: "JetBrains Mono", monospace; font-size: 0.66rem; color: var(--ink-faint);
+    }
+</style>

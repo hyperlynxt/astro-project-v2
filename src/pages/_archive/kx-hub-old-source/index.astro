@@ -1,0 +1,324 @@
+---
+import { getCollection } from 'astro:content';
+import KxBase from '../../layouts/KxBase.astro';
+import StatStrip from '../../components/kx/StatStrip.astro';
+import SectionHead from '../../components/kx/SectionHead.astro';
+import EstadoChip from '../../components/kx/EstadoChip.astro';
+import ObjectRow from '../../components/kx/ObjectRow.astro';
+import AreaCard from '../../components/kx/AreaCard.astro';
+import {
+  AREAS,
+  AREA_DE_TIPO_PIEZA,
+  ACTUAL_ESTADOS,
+  VISION_ESTADOS,
+  fechaCorta,
+  diasDesde,
+  ultimoMovimiento,
+} from '../../lib/kx';
+
+const modulos = await getCollection('kxModulos');
+const piezas = await getCollection('kxPiezas');
+const tareas = await getCollection('kxTareas');
+const sesiones = await getCollection('kxSesiones');
+const documentos = await getCollection('kxDocumentos');
+
+const moduloTitulo = (id: string) => modulos.find((m) => m.id === id)?.data.titulo ?? id;
+
+// ── pulso ──
+const piezasVivasTotal = piezas.filter((p) => ['activo', 'construyendo'].includes(p.data.estado)).length;
+const tareasAbiertasTotal = tareas.filter((t) => t.data.estado !== 'cerrada' && t.data.tipo !== 'aclarar').length;
+const decisionesAbiertas = tareas.filter((t) => t.data.tipo === 'decidir' && t.data.estado !== 'cerrada');
+const ultimo = ultimoMovimiento(modulos, piezas, tareas);
+const diasUltimo = ultimo ? diasDesde(ultimo) : null;
+
+const stats = [
+  { value: modulos.length, label: 'módulos' },
+  { value: piezasVivasTotal, label: 'piezas vivas' },
+  { value: tareasAbiertasTotal, label: 'tareas abiertas' },
+  { value: decisionesAbiertas.length, label: 'decisiones pendientes' },
+  { value: diasUltimo === null ? 's/d' : diasUltimo === 0 ? 'hoy' : diasUltimo, label: diasUltimo === 0 ? 'día del último cambio' : 'días desde el último cambio' },
+];
+
+// ── retomar ──
+const ultimaSesion = [...sesiones].sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())[0] ?? null;
+
+const enObra = [...modulos.map((m) => ({ ...m, kind: 'módulo' })), ...piezas.map((p) => ({ ...p, kind: p.data.tipo }))]
+  .filter((o) => o.data.estado === 'construyendo')
+  .sort((a, b) => b.data.actualizado.getTime() - a.data.actualizado.getTime());
+const enObraTop = enObra.slice(0, 5);
+
+const todosLosObjetos = [
+  ...modulos.map((m) => ({ titulo: m.data.titulo, tipo: 'módulo', estado: m.data.estado, actualizado: m.data.actualizado })),
+  ...piezas.map((p) => ({ titulo: p.data.titulo, tipo: p.data.tipo, estado: p.data.estado, actualizado: p.data.actualizado })),
+  ...tareas.map((t) => ({ titulo: t.data.titulo, tipo: 'tarea', estado: t.data.estado, actualizado: t.data.actualizado })),
+];
+const seMovioUltimo = todosLosObjetos
+  .sort((a, b) => b.actualizado.getTime() - a.actualizado.getTime())
+  .slice(0, 5);
+
+// ── entrar por área ──
+const areasConDatos = AREAS.map((a) => {
+  const piezasArea = piezas.filter((p) => AREA_DE_TIPO_PIEZA[p.data.tipo] === a.slug);
+  const piezasVivas = piezasArea.filter((p) => ['activo', 'construyendo'].includes(p.data.estado)).length;
+  return { ...a, piezasVivas };
+});
+
+// ── documentos ──
+const documentosOrdenados = [...documentos].sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+
+// ── módulos ──
+const modulosActual = modulos.filter((m) => ACTUAL_ESTADOS.includes(m.data.estado));
+const modulosVision = modulos.filter((m) => VISION_ESTADOS.includes(m.data.estado));
+const piezasDeModulo = (id: string) => piezas.filter((p) => p.data.modulo === id).length;
+const documentosDeModulo = (id: string) => documentos.filter((d) => d.data.modulo === id).length;
+
+// ── vistas ──
+const vistas = [
+  { titulo: 'Sistema', desc: 'Módulos y piezas, actual y visión.', href: '/astro-project-v2/kx/sistema/', disponible: true },
+  { titulo: 'Tareas', desc: 'El backlog agrupado por tipo.', href: '/astro-project-v2/kx/tareas/', disponible: true },
+  { titulo: 'Anatomía', desc: 'Por tipo de objeto, con la taxonomía.', href: '/astro-project-v2/kx/anatomia/', disponible: true },
+  { titulo: 'Áreas', desc: 'El sistema cortado por área, no por estado.', href: '/astro-project-v2/kx/areas/', disponible: true },
+  { titulo: 'Sesiones', desc: 'Índice de sesiones, textual y mapa.', href: '/astro-project-v2/kx/sesiones/', disponible: false },
+  { titulo: 'Patch notes', desc: 'El log de eventos del sistema.', href: '/astro-project-v2/kx/patch-notes/', disponible: false },
+  { titulo: 'Flujos', desc: 'Los pipelines, instancia por etapa.', href: '/astro-project-v2/kx/flujos/', disponible: false },
+  { titulo: 'Estructura', desc: 'El árbol de carpetas del sistema.', href: '/astro-project-v2/kx/estructura/', disponible: false },
+];
+---
+
+<KxBase title="kx system" crumb="kx">
+    <section class="hero">
+        <div class="kicker">back end</div>
+        <h1>ground up <em>kx</em> system</h1>
+        <p class="lede">
+            El andamiaje detrás de interlynkx: los módulos, las piezas y los flujos que producen todo
+            lo demás. Esta página se dibuja sola desde el estado del sistema.
+        </p>
+    </section>
+
+    <StatStrip stats={stats} />
+
+    {(ultimaSesion || enObraTop.length > 0 || seMovioUltimo.length > 0) && (
+        <>
+            <SectionHead title="Retomar" num="§1">Lo último que pasó, y lo que está a medio hacer.</SectionHead>
+            <div class="retomar">
+                {ultimaSesion && (
+                    <div class="retomar-col">
+                        <h4>Última sesión</h4>
+                        <div class="sesion-card">
+                            <span class="sesion-id">{ultimaSesion.data.id}</span>
+                            <span class="sesion-fecha">{fechaCorta(ultimaSesion.data.fecha)}</span>
+                            <p class="sesion-titulo">{ultimaSesion.data.titulo}</p>
+                            <div class="sesion-links">
+                                {ultimaSesion.data.hrefTextual && <a href={ultimaSesion.data.hrefTextual}>textual</a>}
+                                {ultimaSesion.data.hrefMapa && <a href={ultimaSesion.data.hrefMapa}>mapa</a>}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {enObraTop.length > 0 && (
+                    <div class="retomar-col">
+                        <h4>En obra</h4>
+                        <div class="retomar-list">
+                            {enObraTop.map((o) => (
+                                <ObjectRow titulo={o.data.titulo} tipo={o.kind} estado={o.data.estado} />
+                            ))}
+                        </div>
+                        {enObra.length > 5 && <a class="ver-mas" href="/astro-project-v2/kx/sistema/">y {enObra.length - 5} más &rarr;</a>}
+                    </div>
+                )}
+                {seMovioUltimo.length > 0 && (
+                    <div class="retomar-col">
+                        <h4>Se movió último</h4>
+                        <div class="retomar-list">
+                            {seMovioUltimo.map((o) => (
+                                <ObjectRow titulo={o.titulo} tipo={o.tipo} fecha={o.actualizado} />
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </>
+    )}
+
+    {decisionesAbiertas.length > 0 && (
+        <>
+            <SectionHead title="Bloqueando" num="§2">Decisiones que solo Teo puede tomar, y cuánto trancan.</SectionHead>
+            <div class="decisiones">
+                {decisionesAbiertas.slice(0, 5).map((d) => {
+                    const bloquea = tareas.filter((t) => t.data.bloqueadaPor?.includes(d.id)).length;
+                    return (
+                        <div class="decision-row">
+                            <span class="decision-titulo">{d.data.titulo}</span>
+                            {bloquea > 0 && <span class="decision-bloquea">bloquea {bloquea}</span>}
+                        </div>
+                    );
+                })}
+            </div>
+        </>
+    )}
+
+    <SectionHead title="Entrar por área" num="§3">Las once áreas de estructura del núcleo. Es el eje con el que se pide el trabajo.</SectionHead>
+    <div class="areas-grid">
+        {areasConDatos.map((a) => (
+            <AreaCard label={a.label} linea={a.linea} href={`/astro-project-v2/kx/areas/${a.slug}/`} piezasVivas={a.piezasVivas} />
+        ))}
+    </div>
+
+    {documentosOrdenados.length > 0 && (
+        <>
+            <SectionHead title="Documentos" num="§4">Cada documento del sistema se publica en pareja: prosa completa y mapa visual.</SectionHead>
+            <div class="grid">
+                {documentosOrdenados.map((doc) => (
+                    <div class="module-card">
+                        <div class="module-row">
+                            <span class="module-id">{doc.data.id} · {moduloTitulo(doc.data.modulo)}</span>
+                            <span class="module-status">{doc.data.estado}</span>
+                        </div>
+                        <h3 class="module-title">{doc.data.titulo}</h3>
+                        <p class="module-desc">{doc.data.subtitulo}</p>
+                        <div class="module-links">
+                            {doc.data.hrefMapa
+                                ? <a href={doc.data.hrefMapa}>mapa visual</a>
+                                : <span class="module-links-missing">falta el mapa</span>}
+                            <a href={doc.data.hrefTextual}>{doc.data.hrefMapa ? 'análisis completo' : 'leer'}</a>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
+
+    <SectionHead title="Módulos" num="§5">{modulos.length} hoy. Los de abajo existen como decisión, no como código.</SectionHead>
+    <div class="modulos-list">
+        {modulosActual.map((m) => (
+            <div class="modulo-row">
+                <span class="modulo-titulo">{m.data.titulo}</span>
+                <EstadoChip estado={m.data.estado} />
+                <span class="modulo-count">{piezasDeModulo(m.id)} piezas</span>
+                <span class="modulo-count">{documentosDeModulo(m.id)} documentos</span>
+            </div>
+        ))}
+    </div>
+    {modulosVision.length > 0 && (
+        <div class="modulos-list modulos-vision">
+            {modulosVision.map((m) => (
+                <div class="modulo-row">
+                    <span class="modulo-titulo">{m.data.titulo}</span>
+                    <EstadoChip estado={m.data.estado} />
+                    <span class="modulo-count">{piezasDeModulo(m.id)} piezas</span>
+                    <span class="modulo-count">{documentosDeModulo(m.id)} documentos</span>
+                </div>
+            ))}
+        </div>
+    )}
+
+    <SectionHead title="Vistas" num="§6">Las lecturas del sistema. Algunas todavía no existen.</SectionHead>
+    <div class="vistas-grid">
+        {vistas.map((v) => v.disponible ? (
+            <a class="vista-card" href={v.href}>
+                <h4>{v.titulo}</h4>
+                <p>{v.desc}</p>
+            </a>
+        ) : (
+            <div class="vista-card is-stub">
+                <h4>{v.titulo}</h4>
+                <p>{v.desc}</p>
+                <span class="vista-badge">sin construir</span>
+            </div>
+        ))}
+    </div>
+</KxBase>
+
+<style>
+    .hero { padding: 3.5rem 0 1.5rem; max-width: 62ch; }
+    .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+    .hero h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 1rem; }
+    .hero h1 em { font-style: italic; color: var(--teal); }
+    .hero .lede { font-size: 1.05rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+
+    /* retomar */
+    .retomar {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
+        background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--gold);
+        border-radius: 10px; padding: 1.5rem 1.7rem;
+    }
+    @media (max-width: 800px) { .retomar { grid-template-columns: 1fr; } }
+    .retomar-col h4 {
+        font-family: "Inter", sans-serif; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--ink-faint); margin: 0 0 0.7rem;
+    }
+    .sesion-card { }
+    .sesion-id { font-family: "JetBrains Mono", monospace; font-size: 0.72rem; color: var(--gold); }
+    .sesion-fecha { font-family: "JetBrains Mono", monospace; font-size: 0.68rem; color: var(--ink-faint); margin-left: 0.6rem; }
+    .sesion-titulo { font-family: "Inter", sans-serif; font-size: 0.86rem; margin: 0.4rem 0 0.6rem; line-height: 1.4; }
+    .sesion-links { display: flex; gap: 0.9rem; }
+    .sesion-links a { font-family: "Inter", sans-serif; font-size: 0.74rem; font-weight: 600; text-decoration: none; color: var(--teal); border-bottom: 1px solid transparent; }
+    .sesion-links a:hover { border-color: var(--teal); }
+    .retomar-list { }
+    .ver-mas { display: inline-block; margin-top: 0.5rem; font-family: "Inter", sans-serif; font-size: 0.72rem; color: var(--ink-soft); text-decoration: none; }
+    .ver-mas:hover { color: var(--teal); }
+
+    /* decisiones */
+    .decisiones {
+        background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--seal);
+        border-radius: 10px; padding: 0.4rem 1.5rem;
+    }
+    .decision-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-top: 1px solid var(--line); }
+    .decision-row:first-child { border-top: none; }
+    .decision-titulo { font-family: "Inter", sans-serif; font-size: 0.86rem; }
+    .decision-bloquea {
+        font-family: "Inter", sans-serif; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.04em;
+        color: var(--seal); white-space: nowrap;
+    }
+
+    /* areas */
+    .areas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+    @media (max-width: 820px) { .areas-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .areas-grid { grid-template-columns: 1fr; } }
+
+    /* documentos (module-card, del hub anterior) */
+    .grid { display: flex; flex-direction: column; gap: 1rem; }
+    .module-card {
+        border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 1.5rem 1.75rem;
+    }
+    .module-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+    .module-id { font-family: "JetBrains Mono", monospace; font-size: 0.72rem; color: var(--gold); letter-spacing: 0.05em; }
+    .module-status { font-family: "Inter", sans-serif; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); text-align: right; }
+    .module-title { font-size: 1.3rem; font-weight: 500; margin: 0 0 0.4rem; }
+    .module-desc { font-family: "Inter", sans-serif; font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+    .module-links { display: flex; gap: 1.2rem; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+    .module-links a { font-family: "Inter", sans-serif; font-size: 0.78rem; font-weight: 600; text-decoration: none; color: var(--teal); border-bottom: 1px solid transparent; }
+    .module-links a:hover { border-color: var(--teal); }
+    .module-links a:first-child { color: var(--gold); }
+    .module-links a:first-child:hover { border-color: var(--gold); }
+    .module-links-missing { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-faint); }
+
+    /* modulos */
+    .modulos-list { display: flex; flex-direction: column; }
+    .modulos-vision { margin-top: 0.6rem; opacity: 0.75; }
+    .modulo-row {
+        display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 1rem;
+        padding: 0.7rem 0.2rem; border-top: 1px solid var(--line);
+    }
+    .modulo-row:first-child { border-top: none; }
+    @media (max-width: 620px) { .modulo-row { grid-template-columns: 1fr auto; row-gap: 0.3rem; } }
+    .modulo-titulo { font-family: "Inter", sans-serif; font-weight: 600; font-size: 0.9rem; }
+    .modulo-count { font-family: "JetBrains Mono", monospace; font-size: 0.66rem; color: var(--ink-faint); white-space: nowrap; }
+
+    /* vistas */
+    .vistas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+    @media (max-width: 820px) { .vistas-grid { grid-template-columns: repeat(2, 1fr); } }
+    .vista-card {
+        display: block; text-decoration: none; color: var(--ink);
+        background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.15rem;
+        position: relative; transition: border-color 0.2s ease;
+    }
+    a.vista-card:hover { border-color: var(--teal); }
+    .vista-card.is-stub { opacity: 0.45; cursor: default; }
+    .vista-card h4 { font-size: 0.92rem; font-weight: 600; margin: 0 0 0.3rem; }
+    .vista-card p { font-family: "Inter", sans-serif; font-size: 0.74rem; color: var(--ink-soft); margin: 0; line-height: 1.4; }
+    .vista-badge {
+        display: inline-block; margin-top: 0.5rem; font-family: "Inter", sans-serif; font-size: 0.6rem;
+        letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-faint);
+    }
+</style>

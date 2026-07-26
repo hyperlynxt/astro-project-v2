@@ -152,7 +152,38 @@ const kxModulos = defineCollection({
     estado: z.enum(ESTADOS),
     descripcion: z.string(),
     origen: z.string().optional(),
-    href: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxSesiones = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-sesiones' }),
+  schema: z.object({
+    id: z.string(),
+    fecha: z.date(),
+    titulo: z.string(),
+    conclusiva: z.boolean().default(false),
+    estado: z.enum(['dictada', 'destilada', 'publicada']),
+    produjo: z.array(z.string()).default([]),
+    resumen: z.string().optional(),
+    hrefTextual: z.string().optional(),
+    hrefMapa: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxDocumentos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-documentos' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    subtitulo: z.string(),
+    modulo: z.string(),
+    hrefTextual: z.string(),
+    hrefMapa: z.string().optional(),
+    estado: z.string(),
+    fecha: z.date(),
+    origen: z.string().optional(),
     actualizado: z.date(),
   }),
 });
@@ -247,5 +278,5 @@ const kxFuncionalidades = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives, kxModulos, kxPiezas, kxTareas, kxWorkflows, kxCuadrantes, kxStack, kxIntegraciones, kxFuncionalidades };
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives, kxModulos, kxPiezas, kxTareas, kxWorkflows, kxCuadrantes, kxStack, kxIntegraciones, kxFuncionalidades, kxSesiones, kxDocumentos };
 

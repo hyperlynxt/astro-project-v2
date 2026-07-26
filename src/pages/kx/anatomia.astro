@@ -34,7 +34,7 @@ function porVista(items, vista) {
 }
 
 const TAXONOMIA_IDS = [
-  { prefijo: 'KX-S{NN}', significa: 'Sesión sistémica', ejemplo: 'KX-S03', vive: '00 - Kx Core Module/Sesiones/' },
+  { prefijo: 'KX-S{NN}', significa: 'Sesión kx core (el id vive en el frontmatter, no en el nombre del archivo)', ejemplo: 'KX-S03', vive: '00 - Kx Core Module/02 - Ensamblaje/Sesiones/' },
   { prefijo: 'KX-M', significa: 'Módulo (slug kebab, no numerado)', ejemplo: 'modulo-base', vive: 'kx-modulos/' },
   { prefijo: 'KX-P{NN}', significa: 'Pieza — skill, flujo, template, convención, integración', ejemplo: 'KX-P08', vive: 'kx-piezas/' },
   { prefijo: 'KX-T{NN}', significa: 'Tarea del backlog', ejemplo: 'KX-T22', vive: 'kx-tareas/' },
@@ -60,6 +60,8 @@ const TAXONOMIA_TIPOS_TAREA = [
 
 const TAXONOMIA_NAMING = [
   { patron: 'kx {nombre} module', aplica: 'titulo de todo módulo del dashboard', ejemplo: 'kx core module, kx sesiones module' },
+  { patron: '{AA.MM.DD} - kx core session[ - II]', aplica: 'sesiones del kx core module', ejemplo: '26.07.28 - kx core session - II' },
+  { patron: '{AA.MM} - Patch Notes', aplica: 'archivo mensual del log de eventos del sistema', ejemplo: '26.07 - Patch Notes' },
   { patron: '{AA.MM.DD} - Class {A/B/C}[ - II]', aplica: 'stream sessions de 01 - Sesiones/', ejemplo: '26.07.25 - Class A - IV' },
   { patron: 'innie / outie', aplica: 'rama de limpieza — hacia adentro (self-archivo) vs hacia afuera (publicación)', ejemplo: 'limpieza-innie, limpieza-outie' },
   { patron: 'BANDERA: TIPO', aplica: 'marcador inline dictado en voz, mayúscula, línea propia', ejemplo: 'BANDERA: TRASPASO DE TEMA' },

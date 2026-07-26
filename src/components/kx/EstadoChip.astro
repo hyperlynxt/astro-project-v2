@@ -1,0 +1,25 @@
+---
+import { ESTADO_META } from '../../lib/kx';
+
+interface Props {
+  estado: string;
+}
+
+const { estado } = Astro.props;
+const meta = ESTADO_META[estado] ?? { label: estado, color: '#8c8070' };
+---
+
+<span class="estado-chip">
+    <span class="dot" style={`background: ${meta.color}`}></span>
+    <span class="label">{meta.label}</span>
+</span>
+
+<style>
+    .estado-chip {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-family: "Inter", sans-serif; font-size: 0.62rem; font-weight: 700;
+        letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft);
+        white-space: nowrap;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+</style>

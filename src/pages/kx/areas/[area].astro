@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import KxBase from '../../../layouts/KxBase.astro';
+import SectionHead from '../../../components/kx/SectionHead.astro';
+import ObjectRow from '../../../components/kx/ObjectRow.astro';
+import {
+  AREAS,
+  AREA_DE_TIPO_PIEZA,
+  AREA_ARCHIVO_BOVEDA,
+  ACTUAL_ESTADOS,
+  VISION_ESTADOS,
+} from '../../../lib/kx';
+
+export function getStaticPaths() {
+  return AREAS.map((a) => ({ params: { area: a.slug }, props: { area: a } }));
+}
+
+const { area } = Astro.props;
+
+const piezas = await getCollection('kxPiezas');
+const piezasArea = piezas
+  .filter((p) => AREA_DE_TIPO_PIEZA[p.data.tipo] === area.slug)
+  .sort((a, b) => b.data.actualizado.getTime() - a.data.actualizado.getTime());
+
+const piezasActual = piezasArea.filter((p) => ACTUAL_ESTADOS.includes(p.data.estado));
+const piezasVision = piezasArea.filter((p) => VISION_ESTADOS.includes(p.data.estado));
+
+const seMovioUltimo = [...piezasArea].slice(0, 5);
+
+const archivoBoveda = AREA_ARCHIVO_BOVEDA[area.slug];
+---
+
+<KxBase title={area.label} crumb={`áreas / ${area.label.toLowerCase()}`}>
+    <section class="hero">
+        <div class="kicker">01 · estructura</div>
+        <h1>{area.label}</h1>
+        <p class="lede">{area.linea}</p>
+        <p class="archivo">Prosa y decisiones: <code>{archivoBoveda}</code> en la bóveda.</p>
+    </section>
+
+    {piezasArea.length > 0 ? (
+        <>
+            <SectionHead title="Piezas" num="§1">Actual y visión, ordenadas por lo último que se tocó.</SectionHead>
+            {piezasActual.length > 0 && (
+                <div class="rows">
+                    {piezasActual.map((p) => (
+                        <ObjectRow titulo={p.data.titulo} tipo={p.data.tipo} estado={p.data.estado} fecha={p.data.actualizado} />
+                    ))}
+                </div>
+            )}
+            {piezasVision.length > 0 && (
+                <>
+                    <p class="subhead">visión</p>
+                    <div class="rows rows-vision">
+                        {piezasVision.map((p) => (
+                            <ObjectRow titulo={p.data.titulo} tipo={p.data.tipo} estado={p.data.estado} fecha={p.data.actualizado} />
+                        ))}
+                    </div>
+                </>
+            )}
+        </>
+    ) : (
+        <p class="nota-vacio">Esta área todavía no tiene piezas cargadas como objetos del sistema.</p>
+    )}
+
+    <SectionHead title="Tareas" num="§2">Lo que queda por hacer en esta área.</SectionHead>
+    <p class="nota-vacio">
+        Falta el campo <code>area</code> en <code>kx-tareas</code> (es la Etapa D del andamio del kx core module).
+        Hasta que exista, las tareas no se pueden filtrar por área sin arriesgar resultados falsos.
+    </p>
+
+    {seMovioUltimo.length > 0 && (
+        <>
+            <SectionHead title="Se movió último" num="§3">Las piezas de esta área ordenadas por su última actualización.</SectionHead>
+            <div class="rows">
+                {seMovioUltimo.map((p) => (
+                    <ObjectRow titulo={p.data.titulo} tipo={p.data.tipo} fecha={p.data.actualizado} />
+                ))}
+            </div>
+        </>
+    )}
+</KxBase>
+
+<style>
+    .hero { padding: 3.5rem 0 1.5rem; max-width: 62ch; }
+    .kicker { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+    .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.2rem); font-weight: 500; line-height: 1.05; margin: 0 0 0.7rem; }
+    .hero .lede { font-size: 1.05rem; line-height: 1.6; color: var(--ink-soft); margin: 0 0 0.9rem; }
+    .archivo { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-faint); margin: 0; }
+    .archivo code { font-family: "JetBrains Mono", monospace; background: var(--panel-2); padding: 0.1rem 0.4rem; border-radius: 3px; }
+
+    .rows { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.3rem 1.1rem; }
+    .rows-vision { opacity: 0.75; }
+    .subhead { font-family: "Inter", sans-serif; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 1.1rem 0 0.4rem; }
+
+    .nota-vacio { font-family: "Inter", sans-serif; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5; }
+    .nota-vacio code { font-family: "JetBrains Mono", monospace; background: var(--panel-2); padding: 0.1rem 0.4rem; border-radius: 3px; }
+</style>

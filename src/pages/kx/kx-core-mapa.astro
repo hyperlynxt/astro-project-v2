@@ -1,0 +1,802 @@
+---
+import '../../styles/global.css';
+
+const DOC = '/astro-project-v2/kx/kx-core/';
+
+const capas = [
+  {
+    n: '01', name: 'Estado', sub: 'mutable · se sobrescribe', color: '#7BA08A',
+    q: '¿Qué hay ahora?',
+    donde: 'colecciones kx-* en la página',
+    href: `${DOC}#11-la-consecuencia-real-tres-semánticas-de-mutación`,
+  },
+  {
+    n: '02', name: 'Eventos', sub: 'append-only · nunca se pisa', color: '#B08D57',
+    q: '¿Qué pasó y cuándo?',
+    donde: '02 - Ensamblaje/Patch Notes/, un mes por archivo',
+    href: `${DOC}#21-el-sistema-no-tiene-log-de-eventos`,
+  },
+  {
+    n: '03', name: 'Prosa', sub: 'autorada · se reescribe despacio', color: '#9B7CC8',
+    q: '¿Por qué es así?',
+    donde: 'archivos de área en la bóveda',
+    href: `${DOC}#12-la-regla-dura-que-sostiene-todo-esto`,
+  },
+];
+
+const categorias = [
+  {
+    n: '01', name: 'Estructura', sub: 'se sobrescribe', color: '#7BA08A',
+    line: '¿Qué existe y cómo está armado? Once áreas.',
+    href: `${DOC}#1-el-reencuadre-las-cuatro-categorías-no-son-cuatro-temas`,
+  },
+  {
+    n: '02', name: 'Ensamblaje', sub: 'se agrega', color: '#B08D57',
+    line: '¿Qué pasó y qué sigue? Patch notes, sesiones, tareas.',
+    href: `${DOC}#36-tareas-y-pendientes-son-lo-mismo`,
+  },
+  {
+    n: '03', name: 'Contexto Personal', sub: 'lo escribe Teo', color: '#9B7CC8',
+    line: '¿Para quién es esto y bajo qué restricciones? La IA no escribe acá.',
+    href: `${DOC}#37-las-áreas-de-contexto-personal`,
+  },
+  {
+    n: '--', name: 'Conocimiento', sub: 'afuera del módulo', color: '#B4BCC0',
+    line: 'Materia prima que el sistema procesa. Módulo aparte, no categoría.',
+    href: `${DOC}#9-qué-no-se-hace-ahora-a-propósito`,
+  },
+];
+
+const areas = [
+  {
+    label: '01 · estructura', color: '#7BA08A', href: `${DOC}#31-las-once-áreas-de-estructura`,
+    items: [
+      { id: 'a1', title: 'modulos', hook: 'Los módulos y su relación.' },
+      { id: 'a2', title: 'capas', hook: 'La escalera: sistema, módulo, pieza, artefacto.' },
+      { id: 'a3', title: 'skills', hook: 'Catálogo, convenciones, arquitectura.' },
+      { id: 'a4', title: 'instancias', hook: 'Unidades atómicas y los templates que las crean.' },
+      { id: 'a5', title: 'flujos', hook: 'Los pipelines que recorren las instancias.' },
+      { id: 'a6', title: 'convenciones', hook: 'Naming, frontmatter, cómo se escribe cada cosa.' },
+      { id: 'a7', title: 'taxonomia', hook: 'Ids, estados, tipos, terminología.' },
+      { id: 'a8', title: 'integraciones', hook: 'Sistema con sistema, y plugins que sostienen un pipeline.' },
+      { id: 'a9', title: 'cuadrantes', hook: 'El cuadrante como unidad estructural.' },
+      { id: 'a10', title: 'pagina', hook: 'Qué colección alimenta qué vista.' },
+      { id: 'a11', title: 'mapas', hook: 'Organigramas, cursogramas, árbol de carpetas.' },
+    ],
+  },
+  {
+    label: '02 · ensamblaje', color: '#B08D57', href: `${DOC}#36-tareas-y-pendientes-son-lo-mismo`,
+    items: [
+      { id: 'b1', title: 'Patch Notes/', hook: 'El log. Un archivo por mes, subdividido por días.' },
+      { id: 'b2', title: 'Sesiones/', hook: 'Una sola clase de sesión, sin propósito declarado.' },
+      { id: 'b3', title: 'Tareas.md', hook: 'Bandeja y criterio. El backlog vive en la página.' },
+    ],
+  },
+  {
+    label: '03 · contexto personal', color: '#9B7CC8', href: `${DOC}#37-las-áreas-de-contexto-personal`,
+    items: [
+      { id: 'c1', title: 'Cuadrantes.md', hook: 'Qué hay adentro de cada cuadrante.' },
+      { id: 'c2', title: 'Areas de Vida.md', hook: 'Para bullet journal y sesiones emocionales.' },
+      { id: 'c3', title: 'Stack Hardware.md', hook: 'Dispositivos, y con qué fricción cada uno.' },
+      { id: 'c4', title: 'Stack Software.md', hook: 'Apps y plugins de comodidad.' },
+      { id: 'c5', title: 'Interaccion.md', hook: 'Tiempos, fricción, comportamiento adhd.' },
+      { id: 'c6', title: 'Objetivos.md', hook: 'Qué craft querés desarrollar, qué querés crear.' },
+    ],
+  },
+];
+
+const brechas = [
+  { n: '2.3', title: 'Cero flujos cargados', hook: 'Lo que más querés mirar es lo que menos data tiene.', peso: 92, sev: 'crítica', href: `${DOC}#23-los-flujos-son-lo-que-más-querés-ver-y-no-hay-un-solo-dato-cargado` },
+  { n: '2.2', title: 'Nada conecta tarea con área', hook: '"Quiero seguir con skills" todavía no tiene respuesta.', peso: 78, sev: 'alta', href: `${DOC}#22-nada-conecta-una-tarea-con-su-capa` },
+  { n: '2.6', title: 'Sprawl de colecciones', hook: 'Ocho colecciones, dos vacías, dos sin criterio escrito.', peso: 52, sev: 'media', href: `${DOC}#26-ya-hay-sprawl-de-colecciones-y-este-plan-agrega-presión` },
+  { n: '2.4', title: 'La taxonomía vive en JSX', hook: 'Los arrays de anatomia.astro son espejo, no fuente.', peso: 38, sev: 'media', href: `${DOC}#24-la-taxonomía-vive-en-jsx` },
+  { n: '2.1', title: 'No había log de eventos', hook: 'Resuelto: el patch notes mensual, con backfill retroactivo.', peso: 100, cerrada: true, sev: 'cerrada', href: `${DOC}#21-el-sistema-no-tiene-log-de-eventos` },
+  { n: '2.5', title: 'Dos lugares quieren ser el lugar', hook: 'Aclarado: era completitud de las áreas, no filesystem.', peso: 64, cerrada: true, sev: 'cerrada', href: `${DOC}#25-hay-dos-lugares-que-quieren-ser-el-lugar-donde-está-todo` },
+  { n: '2.7', title: 'KX-S01 sin frontmatter', hook: 'Resuelto: normalizada, y el template lo evita para siempre.', peso: 22, cerrada: true, sev: 'cerrada', href: `${DOC}#27-la-sesión-de-ayer-no-tiene-id-ni-frontmatter` },
+];
+
+const test = [
+  { name: 'kx-eventos', pasa: true, razon: 'Pasó el test, pero se resolvió como markdown en la bóveda, no como colección.' },
+  { name: 'kx-sesiones', pasa: true, razon: 'Las sesiones son invisibles para la página. Sigue pendiente.' },
+  { name: 'kx-capas', pasa: false, razon: 'La capa se deriva de en qué colección vive el objeto.' },
+  { name: 'kx-taxonomia', pasa: false, razon: 'Cambia dos veces por trimestre. Prosa citable alcanza.' },
+  { name: 'kx-instancias', pasa: false, razon: 'Una instancia y su template son la misma cosa.' },
+];
+
+const vocab = [
+  { t: 'area', d: 'De qué tema. Once valores en Estructura.', href: `${DOC}#31-las-once-áreas-de-estructura` },
+  { t: 'capa', d: 'A qué distancia. No es un campo, es prosa.', href: `${DOC}#32-capa-qué-es-y-qué-no` },
+  { t: 'permanencia', d: 'fija o andamio. Lo andamio se borra sin culpa.', href: `${DOC}#33-permanencia-fija-o-andamio` },
+  { t: 'autoria', d: 'teo, ia, mixta. El color del organigrama.', href: `${DOC}#34-autoria-teo-ia-mixta` },
+  { t: 'conclusiva', d: 'La única señal declarada de compromiso, ahora que no hay proposito.', href: `${DOC}#35-los-tipos-de-sesión-propuesta-descartada` },
+];
+
+const bucles = [
+  { id: 'R1', kind: 'refuerzo', accion: 'alimentarlo', color: '#7BA08A', title: 'El motor', line: 'Ves el sistema, dictás mejor, mejor destilado, ves más.', href: `${DOC}#r1--el-motor-refuerzo-alimentarlo` },
+  { id: 'R2', kind: 'refuerzo', accion: 'cortarlo', color: '#8B2626', title: 'La metaestructura que miente', line: 'Prosa con inventario, queda vieja, desconfiás, nadie la toca.', href: `${DOC}#r2--la-degradación-de-la-metaestructura-refuerzo-cortarlo` },
+  { id: 'R3', kind: 'refuerzo', accion: 'cortarlo', color: '#8B2626', title: 'El costo de destilar', line: 'Más colecciones, destilar cuesta más, destilás menos.', href: `${DOC}#r3--el-costo-de-destilar-refuerzo-cortarlo` },
+  { id: 'B1', kind: 'balance', accion: 'respetarlo', color: '#2A4747', title: 'La fricción de captura', line: 'Cada campo nuevo al dictar baja el caudal de entrada.', href: `${DOC}#b1--la-fricción-de-captura-balance-respetarlo` },
+  { id: 'B2', kind: 'balance', accion: 'para eso sirve', color: '#2A4747', title: 'El log que crece', line: 'El semanal abstracto es el amortiguador del diario.', href: `${DOC}#b2--el-log-que-crece-balance-para-qué-sirve-el-semanal` },
+];
+
+const leverage = [
+  { level: 'Parámetros', tier: 'bajo', tag: 'el campo area · etapa D' },
+  { level: 'Estructura de flujos', tier: 'medio', tag: 'el log de eventos · etapa C' },
+  { level: 'Reglas', tier: 'alto', tag: 'la prosa no enuncia inventario · A, B' },
+  { level: 'Flujos de información', tier: 'el más alto práctico', tag: 'árbol y flujos autogenerados · E, F', hot: true },
+  { level: 'Metas', tier: 'muy alto', tag: 'el core gobierna a los otros módulos · A' },
+  { level: 'Paradigma', tier: 'máximo', tag: 'un sistema para construir el sistema · ya lo tenés', hot: true },
+];
+
+const etapas = [
+  { fase: 'A', nombre: 'Vocabulario', tiempo: 'hecha · 26.07.26', hecha: true, items: ['las 3 categorías', 'las 20 áreas', 'sesiones normalizadas', 'proposito eliminado'], href: `${DOC}#etapa-a--vocabulario-y-normalización--hecha-el-260726` },
+  { fase: 'B', nombre: 'Ruteo', tiempo: 'hecha · 26.07.26', hecha: true, items: ['CLAUDE.md del módulo', 'esqueleto de carpetas', '11 + 6 archivos de área', 'documentos viejos deprecados'], href: `${DOC}#etapa-b--el-documento-de-ruteo--hecha-el-260726` },
+  { fase: 'C', nombre: 'Log de eventos', tiempo: 'hecha · con variante', hecha: true, items: ['patch notes mensual', 'backfill retroactivo', 'criterio de qué se registra', 'falta el semanal'], href: `${DOC}#etapa-c--el-log-de-eventos--hecha-el-260726-con-una-variante` },
+  { fase: 'D', nombre: 'El campo area', tiempo: '1 h', proxima: true, items: ['area en tareas y eventos', 'derivada en piezas', 'backfill de 47 tareas', 'bloque "seguir con X"'], href: `${DOC}#etapa-d--el-campo-area--1-h` },
+  { fase: 'E', nombre: 'Instancias y flujos', tiempo: '1 a 1.5 h', items: ['cargar kx-workflows', 'cerrar KX-T22', '/kx/flujos/ con Mermaid', 'color por autoría'], href: `${DOC}#etapa-e--instancias-y-flujos--1-a-15-h` },
+  { fase: 'F', nombre: 'Árbol de carpetas', tiempo: '1.5 h', items: ['snapshot-arbol.mjs', 'anotaciones por path', '/kx/estructura/', 'diffs de git sobre la forma'], href: `${DOC}#etapa-f--el-árbol-de-carpetas-que-se-actualiza-solo--15-h` },
+  { fase: 'G', nombre: 'Sesiones', tiempo: '1 a 1.5 h', items: ['colección kx-sesiones', '/kx/sesiones/ más reciente arriba', 'destilar emite eventos', 'encadena publicar'], href: `${DOC}#etapa-g--sesiones-como-objetos-publicables--1-a-15-h` },
+  { fase: 'H', nombre: 'Organigrama', tiempo: 'abierto', items: ['/kx/mapa/ generado', 'toggle actual y proyectado', 'nodos clickeables'], href: `${DOC}#etapa-h--organigrama-clickeable--abierto` },
+];
+
+const decisiones = [
+  { n: '1', q: 'Nombres de carpeta', rec: '01 Estructura · 02 Ensamblaje · 03 Contexto Personal', asumida: true },
+  { n: '2', q: 'Tipos de sesión', rec: 'Ninguno. Una sola sesión, sin proposito: propuse un campo y se descartó', asumida: false },
+  { n: '3', q: 'Tareas y pendientes', rec: 'Un solo store, como se propuso', asumida: true },
+  { n: '4', q: 'Dónde vive el patch notes', rec: 'Markdown en la bóveda, un archivo por mes. Al revés de lo propuesto', asumida: false },
+  { n: '5', q: 'La junction de Windows', rec: 'Desestimada, y era otra cosa: completitud de las áreas, no filesystem', asumida: false },
+  { n: '6', q: 'kx-funcionalidades', rec: 'Desestimada como pregunta', asumida: true },
+];
+
+const fallas = [
+  { title: 'Prosa de área vieja', line: 'Le miente al sistema y a Claude. La regla de §1.2 es la barra antivuelco.' },
+  { title: 'Log lleno de ruido', line: 'Solo cambios de estado y cierres de decisión. Nada trivial.' },
+  { title: 'Destilar sin techo', line: 'Pasando 100 objetos, índice compacto generado.' },
+  { title: 'Árbol desincronizado', line: 'Miente donde más confiás. Un comando lo arregla.' },
+  { title: 'Plugin rompe un schema', line: 'Los objetos no se editan a mano. El build es la validación.' },
+  { title: 'Sesión sin frontmatter', line: 'El template como único camino de entrada.' },
+  { title: 'Categorías como temas', line: 'Vuelve todo a tu cabeza, que es el problema original.' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Kx Core Module · mapa visual · kx system</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FCFAF5;
+            --ink: #23211d;
+            --ink-soft: #55503f;
+            --ink-faint: #8c8070;
+            --line: #ddd4bf;
+            --teal: #2A4747;
+            --gold: #B08D57;
+            --seal: #8B2626;
+            --panel: #F5F1E6;
+            --panel-2: #EFE9D9;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px;
+            background-repeat: repeat;
+            color: var(--ink);
+            font-family: "EB Garamond", serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── topbar ── */
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.1rem 2rem; border-bottom: 1px solid var(--line);
+        }
+        .brand {
+            display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none;
+            font-family: "Reenie Beanie", cursive; font-size: 1.6rem; color: var(--ink);
+        }
+        .brand small {
+            font-family: "Inter", sans-serif; font-size: 0.62rem; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--ink-soft);
+        }
+        .crumbs { font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .crumbs a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .crumbs a:hover { color: var(--teal); border-color: var(--teal); }
+        .crumbs .current { color: var(--ink); }
+
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* ── hero ── */
+        .hero { padding: 3.5rem 0 2.5rem; }
+        .kicker {
+            font-family: "Inter", sans-serif; font-size: 0.72rem; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.3rem, 5.5vw, 3.6rem); font-weight: 500; line-height: 1.05;
+            letter-spacing: -0.01em; margin: 0 0 0.7rem;
+        }
+        .hero .lede {
+            font-style: italic; color: var(--ink-soft); font-size: 1.2rem;
+            max-width: 58ch; margin: 0 0 1.6rem; line-height: 1.5;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: "Inter", sans-serif; font-size: 0.8rem; text-decoration: none;
+            color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px;
+        }
+        .hero-cta:hover { color: var(--teal); border-color: var(--teal); }
+
+        /* ── stat strip ── */
+        .stats {
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 2.5rem 0;
+        }
+        @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat { border-top: 1px solid var(--line); } }
+        .stat { padding: 1.4rem 1rem; text-align: center; border-left: 1px solid var(--line); }
+        .stat:first-child { border-left: none; }
+        .stat b {
+            display: block; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600;
+            color: var(--teal); line-height: 1; margin-bottom: 0.4rem;
+        }
+        .stat span {
+            font-family: "Inter", sans-serif; font-size: 0.68rem; letter-spacing: 0.05em;
+            color: var(--ink-soft); line-height: 1.3; display: block;
+        }
+
+        /* ── section heading ── */
+        .section-head {
+            display: flex; align-items: baseline; justify-content: space-between;
+            gap: 1rem; margin: 4rem 0 1.5rem;
+        }
+        .section-head h2 { font-size: 1.5rem; font-weight: 500; margin: 0; }
+        .section-head .num {
+            font-family: "JetBrains Mono", monospace; font-size: 0.7rem;
+            color: var(--gold); letter-spacing: 0.05em; white-space: nowrap;
+        }
+        .section-note {
+            font-family: "Inter", sans-serif; font-size: 0.82rem; color: var(--ink-soft);
+            margin: -0.8rem 0 1.6rem; max-width: 64ch; line-height: 1.55;
+        }
+
+        /* ── las tres capas de mutación ── */
+        .mutlayers { display: flex; flex-direction: column; gap: 0.7rem; }
+        .mutlayer {
+            display: grid; grid-template-columns: 54px 1fr 1.1fr; align-items: center; gap: 1.2rem;
+            text-decoration: none; color: var(--ink);
+            background: var(--panel); border: 1px solid var(--line);
+            border-left: 5px solid var(--c, var(--gold)); border-radius: 8px;
+            padding: 1.1rem 1.4rem; transition: transform 0.2s ease;
+        }
+        .mutlayer:hover { transform: translateX(3px); }
+        @media (max-width: 700px) { .mutlayer { grid-template-columns: 40px 1fr; } .mutlayer .ml-right { grid-column: 1 / -1; } }
+        .ml-n { font-family: "JetBrains Mono", monospace; font-size: 1.3rem; color: var(--c); font-weight: 500; }
+        .ml-name { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.15rem; }
+        .ml-sub {
+            font-family: "Inter", sans-serif; font-size: 0.68rem; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--c);
+        }
+        .ml-right { font-family: "Inter", sans-serif; }
+        .ml-q { font-size: 0.94rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+        .ml-donde { font-size: 0.78rem; color: var(--ink-soft); }
+
+        /* ── regla dura ── */
+        .rule {
+            margin: 2rem 0 0; background: var(--panel-2);
+            border: 1px solid var(--line); border-left: 5px solid var(--seal);
+            border-radius: 8px; padding: 1.5rem 1.7rem;
+        }
+        .rule-label {
+            font-family: "Inter", sans-serif; font-size: 0.64rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--seal); font-weight: 700; margin-bottom: 0.6rem;
+        }
+        .rule p { margin: 0; font-size: 1.28rem; line-height: 1.4; font-weight: 500; }
+        .rule .why {
+            font-family: "Inter", sans-serif; font-size: 0.8rem; color: var(--ink-soft);
+            margin: 0.8rem 0 0; line-height: 1.55; font-weight: 400;
+        }
+
+        /* ── cards de categorías ── */
+        .chambers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media (max-width: 640px) { .chambers { grid-template-columns: 1fr; } }
+        .chamber {
+            display: block; text-decoration: none; color: var(--ink);
+            background: var(--panel); border: 1px solid var(--line);
+            border-left: 4px solid var(--c, var(--gold)); border-radius: 8px;
+            padding: 1.3rem 1.5rem; transition: transform 0.2s ease;
+        }
+        .chamber:hover { transform: translateX(3px); }
+        .chamber-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+        .chamber-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c, var(--gold)); flex-shrink: 0; }
+        .chamber-n { font-family: "JetBrains Mono", monospace; font-size: 0.68rem; color: var(--ink-faint); }
+        .chamber h3 { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.15rem; }
+        .chamber .sub {
+            font-family: "Inter", sans-serif; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--c, var(--gold)); margin-bottom: 0.6rem;
+        }
+        .chamber p { font-family: "Inter", sans-serif; font-size: 0.86rem; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+        .chamber.is-cold { opacity: 0.6; }
+
+        /* ── clusters de áreas ── */
+        .cluster { margin-bottom: 2rem; }
+        .cluster-head {
+            display: flex; align-items: center; gap: 0.5rem; font-family: "Inter", sans-serif;
+            font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--ink-soft); margin-bottom: 0.8rem; text-decoration: none;
+        }
+        .cluster-head:hover { color: var(--teal); }
+        .cluster-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .cluster-count { font-family: "JetBrains Mono", monospace; color: var(--ink-faint); }
+        .area-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 0.7rem; }
+        .area-card {
+            display: block; text-decoration: none; color: var(--ink);
+            background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+            padding: 0.9rem 1.05rem; transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .area-card:hover { border-color: var(--c, var(--gold)); transform: translateY(-2px); }
+        .area-card h4 {
+            font-family: "JetBrains Mono", monospace; font-size: 0.84rem; font-weight: 500;
+            margin: 0 0 0.35rem; color: var(--c, var(--gold));
+        }
+        .area-card p { font-family: "Inter", sans-serif; font-size: 0.76rem; line-height: 1.45; color: var(--ink-soft); margin: 0; }
+
+        /* ── brechas ── */
+        .gaps {
+            display: flex; flex-direction: column; gap: 0.55rem;
+            background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem;
+        }
+        .gap {
+            display: grid; grid-template-columns: 46px 1fr 150px 90px; align-items: center;
+            gap: 1rem; text-decoration: none; color: var(--ink); padding: 0.45rem 0.4rem;
+            border-radius: 6px; transition: background 0.2s ease;
+        }
+        .gap:hover { background: var(--panel-2); }
+        @media (max-width: 760px) {
+            .gap { grid-template-columns: 40px 1fr 70px; }
+            .gap .gap-bar { grid-column: 2 / -1; }
+        }
+        .gap-n { font-family: "JetBrains Mono", monospace; font-size: 0.7rem; color: var(--ink-faint); }
+        .gap-txt h4 { font-size: 0.95rem; font-weight: 600; margin: 0 0 0.1rem; }
+        .gap-txt p { font-family: "Inter", sans-serif; font-size: 0.76rem; color: var(--ink-soft); margin: 0; line-height: 1.4; }
+        .gap-bar { height: 9px; background: var(--panel-2); border-radius: 6px; overflow: hidden; }
+        .gap-bar i { display: block; height: 100%; border-radius: 6px; }
+        .gap-sev {
+            font-family: "Inter", sans-serif; font-size: 0.64rem; letter-spacing: 0.05em;
+            text-transform: uppercase; text-align: right; white-space: nowrap;
+        }
+
+        /* ── test de colecciones ── */
+        .test { display: flex; flex-direction: column; gap: 0.5rem; }
+        .test-row {
+            display: grid; grid-template-columns: 170px 74px 1fr; align-items: center; gap: 1rem;
+            background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0.7rem 1.05rem;
+        }
+        @media (max-width: 620px) { .test-row { grid-template-columns: 1fr 74px; } .test-row .test-why { grid-column: 1 / -1; } }
+        .test-name { font-family: "JetBrains Mono", monospace; font-size: 0.82rem; }
+        .test-verdict {
+            font-family: "Inter", sans-serif; font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
+            padding: 0.2rem 0.35rem; border-radius: 4px;
+        }
+        .test-verdict.yes { color: #3d6b4e; background: #E4EEE5; }
+        .test-verdict.no { color: var(--ink-faint); background: var(--panel-2); }
+        .test-why { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-soft); line-height: 1.4; }
+
+        /* ── vocabulario ── */
+        .vocab { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.7rem; }
+        .vword {
+            display: block; text-decoration: none; color: var(--ink); background: var(--panel);
+            border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 8px;
+            padding: 0.95rem 1.1rem; transition: transform 0.2s ease;
+        }
+        .vword:hover { transform: translateY(-2px); }
+        .vword b { font-family: "JetBrains Mono", monospace; font-size: 0.86rem; display: block; margin-bottom: 0.35rem; color: var(--teal); }
+        .vword span { font-family: "Inter", sans-serif; font-size: 0.77rem; color: var(--ink-soft); line-height: 1.45; }
+
+        /* ── bucles ── */
+        .loops { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.7rem; }
+        .loop {
+            display: block; text-decoration: none; color: var(--ink); background: var(--panel);
+            border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 8px;
+            padding: 1rem 1.15rem; transition: transform 0.2s ease;
+        }
+        .loop:hover { transform: translateX(3px); }
+        .loop-top { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.4rem; }
+        .loop-id { font-family: "JetBrains Mono", monospace; font-size: 0.9rem; font-weight: 600; color: var(--c); }
+        .loop-kind {
+            font-family: "Inter", sans-serif; font-size: 0.6rem; letter-spacing: 0.07em;
+            text-transform: uppercase; color: var(--ink-faint);
+        }
+        .loop h4 { font-size: 0.98rem; font-weight: 600; margin: 0 0 0.3rem; }
+        .loop p { font-family: "Inter", sans-serif; font-size: 0.77rem; color: var(--ink-soft); margin: 0 0 0.5rem; line-height: 1.45; }
+        .loop-do {
+            font-family: "Inter", sans-serif; font-size: 0.64rem; letter-spacing: 0.05em;
+            text-transform: uppercase; color: var(--c); font-weight: 700;
+        }
+
+        /* ── escalera ── */
+        .ladder { display: flex; flex-direction: column-reverse; gap: 0.5rem; }
+        .rung {
+            display: grid; grid-template-columns: 190px 1fr auto; align-items: center; gap: 1rem;
+            padding: 0.65rem 1rem; border-radius: 6px; background: var(--panel); border: 1px solid var(--line);
+        }
+        @media (max-width: 700px) { .rung { grid-template-columns: 1fr auto; } .rung .rung-tag { grid-column: 1 / -1; } }
+        .rung.hot { background: #FBF3E3; border-color: var(--gold); }
+        .rung-level { font-weight: 600; font-size: 0.92rem; }
+        .rung-tag { font-family: "Inter", sans-serif; font-size: 0.76rem; color: var(--ink-soft); }
+        .rung-tier {
+            font-family: "Inter", sans-serif; font-size: 0.62rem; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+        }
+        .rung.hot .rung-tier { color: var(--gold); font-weight: 600; }
+
+        /* ── etapas ── */
+        .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+        @media (max-width: 860px) { .roadmap { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .roadmap { grid-template-columns: 1fr; } }
+        .phase {
+            display: block; text-decoration: none; color: var(--ink); background: var(--panel);
+            border: 1px solid var(--line); border-radius: 8px; padding: 1.1rem 1.1rem 1.2rem; position: relative;
+        }
+        .phase:hover { border-color: var(--teal); }
+        .phase.hecha { background: #E9F0E9; border-color: #7BA08A; }
+        .phase.proxima { background: #FBF3E3; border-color: var(--gold); }
+        .phase-badge.hechabadge { background: #5F8570; }
+        .phase-badge.next { background: var(--teal); }
+        .phase-badge {
+            position: absolute; top: -9px; right: 10px; font-family: "Inter", sans-serif;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            background: var(--gold); color: #FCFAF5; padding: 0.15rem 0.45rem; border-radius: 3px;
+        }
+        .phase-n { font-family: "Inter", sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--teal); margin-bottom: 0.1rem; }
+        .phase-name { font-size: 1.02rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .phase-t { font-family: "Inter", sans-serif; font-size: 0.68rem; color: var(--ink-faint); margin-bottom: 0.8rem; }
+        .phase ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+        .phase li {
+            font-family: "Inter", sans-serif; font-size: 0.75rem; color: var(--ink-soft);
+            line-height: 1.35; padding-left: 0.8rem; position: relative;
+        }
+        .phase li::before {
+            content: ''; position: absolute; left: 0; top: 0.5em;
+            width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+        }
+
+        /* ── camino crítico ── */
+        .critical {
+            font-family: "JetBrains Mono", monospace; font-size: 0.76rem; line-height: 1.75;
+            background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+            padding: 1.3rem 1.5rem; margin-top: 1.2rem; overflow-x: auto; white-space: pre;
+            color: var(--ink-soft);
+        }
+
+        /* ── decisiones ── */
+        .decs { display: flex; flex-direction: column; gap: 0.55rem; }
+        .dec {
+            display: grid; grid-template-columns: 30px 1fr 1.4fr 96px; align-items: center; gap: 1rem;
+            background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0.8rem 1.05rem;
+        }
+        @media (max-width: 760px) { .dec { grid-template-columns: 30px 1fr 92px; } .dec .dec-rec { grid-column: 2 / -1; } }
+        .dec.needs { border-left: 4px solid var(--seal); }
+        .dec-n { font-family: "JetBrains Mono", monospace; font-size: 0.8rem; color: var(--ink-faint); }
+        .dec-q { font-size: 0.95rem; font-weight: 600; }
+        .dec-rec { font-family: "Inter", sans-serif; font-size: 0.78rem; color: var(--ink-soft); line-height: 1.4; }
+        .dec-badge {
+            font-family: "Inter", sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+            text-transform: uppercase; text-align: center; padding: 0.22rem 0.35rem; border-radius: 4px;
+        }
+        .dec-badge.asum { color: var(--ink-faint); background: var(--panel-2); }
+        .dec-badge.tuya { color: #FCFAF5; background: var(--seal); }
+
+        /* ── fallas ── */
+        .risks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+        @media (max-width: 700px) { .risks { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 460px) { .risks { grid-template-columns: 1fr; } }
+        .risk {
+            background: var(--panel); border: 1px solid var(--line);
+            border-left: 3px solid var(--seal); border-radius: 6px; padding: 0.9rem 1.05rem;
+        }
+        .risk h4 { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.25rem; }
+        .risk p { font-family: "Inter", sans-serif; font-size: 0.76rem; color: var(--ink-soft); margin: 0; line-height: 1.4; }
+
+        /* ── footer nav ── */
+        .footnav {
+            margin: 5rem 0 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
+            font-family: "Inter", sans-serif; font-size: 0.8rem;
+        }
+        .footnav a { text-decoration: none; color: var(--ink-soft); }
+        .footnav a:hover { color: var(--teal); }
+        .footnav .primary { color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+        .footnav .primary:hover { color: var(--teal); border-color: var(--teal); }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/astro-project-v2/kx/" class="brand">& <small>kx system</small></a>
+        <nav class="crumbs">
+            <a href="/astro-project-v2/">interlynkx</a> / <a href="/astro-project-v2/kx/">kx</a> / <span class="current">kx core · mapa</span>
+        </nav>
+    </div>
+
+    <div class="wrap">
+        <section class="hero">
+            <div class="kicker">kx core module · vista visual</div>
+            <h1>El andamio, de un vistazo</h1>
+            <p class="lede">
+                Las tres categorías como tres preguntas, las tres capas de mutación que evitan
+                que el sistema se duplique, y las ocho etapas en el orden en que se construye.
+                Las decisiones ya están resueltas y las tres primeras etapas, ejecutadas.
+            </p>
+            <a class="hero-cta" href={DOC}>leer el plan completo &rarr;</a>
+        </section>
+
+        <div class="stats">
+            <div class="stat"><b>3</b><span>categorías, como preguntas</span></div>
+            <div class="stat"><b>3</b><span>capas de mutación</span></div>
+            <div class="stat"><b>11</b><span>áreas de estructura</span></div>
+            <div class="stat"><b>6</b><span>decisiones, todas resueltas</span></div>
+            <div class="stat"><b>8</b><span>etapas, tres ya hechas</span></div>
+        </div>
+
+        <div class="section-head">
+            <h2>Las tres capas de mutación</h2>
+            <span class="num">§1.1</span>
+        </div>
+        <p class="section-note">
+            La duplicación no se evita separando temas, se evita separando <b>cómo cambia cada cosa</b>.
+            Un mismo hecho no puede vivir en dos capas: si se sobrescribe, es estado; si se acumula, es evento; si explica, es prosa.
+        </p>
+        <div class="mutlayers">
+            {capas.map((c) => (
+                <a class="mutlayer" href={c.href} style={`--c: ${c.color}`}>
+                    <span class="ml-n">{c.n}</span>
+                    <div>
+                        <h3 class="ml-name">{c.name}</h3>
+                        <div class="ml-sub">{c.sub}</div>
+                    </div>
+                    <div class="ml-right">
+                        <div class="ml-q">{c.q}</div>
+                        <div class="ml-donde">{c.donde}</div>
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        <div class="rule">
+            <div class="rule-label">la regla dura · §1.2</div>
+            <p>La prosa nunca enuncia inventario. El inventario siempre se renderiza.</p>
+            <p class="why">
+                Un archivo de área puede decir cómo se nombran las skills. No puede decir cuántas hay ni cuáles.
+                Es la regla que decide si en tres meses la metaestructura te sirve o te miente, y el costo de que
+                mienta no es solo tuyo: Claude también la lee.
+            </p>
+        </div>
+
+        <div class="section-head">
+            <h2>Las categorías, como preguntas</h2>
+            <span class="num">§1</span>
+        </div>
+        <p class="section-note">
+            Leídas como temas, hay que preguntar dónde va cada cosa nueva. Leídas como preguntas, el criterio
+            se vuelve automático y deja de vivir en tu cabeza. Quedaron tres: la cuarta candidata
+            (conocimiento técnico) se fue afuera del módulo, porque es materia prima que el sistema procesa,
+            no algo que el sistema necesite para operarse.
+        </p>
+        <div class="chambers">
+            {categorias.map((c) => (
+                <a class={`chamber${c.n === '--' ? ' is-cold' : ''}`} href={c.href} style={`--c: ${c.color}`}>
+                    <div class="chamber-top">
+                        <span class="chamber-dot"></span>
+                        <span class="chamber-n">{c.n}</span>
+                    </div>
+                    <h3>{c.name}</h3>
+                    <div class="sub">{c.sub}</div>
+                    <p>{c.line}</p>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Las áreas</h2>
+            <span class="num">§3.1 · §3.6 · §3.7</span>
+        </div>
+        <p class="section-note">
+            Once en Estructura (instancias y flujos separados, templates absorbidos, "raw materials" convertido
+            en un campo), tres en Obra (pendientes es una vista de tareas, no un store), seis en Contexto.
+        </p>
+        {areas.map((cl) => (
+            <div class="cluster">
+                <a class="cluster-head" href={cl.href}>
+                    <span class="cluster-dot" style={`background: ${cl.color}`}></span>
+                    {cl.label}
+                    <span class="cluster-count">{cl.items.length}</span>
+                </a>
+                <div class="area-grid">
+                    {cl.items.map((it) => (
+                        <a class="area-card" href={cl.href} style={`--c: ${cl.color}`}>
+                            <h4>{it.title}</h4>
+                            <p>{it.hook}</p>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        ))}
+
+        <div class="section-head">
+            <h2>Las siete brechas, por peso</h2>
+            <span class="num">§2</span>
+        </div>
+        <p class="section-note">
+            No hipótesis: esto salió de leer el sistema como estaba. <b>Tres ya están cerradas</b> y van al final.
+            Las dos primeras de las abiertas son las que justifican el orden de lo que queda.
+        </p>
+        <div class="gaps">
+            {brechas.map((b) => (
+                <a class="gap" href={b.href}>
+                    <span class="gap-n">§{b.n}</span>
+                    <div class="gap-txt">
+                        <h4>{b.title}</h4>
+                        <p>{b.hook}</p>
+                    </div>
+                    <div class="gap-bar">
+                        <i style={`width: ${b.cerrada ? 100 : b.peso}%; background: ${b.cerrada ? '#7BA08A' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : '#B4BCC0'}`}></i>
+                    </div>
+                    <span class="gap-sev" style={`color: ${b.cerrada ? '#3d6b4e' : b.peso > 85 ? 'var(--seal)' : b.peso > 60 ? 'var(--gold)' : 'var(--ink-faint)'}`}>{b.sev}</span>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>El test de colecciones</h2>
+            <span class="num">§2.6</span>
+        </div>
+        <p class="section-note">
+            ¿Esta colección responde una pregunta que hoy no se puede responder de ninguna forma?
+            Siete candidatas, dos pasan. Es la barrera contra el sprawl que ya empezó.
+        </p>
+        <div class="test">
+            {test.map((t) => (
+                <div class="test-row">
+                    <span class="test-name">{t.name}</span>
+                    <span class={`test-verdict ${t.pasa ? 'yes' : 'no'}`}>{t.pasa ? 'pasa' : 'no pasa'}</span>
+                    <span class="test-why">{t.razon}</span>
+                </div>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>El vocabulario nuevo</h2>
+            <span class="num">§3</span>
+        </div>
+        <p class="section-note">
+            Cinco términos, y ninguno agrega un campo al momento de dictar. Todo se llena al destilar o al publicar.
+        </p>
+        <div class="vocab">
+            {vocab.map((v) => (
+                <a class="vword" href={v.href}>
+                    <b>{v.t}</b>
+                    <span>{v.d}</span>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Los bucles que deciden si esto vive</h2>
+            <span class="num">§4</span>
+        </div>
+        <p class="section-note">
+            Dos hay que alimentar y dos hay que cortar de entrada. El R2 es el que mata metaestructuras,
+            y mata más rápido a las buenas que a las malas.
+        </p>
+        <div class="loops">
+            {bucles.map((b) => (
+                <a class="loop" href={b.href} style={`--c: ${b.color}`}>
+                    <div class="loop-top">
+                        <span class="loop-id">{b.id}</span>
+                        <span class="loop-kind">{b.kind}</span>
+                    </div>
+                    <h4>{b.title}</h4>
+                    <p>{b.line}</p>
+                    <div class="loop-do">{b.accion}</div>
+                </a>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Puntos de apalancamiento</h2>
+            <span class="num">§5</span>
+        </div>
+        <p class="section-note">
+            De abajo hacia arriba. Lo contraintuitivo: la intervención más potente no es automatizar el
+            destilado, es cambiar qué tenés en la pantalla en el momento de hablar.
+        </p>
+        <div class="ladder">
+            {leverage.map((l) => (
+                <div class={`rung${l.hot ? ' hot' : ''}`}>
+                    <span class="rung-level">{l.level}</span>
+                    <span class="rung-tag">{l.tag}</span>
+                    <span class="rung-tier">{l.tier}</span>
+                </div>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Las ocho etapas</h2>
+            <span class="num">§6</span>
+        </div>
+        <p class="section-note">
+            Cada una deja algo usable aunque las siguientes nunca se hagan. A, B y C están hechas: el vocabulario,
+            la tabla de ruteo y el log. La D es la próxima, y es la que habilita "quiero seguir con skills".
+        </p>
+        <div class="roadmap">
+            {etapas.map((e) => (
+                <a class={`phase${e.hecha ? ' hecha' : ''}${e.proxima ? ' proxima' : ''}`} href={e.href}>
+                    {e.hecha && <span class="phase-badge hechabadge">hecha</span>}
+                    {e.proxima && <span class="phase-badge next">próxima</span>}
+                    <div class="phase-n">Etapa {e.fase}</div>
+                    <div class="phase-name">{e.nombre}</div>
+                    <div class="phase-t">{e.tiempo}</div>
+                    <ul>
+                        {e.items.map((it) => <li>{it}</li>)}
+                    </ul>
+                </a>
+            ))}
+        </div>
+        <a href={`${DOC}#el-camino-crítico`} style="text-decoration: none;">
+            <div class="critical">{`A (vocabulario) ──▶ B (ruteo, CLAUDE.md del módulo)
+                      │
+                      ├──▶ C (eventos) ──▶ D (área) ──▶ G (sesiones) ──▶ H (organigrama)
+                      ├──▶ E (flujos)          ← independiente
+                      └──▶ F (árbol)           ← independiente`}</div>
+        </a>
+
+        <div class="section-head">
+            <h2>Decisiones</h2>
+            <span class="num">§7</span>
+        </div>
+        <p class="section-note">
+            Las seis se cerraron en KX-S02. Marcadas en rojo las tres donde tu decisión fue distinta de lo que
+            yo proponía, que son las que más vale la pena leer.
+        </p>
+        <div class="decs">
+            {decisiones.map((d) => (
+                <div class={`dec${d.asumida ? '' : ' needs'}`}>
+                    <span class="dec-n">{d.n}</span>
+                    <span class="dec-q">{d.q}</span>
+                    <span class="dec-rec">{d.rec}</span>
+                    <span class={`dec-badge ${d.asumida ? 'asum' : 'tuya'}`}>{d.asumida ? 'como propuse' : 'distinta'}</span>
+                </div>
+            ))}
+        </div>
+
+        <div class="section-head">
+            <h2>Modos de falla</h2>
+            <span class="num">§8</span>
+        </div>
+        <div class="risks">
+            {fallas.map((f) => (
+                <div class="risk">
+                    <h4>{f.title}</h4>
+                    <p>{f.line}</p>
+                </div>
+            ))}
+        </div>
+
+        <div class="footnav">
+            <a href="/astro-project-v2/kx/">&larr; volver al hub</a>
+            <a class="primary" href={DOC}>leer el plan completo &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>
