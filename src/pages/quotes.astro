@@ -20,6 +20,9 @@ const STAR_ROTATIONS = [0, 15, -10];
 
 <html lang="en">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atlas Field Notes — Gathered Words</title>
@@ -222,9 +225,107 @@ const STAR_ROTATIONS = [0, 15, -10];
         .star-filter:not(.active) svg { color: #A39985 !important; }
         .star-filter:not(.active) svg path { fill: #A39985 !important; fill-opacity: 0.15 !important; stroke: #A39985 !important; }
         .star-filter:hover { transform: scale(1.1); }
+
+        /* ── dark mode ── */
+        :root {
+            --dqd-bg: #15130E;
+            --dqd-card: #211E18;
+            --dqd-card-alt: #29251C;
+            --dqd-ink: #EDE9DD;
+            --dqd-ink-faint: #9C9482;
+            --dqd-line: #37342A;
+            --dqd-accent: #5EE39B;
+            --dqd-accent-deep: #3FCB84;
+            --dqd-accent-tint: rgba(94,227,155,0.12);
+            --dqd-accent-mid: rgba(94,227,155,0.4);
+            --dqd-header-bg: rgba(21,19,14,0.9);
+        }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
+        html.theme-dark body { background-color: var(--dqd-bg) !important; background-image: none !important; color: var(--dqd-ink) !important; }
+
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid #E8E2D2; background: #fff; color: #2A2724;
+            cursor: pointer; font-size: 1rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: #9BE6BC; transform: translateY(-1px); }
+        html.theme-dark .theme-toggle { background: var(--dqd-card); border-color: var(--dqd-line); color: var(--dqd-ink); }
+        html.theme-dark .theme-toggle:hover { border-color: var(--dqd-accent-mid); }
+
+        html.theme-dark header { background-color: var(--dqd-header-bg) !important; border-bottom-color: var(--dqd-line) !important; }
+        html.theme-dark [class*="[#2A2724]"] { color: var(--dqd-ink) !important; border-color: var(--dqd-line) !important; }
+        html.theme-dark [class*="[#A39985]"],
+        html.theme-dark [class*="[#8C8070]"] { color: var(--dqd-ink-faint) !important; border-color: var(--dqd-ink-faint) !important; }
+        html.theme-dark [class*="[#E8E2D2]"] { border-color: var(--dqd-line) !important; background-color: var(--dqd-line) !important; }
+        html.theme-dark [class*="[#4FAE7A]"] { color: var(--dqd-accent) !important; background-color: var(--dqd-accent) !important; border-color: var(--dqd-accent) !important; }
+        html.theme-dark [class*="hover:bg-[#3B8F60]"]:hover { background-color: var(--dqd-accent-deep) !important; }
+        html.theme-dark [class*="[#78D6A2]"],
+        html.theme-dark [class*="[#9BE6BC]"] { border-color: var(--dqd-accent-mid) !important; }
+        html.theme-dark [class*="[#E3F5EA]"],
+        html.theme-dark [class*="[#E9F8EE]"],
+        html.theme-dark [class*="[#F4FBF6]"],
+        html.theme-dark [class*="[#F3FBF6]"] { background-color: var(--dqd-accent-tint) !important; }
+        html.theme-dark [class*="[#2F6B45]"] { background-color: var(--dqd-accent-deep) !important; }
+        html.theme-dark [class*="[#FFFFFF]"],
+        html.theme-dark [class*="[#ffffff]"],
+        html.theme-dark [class*="bg-white"] { background-color: var(--dqd-card) !important; }
+        html.theme-dark [class*="[#F5F2EB]"] { background-color: var(--dqd-header-bg) !important; }
+        html.theme-dark [class*="[#FDFCF9]"] { background-color: var(--dqd-bg) !important; }
+
+        html.theme-dark .quote-card { background-color: var(--dqd-card) !important; border-color: var(--dqd-line) !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
+        html.theme-dark .quote-card:hover {
+            background: linear-gradient(135deg, var(--dqd-card) 0%, var(--dqd-accent-tint) 100%) !important;
+            border-color: var(--dqd-accent-mid) !important;
+            box-shadow: 0 0 6px rgba(94,227,155,0.5), 0 0 16px rgba(94,227,155,0.35), 0 0 28px rgba(94,227,155,0.2), 0 14px 30px -12px rgba(0,0,0,0.55) !important;
+        }
+        html.theme-dark .quote-card:hover .card-body p { color: var(--dqd-accent) !important; text-shadow: 0 0 16px rgba(94,227,155,0.55); }
+        html.theme-dark .quote-card:hover .card-quote-icon { color: var(--dqd-accent) !important; }
+        html.theme-dark .card-quote-icon { color: var(--dqd-accent); }
+        html.theme-dark .card-tag { background: rgba(237,233,221,0.08) !important; color: rgba(237,233,221,0.55) !important; }
+        html.theme-dark .card-expand { color: rgba(237,233,221,0.35) !important; }
+        html.theme-dark .star-rating { color: var(--dqd-accent); }
+        html.theme-dark .star-filter.active { color: var(--dqd-accent) !important; }
+        html.theme-dark .star-filter.active svg { color: var(--dqd-accent) !important; }
+        html.theme-dark .star-filter.active svg path { fill: var(--dqd-accent) !important; stroke: var(--dqd-accent) !important; }
+        html.theme-dark .star-filter:not(.active) { color: var(--dqd-ink-faint) !important; }
+        html.theme-dark .star-filter:not(.active) svg { color: var(--dqd-ink-faint) !important; }
+        html.theme-dark .star-filter:not(.active) svg path { fill: var(--dqd-ink-faint) !important; stroke: var(--dqd-ink-faint) !important; }
+
+        html.theme-dark #modal-overlay { background-color: rgba(0,0,0,0.65) !important; }
+        html.theme-dark .modal-card { background-color: var(--dqd-bg) !important; }
+        html.theme-dark #summary-container { border-left-color: var(--dqd-accent) !important; }
+        html.theme-dark .sidebar-block { background-color: var(--dqd-card-alt) !important; border-color: rgba(237,233,221,0.08) !important; }
+
+        html.theme-dark #filter-modal { background-color: rgba(0,0,0,0.55) !important; }
+        html.theme-dark #filter-modal > div {
+            background-color: var(--dqd-bg) !important;
+            background-image: none !important;
+            border-color: var(--dqd-accent-mid) !important;
+        }
+        html.theme-dark #filter-modal > div > div:first-child {
+            background: linear-gradient(135deg, rgba(94,227,155,0.08) 0%, rgba(94,227,155,0.03) 100%) !important;
+            border-color: var(--dqd-line) !important;
+        }
+        html.theme-dark [id^="filter-utility-stars"] { background-color: var(--dqd-card-alt) !important; }
+
+        html.theme-dark .fixed.bottom-10 { background-color: var(--dqd-card) !important; border-color: var(--dqd-line) !important; }
+        html.theme-dark #clear-filter-btn { background-color: transparent !important; }
+        html.theme-dark #clear-filter-btn:hover { background-color: var(--dqd-accent-tint) !important; }
     </style>
 </head>
 <body class="min-h-screen">
+    <div class="paper-overlay" aria-hidden="true"></div>
 
     <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
         <div class="flex items-center gap-10">
@@ -238,7 +339,10 @@ const STAR_ROTATIONS = [0, 15, -10];
                 <a href="/astro-project-v2/linguistic-treats" class="font-serif text-xl text-[#A39985] transition-all duration-300 hover:text-[#2A2724] hover:-translate-y-[1px]">Linguistic Treats</a>
             </nav>
         </div>
-        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#4FAE7A] tracking-tight translate-y-1">hyperlynxt | teo</div>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+            <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#4FAE7A] tracking-tight translate-y-1">hyperlynkx | teo</div>
+        </div>
     </header>
 
     <section class="w-full pt-20 pb-16 px-6">
@@ -509,6 +613,16 @@ const STAR_ROTATIONS = [0, 15, -10];
     </div>
 
     <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+
         const overlay = document.getElementById('modal-overlay');
         const filterModal = document.getElementById('filter-modal');
         const cards = document.querySelectorAll('.quote-card');

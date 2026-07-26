@@ -17,6 +17,9 @@ words.sort((a, b) => {
 
 <html lang="en">
 <head>
+    <script is:inline>
+        try { if (localStorage.getItem('kx-theme') === 'dark') document.documentElement.classList.add('theme-dark'); } catch (e) {}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atlas Field Notes — Linguistic Treats</title>
@@ -156,9 +159,116 @@ words.sort((a, b) => {
             color: #8B2626 !important;
             font-weight: 600 !important;
         }
+
+        /* ── dark mode ── */
+        :root {
+            --dwd-bg: #15130E;
+            --dwd-card: #211E18;
+            --dwd-card-alt: #29251C;
+            --dwd-ink: #EDE9DD;
+            --dwd-ink-faint: #9C9482;
+            --dwd-line: #37342A;
+            --dwd-accent: #B79FFF;
+            --dwd-accent-deep: #8F6FE8;
+            --dwd-accent-tint: rgba(183,159,255,0.12);
+            --dwd-accent-mid: rgba(183,159,255,0.4);
+            --dwd-header-bg: rgba(21,19,14,0.9);
+            --dwd-gold: #E6BA76;
+            --dwd-seal: #FF7A6B;
+        }
+        .paper-overlay {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position: 0px 0px, 40px 60px, 80px 20px;
+            background-repeat: repeat;
+        }
+        html.theme-dark .paper-overlay { filter: invert(1) grayscale(1) brightness(1.7); mix-blend-mode: screen; opacity: 0.5; }
+        html.theme-dark body { background-color: var(--dwd-bg) !important; background-image: none !important; color: var(--dwd-ink) !important; }
+
+        .theme-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid #E8E2D2; background: #fff; color: #2A2724;
+            cursor: pointer; font-size: 1rem; line-height: 1; padding: 0;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { border-color: #C9A6FF; transform: translateY(-1px); }
+        html.theme-dark .theme-toggle { background: var(--dwd-card); border-color: var(--dwd-line); color: var(--dwd-ink); }
+        html.theme-dark .theme-toggle:hover { border-color: var(--dwd-accent-mid); }
+
+        html.theme-dark header { background-color: var(--dwd-header-bg) !important; border-bottom-color: var(--dwd-line) !important; }
+        html.theme-dark [class*="[#2A2724]"] { color: var(--dwd-ink) !important; border-color: var(--dwd-line) !important; }
+        html.theme-dark [class*="[#A39985]"],
+        html.theme-dark [class*="[#8C8070]"] { color: var(--dwd-ink-faint) !important; border-color: var(--dwd-ink-faint) !important; }
+        html.theme-dark [class*="[#E8E2D2]"] { border-color: var(--dwd-line) !important; background-color: var(--dwd-line) !important; }
+        html.theme-dark [class*="[#9B7CC8]"] { color: var(--dwd-accent) !important; background-color: var(--dwd-accent) !important; border-color: var(--dwd-accent) !important; }
+        html.theme-dark [class*="hover:bg-[#7A5BA8]"]:hover { background-color: var(--dwd-accent-deep) !important; }
+        html.theme-dark [class*="[#C9A6FF]"] { border-color: var(--dwd-accent-mid) !important; }
+        html.theme-dark [class*="[#F6F1FF]"],
+        html.theme-dark [class*="[#F3ECFF]"],
+        html.theme-dark [class*="[#EDE6F8]"] { background-color: var(--dwd-accent-tint) !important; }
+        html.theme-dark [class*="[#FFFFFF]"],
+        html.theme-dark [class*="bg-white"] { background-color: var(--dwd-card) !important; }
+        html.theme-dark [class*="[#F5F2EB]"] { background-color: var(--dwd-header-bg) !important; }
+        html.theme-dark [class*="[#FDFCF9]"] { background-color: var(--dwd-bg) !important; }
+        html.theme-dark [class*="[#B08D57]"] { color: var(--dwd-gold) !important; }
+        html.theme-dark [class*="[#8B2626]"] { color: var(--dwd-seal) !important; }
+
+        html.theme-dark .word-card { background-color: var(--dwd-card) !important; border-color: var(--dwd-line) !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
+        html.theme-dark .word-card:hover {
+            background: linear-gradient(135deg, var(--dwd-card) 0%, var(--dwd-accent-tint) 100%) !important;
+            border-color: var(--dwd-accent-mid) !important;
+            box-shadow: 0 0 6px rgba(183,159,255,0.5), 0 0 16px rgba(183,159,255,0.35), 0 0 28px rgba(183,159,255,0.2), 0 14px 30px -12px rgba(0,0,0,0.55) !important;
+        }
+        html.theme-dark .word-card:hover .card-word { color: var(--dwd-accent) !important; text-shadow: 0 0 16px rgba(183,159,255,0.55); }
+        html.theme-dark .word-card:hover .card-definition { color: var(--dwd-accent) !important; }
+        html.theme-dark .word-card:hover .card-type-icon { color: var(--dwd-accent) !important; }
+        html.theme-dark .card-type-icon { color: var(--dwd-accent); }
+        html.theme-dark .card-word { color: var(--dwd-ink); }
+        html.theme-dark .card-definition { color: rgba(237,233,221,0.55); }
+        html.theme-dark .card-tag { background: rgba(237,233,221,0.08) !important; color: rgba(237,233,221,0.55) !important; }
+        html.theme-dark .card-expand { color: rgba(237,233,221,0.35) !important; }
+        html.theme-dark .type-badge { background: rgba(183,159,255,0.14) !important; color: var(--dwd-accent) !important; border-color: rgba(183,159,255,0.3) !important; }
+        html.theme-dark .word-card:hover .type-badge { background: rgba(183,159,255,0.22) !important; border-color: rgba(183,159,255,0.45) !important; }
+        html.theme-dark .star-rating { color: var(--dwd-accent); }
+        html.theme-dark .star-filter.active { color: var(--dwd-accent) !important; }
+        html.theme-dark .star-filter.active svg { color: var(--dwd-accent) !important; }
+        html.theme-dark .star-filter.active svg path { fill: var(--dwd-accent) !important; stroke: var(--dwd-accent) !important; }
+        html.theme-dark .star-filter:not(.active) { color: var(--dwd-ink-faint) !important; }
+        html.theme-dark .star-filter:not(.active) svg { color: var(--dwd-ink-faint) !important; }
+        html.theme-dark .star-filter:not(.active) svg path { fill: var(--dwd-ink-faint) !important; stroke: var(--dwd-ink-faint) !important; }
+        html.theme-dark .word-card strong, html.theme-dark .word-card b { color: var(--dwd-seal) !important; }
+        html.theme-dark #modal-definition strong, html.theme-dark #modal-definition b { color: var(--dwd-seal) !important; }
+
+        html.theme-dark #modal-overlay { background-color: rgba(0,0,0,0.65) !important; }
+        html.theme-dark .modal-card { background-color: var(--dwd-bg) !important; background-image: none !important; }
+        html.theme-dark #modal-word { color: var(--dwd-ink) !important; }
+        html.theme-dark #modal-definition { color: var(--dwd-ink) !important; }
+        html.theme-dark #modal-note { color: var(--dwd-ink) !important; }
+
+        html.theme-dark #filter-modal { background-color: rgba(0,0,0,0.55) !important; }
+        html.theme-dark #filter-modal > div {
+            background-color: var(--dwd-bg) !important;
+            background-image: none !important;
+            border-color: var(--dwd-accent-mid) !important;
+        }
+        html.theme-dark #filter-modal > div > div:first-child {
+            background: linear-gradient(135deg, rgba(183,159,255,0.08) 0%, rgba(183,159,255,0.03) 100%) !important;
+            border-color: var(--dwd-line) !important;
+        }
+        html.theme-dark [id^="filter-utility-stars"] { background-color: var(--dwd-card-alt) !important; }
+        html.theme-dark .p-6.border-t { background-color: var(--dwd-card-alt) !important; border-color: var(--dwd-line) !important; }
+
+        html.theme-dark #bottom-bar { background-color: var(--dwd-card) !important; border-color: var(--dwd-line) !important; }
+        html.theme-dark #clear-filter-btn { background-color: transparent !important; }
+        html.theme-dark #clear-filter-btn:hover { background-color: var(--dwd-accent-tint) !important; }
     </style>
 </head>
 <body class="min-h-screen">
+    <div class="paper-overlay" aria-hidden="true"></div>
 
     <header class="sticky top-0 z-50 w-full h-[80px] bg-[#F5F2EB]/95 glass-nav flex items-center justify-between px-10 shadow-sm" style="border-bottom: 0.5px solid rgba(42,39,35,0.08);">
         <div class="flex items-center gap-10">
@@ -172,7 +282,10 @@ words.sort((a, b) => {
                 </a>
             </nav>
         </div>
-        <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#9B7CC8] tracking-tight translate-y-1">hyperlynxt | teo</div>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+            <div class="font-['Reenie_Beanie'] text-[1.75rem] leading-none text-[#9B7CC8] tracking-tight translate-y-1">hyperlynkx | teo</div>
+        </div>
     </header>
 
     <section class="w-full pt-20 pb-16 px-6">
@@ -424,6 +537,16 @@ words.sort((a, b) => {
     </div>
 
     <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        function isDark() { return document.documentElement.classList.contains('theme-dark'); }
+        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        syncToggleIcon();
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('theme-dark');
+            try { localStorage.setItem('kx-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+            syncToggleIcon();
+        });
+
         const overlay = document.getElementById('modal-overlay');
         const filterModal = document.getElementById('filter-modal');
         const bottomBar = document.getElementById('bottom-bar');
