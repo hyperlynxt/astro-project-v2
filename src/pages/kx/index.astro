@@ -258,6 +258,7 @@ const ESTADO_LABEL: Record<string, string> = {
             text-transform: uppercase; color: var(--teal); background: var(--teal-tint);
             padding: 0.3rem 0.7rem; border-radius: 999px;
         }
+        .num-ic { vertical-align: -1px; margin-right: 3px; }
         .snote { font-family: "Inter", sans-serif; font-size: 0.86rem; color: var(--ink-soft); margin: 0.4rem 0 1.4rem; max-width: 64ch; line-height: 1.55; }
 
         /* ── retomar ── */
@@ -403,7 +404,7 @@ const ESTADO_LABEL: Record<string, string> = {
             </nav>
         </div>
         <div class="nav-right-group">
-            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
             <a href="/astro-project-v2/" class="nav-right">hyperlynkx | teo</a>
         </div>
     </div>
@@ -435,7 +436,7 @@ const ESTADO_LABEL: Record<string, string> = {
             <>
                 <div class="shead">
                     <h2>Retomar</h2>
-                    <span class="tag">§1</span>
+                    <span class="tag"><svg class="num-ic" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><line x1="10" y1="4" x2="8" y2="20"></line><line x1="15" y1="4" x2="13" y2="20"></line></svg>1</span>
                 </div>
                 <p class="snote">Lo último que pasó, y lo que está a medio hacer.</p>
                 <div class="retomar">
@@ -496,7 +497,7 @@ const ESTADO_LABEL: Record<string, string> = {
 
         <div class="shead">
             <h2>Entrar por área</h2>
-            <span class="tag">§2</span>
+            <span class="tag"><svg class="num-ic" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><line x1="10" y1="4" x2="8" y2="20"></line><line x1="15" y1="4" x2="13" y2="20"></line></svg>2</span>
         </div>
         <p class="snote">Las once áreas de la Matriz. Es el eje con el que se pide el trabajo, no el estado ni el tipo.</p>
         <div class="areas-grid">
@@ -514,7 +515,7 @@ const ESTADO_LABEL: Record<string, string> = {
             <>
                 <div class="shead">
                     <h2>Documentos</h2>
-                    <span class="tag">§3</span>
+                    <span class="tag"><svg class="num-ic" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><line x1="10" y1="4" x2="8" y2="20"></line><line x1="15" y1="4" x2="13" y2="20"></line></svg>3</span>
                 </div>
                 <p class="snote">Cada documento se publica en pareja: prosa completa y mapa visual.</p>
                 <div class="doc-grid">
@@ -538,7 +539,7 @@ const ESTADO_LABEL: Record<string, string> = {
 
         <div class="shead">
             <h2>Módulos</h2>
-            <span class="tag">§4</span>
+            <span class="tag"><svg class="num-ic" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><line x1="10" y1="4" x2="8" y2="20"></line><line x1="15" y1="4" x2="13" y2="20"></line></svg>4</span>
         </div>
         <p class="snote">{modulos.length} hoy. Los de abajo existen como decisión, no como código todavía.</p>
         <div class="modulos-list">
@@ -564,7 +565,7 @@ const ESTADO_LABEL: Record<string, string> = {
 
         <div class="shead">
             <h2>Vistas</h2>
-            <span class="tag">§5</span>
+            <span class="tag"><svg class="num-ic" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><line x1="10" y1="4" x2="8" y2="20"></line><line x1="15" y1="4" x2="13" y2="20"></line></svg>5</span>
         </div>
         <p class="snote">Las lecturas del sistema. Algunas todavía no existen.</p>
         <div class="vistas-grid">
@@ -590,7 +591,7 @@ const ESTADO_LABEL: Record<string, string> = {
     <script is:inline>
         const themeToggle = document.getElementById('theme-toggle');
         function isDark() { return document.documentElement.classList.contains('theme-dark'); }
-        function syncToggleIcon() { themeToggle.textContent = isDark() ? '☀' : '🌙'; }
+        function syncToggleIcon() { themeToggle.innerHTML = isDark() ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>' : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>'; }
         syncToggleIcon();
         themeToggle.addEventListener('click', () => {
             document.documentElement.classList.toggle('theme-dark');
