@@ -1,11 +1,12 @@
 ---
 id: "KX-I02"
 tema: "El hub kx: rediseñar /kx/ como dos áreas visuales, Atlas y autopoiesis, planificadas de punta a punta antes de escribir HTML"
-estado_ciclo: activo
+estado_ciclo: terminado
 fecha_inicio: 2026-08-01
+fecha_fin: 2026-08-02
 hora_inicio: "20:23"
 origen: ["KX-S07"]
-produjo: ["KX-P16", "KX-P21", "KX-P22", "KX-T57", "KX-T58", "KX-T59", "KX-T60", "KX-T61", "KX-T62", "KX-T63", "KX-T64", "KX-T22", "KX-F01", "KX-F02", "KX-F03", "KX-F04", "KX-F05"]
+produjo: ["KX-P16", "KX-P21", "KX-P22", "KX-T57", "KX-T58", "KX-T59", "KX-T60", "KX-T61", "KX-T62", "KX-T63", "KX-T64", "KX-T22", "KX-F01", "KX-F02", "KX-F03", "KX-F04", "KX-F05", "KX-S03", "KX-S04"]
 idaYVuelta:
   - quien: teo
     marca: "20:23"
@@ -60,7 +61,20 @@ idaYVuelta:
     texto: "Dio por buena la constelación nueva. Pidió deprecar la anterior, que la firma del sitio lleve al hub nuevo, y pushear todo."
   - quien: ia
     marca: ""
-    texto: "Archivó las cuatro vistas viejas a `_archive/kx-vistas-viejas/` (el build baja de 55 a 40 páginas, lo esperado). Detectó que diez archivos de la Matriz apuntaban a esas rutas en \"Dónde se ve el inventario\", sección que se renderiza en las páginas de área, y los corrigió antes de pushear: cero `href` muertos en el HTML construido. Los dos pares de documento se conservan por ser contenido. La firma ya apuntaba a `/kx/`, así que solo faltaba deployar. Pusheó a `main`, que dispara el deploy."
-cierre: ""
+    texto: "Archivó las cuatro vistas viejas a `_archive/kx-vistas-viejas/` (el build baja de 55 a 40 páginas, lo esperado). Detectó que diez archivos de la Matriz apuntaban a esas rutas en \"Dónde se ve el inventario\", sección que se renderiza en las páginas de área, y los corrigió antes de pushear: cero `href` muertos en el HTML construido. Los dos pares de documento se conservan por ser contenido. La firma ya apuntaba a `/kx/`, así que solo faltaba deployar. Pusheó a `main`, que dispara el deploy. Verificó en producción: las diez rutas nuevas dan 200, las cuatro archivadas dan 404, el soft-skip de los tres generadores corrió tal cual en el log de CI."
+  - quien: teo
+    marca: ""
+    texto: "Dio por terminado y cerrado el ciclo."
+  - quien: ia
+    marca: ""
+    texto: "Doble revisado sobre los diecinueve objetos de `produjo`: todos con el estado real que el patch notes describe. Sumó `KX-S03` y `KX-S04` a `produjo`, que faltaban. Anotó, sin bloquear el cierre, que `KX-F01`/`KX-F02` están `finalizado` sin `fechaFin`: es la misma política ya escrita de no inventar fechas, no un cabo suelto. Corrió el build de sincronización y cerró el ciclo."
+cierre: |-
+  Doble revisado: los diecinueve objetos de `produjo` se verificaron contra `interlynkx-page/src/content/`. Tres piezas (`KX-P16`, `KX-P21`, `KX-P22`) en `activo`. Nueve tareas: seis cerradas (`KX-T57`, `KX-T58`, `KX-T60`, `KX-T61`, `KX-T62`, `KX-T22`) y tres abiertas a propósito (`KX-T59`, `KX-T63`, `KX-T64` — la primera es trabajo real pendiente del Atlas, las otras dos son backlog declarado para después, no cabos de este ciclo). Cinco flujos (`KX-F01` a `KX-F05`) cargados con su estado real. Dos sesiones (`KX-S03`, `KX-S04`) completadas en la colección, faltaban en `produjo` original y se sumaron acá.
+
+  El patch notes de los dos días (`26.08.01`, `26.08.02`) tiene entrada por cada cambio real de este ciclo. El deploy a producción se verificó en vivo: las diez rutas nuevas responden 200, las cuatro archivadas responden 404, y el log de GitHub Actions confirma que los tres generadores saltearon en silencio como estaba diseñado.
+
+  **Cabo suelto anotado, no bloqueante:** `KX-F01` y `KX-F02` están `estado: finalizado` sin `fechaFin`. No es un olvido — es la misma política que ya rige `fechaInicio` en todo el sistema (`Mapa de Pagina.md`, Abierto): no se inventa una fecha sin evidencia real, y no hay registro de cuándo estos dos flujos, que venían de antes de este ciclo, cruzaron a `finalizado`. Queda vacío a propósito.
+
+  Sin cabos sueltos del ciclo. Lo que sigue abierto (`KX-T59` con diez áreas todavía en el molde común, `KX-T63` el mapa de dependencias, `KX-T64` el mega buscador, y la pregunta de si migrar los documentos publicados a `KxShell`) es backlog explícito para el próximo ciclo, no algo que este cierre esté ocultando.
 actualizado: 2026-08-02
 ---
