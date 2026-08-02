@@ -1,0 +1,178 @@
+---
+import { getCollection } from 'astro:content';
+import KxShell from '../../../layouts/KxShell.astro';
+import Kicker from '../../../components/kx/Kicker.astro';
+import Medidor from '../../../components/kx/Medidor.astro';
+
+const base = '/astro-project-v2';
+const tareas = await getCollection('kxTareas');
+const sesiones = await getCollection('kxSesiones');
+const ciclos = await getCollection('kxCiclos');
+const eventos = await getCollection('kxEventos');
+
+const tareasNoTriage = tareas.filter((t) => t.data.tipo !== 'aclarar');
+const desglose = [
+  { estado: 'abierta', count: tareasNoTriage.filter((t) => t.data.estado === 'abierta').length },
+  { estado: 'bloqueada', count: tareasNoTriage.filter((t) => t.data.estado === 'bloqueada').length },
+  { estado: 'cerrada', count: tareasNoTriage.filter((t) => t.data.estado === 'cerrada').length },
+];
+
+const cicloActivo = ciclos.find((c) => c.data.estado_ciclo === 'activo') ?? null;
+
+const vistas = [
+  { titulo: 'Tareas', desc: 'El backlog, en columnas por quién puede desbloquearla.', href: `${base}/kx/autopoiesis/tareas/`, count: tareas.length, disponible: true },
+  { titulo: 'Sesiones', desc: 'Cronológico, con lo que produjo cada una.', href: `${base}/kx/autopoiesis/sesiones/`, count: sesiones.length, disponible: true },
+  { titulo: 'Ciclos', desc: 'La bitácora de cada intervalo de implementación.', href: `${base}/kx/autopoiesis/ciclos/`, count: ciclos.length, disponible: true },
+  { titulo: 'Log', desc: 'El patch notes, filtrable por área y verbo.', href: `${base}/kx/autopoiesis/log/`, count: eventos.length, disponible: true },
+];
+
+const decisionesAbiertas = tareas.filter((t) => t.data.tipo === 'decidir' && t.data.estado !== 'cerrada');
+const sesionesSinProcesar = sesiones.filter((s) => s.data.estado_autopoiesis === 'sin-procesar');
+const ultimosEventos = [...eventos].sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime()).slice(0, 6);
+---
+
+<KxShell title="Autopoiesis" crumbs={[{ label: 'Autopoiesis' }]}>
+  <Fragment slot="kicker"><Kicker texto="cambiar el sistema" color="lavender" /></Fragment>
+  <h1 slot="title">Autopoiesis</h1>
+  <p class="kx-lede">En qué se está trabajando, y qué falta.</p>
+
+  {cicloActivo && (
+    <div class="kx-ciclo-banner">
+      <span class="kx-ciclo-kicker">ciclo activo · {cicloActivo.data.id}</span>
+      <p>{cicloActivo.data.tema}</p>
+    </div>
+  )}
+
+  <div class="kx-medidor-row">
+    <Medidor valor={tareasNoTriage.length} label="tareas en total" desglose={desglose} rampa="estadoTarea" />
+  </div>
+
+  <div class="kx-shead"><h2>Entrar por vista</h2></div>
+  <div class="kx-vistas-grid">
+    {vistas.map((v) => v.disponible ? (
+      <a class="kx-vista-card" href={v.href}>
+        <h4>{v.titulo}</h4>
+        <p>{v.desc}</p>
+        <span class="kx-vista-count">{v.count}</span>
+      </a>
+    ) : (
+      <div class="kx-vista-card kx-vista-card--stub">
+        <h4>{v.titulo}</h4>
+        <p>{v.desc}</p>
+        <span class="kx-vista-count">{v.count} en la colección</span>
+        <span class="kx-vista-badge">página sin construir todavía (KX-T60)</span>
+      </div>
+    ))}
+  </div>
+
+  {(decisionesAbiertas.length > 0 || sesionesSinProcesar.length > 0) && (
+    <>
+      <div class="kx-shead"><h2>Qué está frenando</h2></div>
+      <div class="kx-frenos">
+        {decisionesAbiertas.length > 0 && (
+          <div class="kx-freno">
+            <span class="kx-freno-label">decisiones abiertas · solo Teo las desbloquea</span>
+            {decisionesAbiertas.map((d) => (
+              <div class="kx-freno-row">
+                <span class="kx-mono">{d.data.id}</span>
+                <span>{d.data.titulo}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {sesionesSinProcesar.length > 0 && (
+          <div class="kx-freno kx-freno--gold">
+            <span class="kx-freno-label">sesiones sin procesar</span>
+            {sesionesSinProcesar.map((s) => (
+              <div class="kx-freno-row">
+                <span class="kx-mono">{s.data.id}</span>
+                <span>{s.data.titulo || 'sin título todavía'}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  )}
+
+  <div class="kx-shead">
+    <h2>Últimos eventos</h2>
+    <a class="kx-vermas" href={`${base}/kx/autopoiesis/log/`}>ver el log completo &rarr;</a>
+  </div>
+  <div class="kx-pulso">
+    {ultimosEventos.map((e) => (
+      <div class="kx-pulso-row">
+        <span class="kx-pulso-area">{e.data.area}</span>
+        <span class="kx-pulso-verbo">{e.data.verbo}</span>
+        <span class="kx-pulso-texto">{e.data.texto}</span>
+      </div>
+    ))}
+  </div>
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); max-width: 60ch; margin: 0.9rem 0 0; }
+  .kx-ciclo-banner {
+    margin-top: 1.4rem; padding: 0.9rem 1.3rem; border-radius: var(--kx-radius);
+    background: var(--kx-lavender-tint); border: 1px solid var(--kx-lavender-mid);
+  }
+  .kx-ciclo-kicker { font-family: var(--kx-font-sans); font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--kx-lavender-deep); }
+  .kx-ciclo-banner p { margin: 0.4rem 0 0; font-size: 0.98rem; }
+  .kx-medidor-row { margin-top: 1.8rem; max-width: 360px; }
+  .kx-shead { margin: 3rem 0 1rem; }
+  .kx-shead h2 { font-size: 1.35rem; font-weight: 500; margin: 0; }
+  .kx-vistas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
+  @media (max-width: 900px) { .kx-vistas-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .kx-vistas-grid { grid-template-columns: 1fr; } }
+  .kx-vista-card {
+    display: block; text-decoration: none; color: var(--kx-ink);
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.1rem 1.25rem; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  a.kx-vista-card:hover { transform: translateY(-3px); border-color: var(--kx-accent-mid); box-shadow: 0 14px 26px -16px var(--kx-accent-glow); }
+  .kx-vista-card--stub { opacity: 0.65; }
+  .kx-vista-card h4 { font-size: 0.96rem; font-weight: 600; margin: 0 0 0.3rem; }
+  .kx-vista-card p { font-family: var(--kx-font-sans); font-size: 0.76rem; color: var(--kx-ink-soft); margin: 0; line-height: 1.45; }
+  .kx-vista-count {
+    display: inline-block; margin-top: 0.6rem; font-family: var(--kx-font-mono); font-size: 0.68rem;
+    color: var(--kx-accent-deep); background: var(--kx-accent-tint); padding: 0.2rem 0.55rem; border-radius: var(--kx-radius-pill);
+  }
+  .kx-vista-badge { display: block; margin-top: 0.4rem; font-family: var(--kx-font-sans); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--kx-ink-faint); }
+
+  .kx-vermas { font-family: var(--kx-font-sans); font-size: 0.78rem; font-weight: 700; color: var(--kx-accent-deep); text-decoration: none; margin-left: auto; }
+  .kx-vermas:hover { text-decoration: underline; }
+  .kx-shead { display: flex; align-items: baseline; gap: 0.8rem; }
+
+  .kx-frenos { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 820px) { .kx-frenos { grid-template-columns: 1fr; } }
+  .kx-freno {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-left: 3px solid var(--kx-alert);
+    border-radius: var(--kx-radius); padding: 1rem 1.2rem;
+  }
+  .kx-freno--gold { border-left-color: var(--kx-gold); }
+  .kx-freno-label {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--kx-ink-faint); display: block; margin-bottom: 0.7rem;
+  }
+  .kx-freno-row {
+    display: flex; align-items: baseline; gap: 0.6rem; padding: 0.4rem 0;
+    border-top: 1px solid var(--kx-line-soft); font-family: var(--kx-font-sans); font-size: 0.8rem;
+    color: var(--kx-ink-soft);
+  }
+  .kx-freno-row:first-of-type { border-top: none; }
+  .kx-mono { font-family: var(--kx-font-mono); font-size: 0.66rem; color: var(--kx-accent-deep); font-weight: 600; flex-shrink: 0; }
+
+  .kx-pulso { display: flex; flex-direction: column; gap: 0.4rem; }
+  .kx-pulso-row {
+    display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap;
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius-sm);
+    padding: 0.55rem 0.9rem; font-family: var(--kx-font-sans); font-size: 0.8rem;
+  }
+  .kx-pulso-area {
+    font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--kx-ink-faint); background: var(--kx-panel); border: 1px solid var(--kx-line);
+    padding: 0.12rem 0.45rem; border-radius: var(--kx-radius-pill); white-space: nowrap;
+  }
+  .kx-pulso-verbo { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--kx-lavender-deep); white-space: nowrap; }
+  .kx-pulso-texto { color: var(--kx-ink-soft); line-height: 1.5; flex: 1; min-width: 12rem; }
+</style>

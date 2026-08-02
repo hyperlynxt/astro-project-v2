@@ -1,0 +1,41 @@
+---
+// Prosa: el texto que viene de un `Mapa de {área}.md` de la bóveda.
+// Se distingue visualmente de las tarjetas a propósito: la prosa es la fuente
+// (el porqué), las tarjetas son el índice derivado (el qué).
+import { prosaAHtml } from '../../lib/kx';
+
+interface Props { md: string }
+const { md } = Astro.props;
+const html = prosaAHtml(md);
+---
+
+{html && <div class="kx-prosa" set:html={html} />}
+
+<style>
+  .kx-prosa { font-family: var(--kx-font-serif); font-size: 1.02rem; line-height: 1.65; color: var(--kx-ink); }
+  .kx-prosa :global(p) { margin: 0 0 0.9rem; }
+  .kx-prosa :global(p:last-child) { margin-bottom: 0; }
+  .kx-prosa :global(h4) {
+    font-family: var(--kx-font-sans); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--kx-gold-deep);
+    margin: 1.5rem 0 0.6rem;
+  }
+  .kx-prosa :global(ul) { margin: 0 0 0.9rem; padding-left: 1.2rem; }
+  .kx-prosa :global(li) { margin-bottom: 0.45rem; }
+  .kx-prosa :global(code) {
+    font-family: var(--kx-font-mono); font-size: 0.84em; background: var(--kx-panel);
+    border: 1px solid var(--kx-line-soft); padding: 0.08rem 0.32rem;
+    border-radius: 5px; color: var(--kx-accent-deep);
+  }
+  .kx-prosa :global(strong) { font-weight: 600; }
+  .kx-prosa :global(blockquote) {
+    margin: 0 0 0.9rem; padding: 0.6rem 1.1rem; border-left: 3px solid var(--kx-accent-mid);
+    background: var(--kx-panel); border-radius: 0 var(--kx-radius-sm) var(--kx-radius-sm) 0;
+    color: var(--kx-ink-soft);
+  }
+  .kx-prosa :global(.kx-prosa-raw) {
+    font-family: var(--kx-font-mono); font-size: 0.76rem; line-height: 1.5;
+    background: var(--kx-panel); border: 1px solid var(--kx-line); border-radius: var(--kx-radius-sm);
+    padding: 0.8rem 1rem; overflow-x: auto; color: var(--kx-ink-soft);
+  }
+</style>

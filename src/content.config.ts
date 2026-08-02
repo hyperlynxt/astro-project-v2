@@ -151,7 +151,32 @@ const kxModulos = defineCollection({
     titulo: z.string(),
     estado: z.enum(ESTADOS),
     descripcion: z.string(),
+    // fechaInicio: cuándo el objeto entró al Atlas (estado más bajo).
+    // fechaFin: cuándo pasó a `finalizado`. Las escribe la skill al cambiar
+    // el estado, no se mantienen a mano. `actualizado` sigue siendo el último toque.
+    fechaInicio: z.date().optional(),
+    fechaFin: z.date().optional(),
     origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxAreas = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-areas' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    linea: z.string(),
+    archivoBoveda: z.string(),
+    queEs: z.string(),
+    convenciones: z.string(),
+    abierto: z.string(),
+    inventario: z.string(),
+    decisiones: z.array(z.object({
+      fecha: z.date(),
+      titulo: z.string(),
+      cuerpo: z.string(),
+    })).default([]),
     actualizado: z.date(),
   }),
 });
@@ -163,7 +188,7 @@ const kxSesiones = defineCollection({
     fecha: z.date(),
     titulo: z.string(),
     conclusiva: z.boolean().default(false),
-    estado: z.enum(['dictada', 'destilada', 'publicada']),
+    estado_autopoiesis: z.enum(['sin-procesar', 'procesada']),
     produjo: z.array(z.string()).default([]),
     resumen: z.string().optional(),
     hrefTextual: z.string().optional(),
@@ -198,6 +223,8 @@ const kxPiezas = defineCollection({
     estado: z.enum(ESTADOS),
     descripcion: z.string(),
     ruta: z.string().optional(),
+    fechaInicio: z.date().optional(),
+    fechaFin: z.date().optional(),
     origen: z.string().optional(),
     actualizado: z.date(),
   }),
@@ -211,10 +238,62 @@ const kxTareas = defineCollection({
     tipo: z.enum(['decidir', 'pensar', 'construir', 'escribir', 'aclarar']),
     estado: z.enum(['abierta', 'bloqueada', 'cerrada']),
     modulo: z.string().optional(),
+    area: z.string().optional(),
     prioridad: z.enum(['alta', 'media', 'baja']).optional(),
     descripcion: z.string(),
     notaOriginal: z.string().optional(),
     bloqueadaPor: z.array(z.string()).optional(),
+    origen: z.string().optional(),
+    actualizado: z.date(),
+  }),
+});
+
+const kxCiclos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-ciclos' }),
+  schema: z.object({
+    id: z.string(),
+    tema: z.string(),
+    estado_ciclo: z.enum(['activo', 'terminado', 'pausado', 'abandonado']),
+    fecha_inicio: z.date(),
+    fecha_fin: z.date().optional(),
+    hora_inicio: z.string().optional(),
+    origen: z.array(z.string()).default([]),
+    produjo: z.array(z.string()).default([]),
+    // La ida y vuelta: un callout por intercambio con consecuencia real.
+    // La genera generate-kx-ciclos.mjs desde los callouts [!teo]/[!ia] de la bóveda.
+    idaYVuelta: z.array(z.object({
+      quien: z.enum(['teo', 'ia']),
+      marca: z.string().default(''),
+      texto: z.string(),
+    })).default([]),
+    cierre: z.string().default(''),
+    actualizado: z.date(),
+  }),
+});
+
+const kxEventos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-eventos' }),
+  schema: z.object({
+    id: z.string(),
+    fecha: z.date(),
+    area: z.string(),
+    verbo: z.enum(['creado', 'implementado', 'decidido', 'cambiado', 'calibrado', 'deprecado', 'abierto', 'cerrado']),
+    texto: z.string(),
+    archivoOrigen: z.string(),
+  }),
+});
+
+const kxInstancias = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/kx-instancias' }),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    estado: z.enum(ESTADOS),
+    descripcion: z.string(),
+    ruta: z.string().optional(),
+    etapas: z.array(z.string()).optional(),
+    fechaInicio: z.date().optional(),
+    fechaFin: z.date().optional(),
     origen: z.string().optional(),
     actualizado: z.date(),
   }),
@@ -229,6 +308,11 @@ const kxWorkflows = defineCollection({
     pasos: z.array(z.string()),
     estado: z.enum(ESTADOS),
     descripcion: z.string(),
+    materiaPrima: z.string().optional(),
+    destino: z.string().optional(),
+    cuelloDeBotella: z.string().optional(),
+    fechaInicio: z.date().optional(),
+    fechaFin: z.date().optional(),
     origen: z.string().optional(),
     actualizado: z.date(),
   }),
@@ -241,6 +325,8 @@ const kxCuadrantes = defineCollection({
     titulo: z.string(),
     estado: z.enum(ESTADOS),
     descripcion: z.string(),
+    fechaInicio: z.date().optional(),
+    fechaFin: z.date().optional(),
     origen: z.string().optional(),
     actualizado: z.date(),
   }),
@@ -278,5 +364,5 @@ const kxFuncionalidades = defineCollection({
   }),
 });
 
-export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives, kxModulos, kxPiezas, kxTareas, kxWorkflows, kxCuadrantes, kxStack, kxIntegraciones, kxFuncionalidades, kxSesiones, kxDocumentos };
+export const collections = { definitions, concepts, quotes, linguisticTreats, essays, notes, frameworks, contentNotes, researchDives, kxModulos, kxPiezas, kxTareas, kxWorkflows, kxCuadrantes, kxStack, kxIntegraciones, kxFuncionalidades, kxSesiones, kxDocumentos, kxCiclos, kxEventos, kxInstancias, kxAreas };
 

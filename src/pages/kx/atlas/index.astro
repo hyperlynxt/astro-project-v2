@@ -1,0 +1,150 @@
+---
+import { getCollection } from 'astro:content';
+import KxShell from '../../../layouts/KxShell.astro';
+import Kicker from '../../../components/kx/Kicker.astro';
+import Medidor from '../../../components/kx/Medidor.astro';
+import { AREA_FUENTE, ESTADO_PASTILLA } from '../../../lib/kx';
+
+const base = '/astro-project-v2';
+
+const areas = await getCollection('kxAreas');
+const modulos = await getCollection('kxModulos');
+const piezas = await getCollection('kxPiezas');
+const workflows = await getCollection('kxWorkflows');
+const cuadrantes = await getCollection('kxCuadrantes');
+const instancias = await getCollection('kxInstancias');
+const integraciones = await getCollection('kxIntegraciones');
+const documentos = await getCollection('kxDocumentos');
+
+const POR_COLECCION: Record<string, { data: { estado?: string } }[]> = {
+  kxModulos: modulos, kxWorkflows: workflows, kxCuadrantes: cuadrantes,
+  kxInstancias: instancias, kxIntegraciones: integraciones, kxDocumentos: documentos,
+};
+
+function objetosDeArea(slug: string) {
+  const fuentes = AREA_FUENTE[slug] ?? [];
+  return fuentes.flatMap((f) =>
+    f.filtroTipo
+      ? piezas.filter((p) => p.data.tipo === f.filtroTipo).map((p) => ({ estado: p.data.estado }))
+      : (POR_COLECCION[f.coleccion] ?? []).map((o) => ({ estado: o.data.estado ?? 'activo' }))
+  );
+}
+
+// El orden de presentación lo fija el generador; se respeta el del archivo.
+const ORDEN_SLUGS = ['modulos', 'skills', 'flujos', 'instancias', 'cuadrantes', 'integraciones', 'convenciones', 'taxonomia', 'capas', 'pagina', 'mapas'];
+const areasOrdenadas = ORDEN_SLUGS
+  .map((slug) => areas.find((a) => a.data.id === slug))
+  .filter(Boolean) as typeof areas;
+
+const conDatos = areasOrdenadas.map((a) => {
+  const objs = objetosDeArea(a.data.id);
+  const esConceptual = (AREA_FUENTE[a.data.id] ?? []).length === 0;
+  const vivos = objs.filter((o) => ['activo', 'construyendo', 'finalizado'].includes(o.estado)).length;
+  return { area: a, total: objs.length, vivos, esConceptual, decisiones: a.data.decisiones.length };
+});
+
+const ESTADOS_ORDEN = ['idea', 'disenado', 'construyendo', 'activo', 'finalizado', 'pausado', 'deprecado'];
+const todos = [...modulos, ...piezas];
+const desgloseGlobal = ESTADOS_ORDEN.map((estado) => ({ estado, count: todos.filter((i) => i.data.estado === estado).length }));
+---
+
+<KxShell title="Atlas" crumbs={[{ label: 'Atlas' }]}>
+  <Fragment slot="kicker"><Kicker texto="ver el sistema" color="mint" /></Fragment>
+  <h1 slot="title">Atlas</h1>
+  <p class="kx-lede">
+    Once áreas, una por archivo de <code>01 - Matriz/</code>. Cada una tiene su página con su prosa,
+    su inventario agrupado por estado, sus decisiones fechadas y lo que queda abierto.
+  </p>
+
+  <div class="kx-medidor-row">
+    <Medidor valor={todos.length} label="módulos + piezas" desglose={desgloseGlobal} />
+  </div>
+
+  <div class="kx-shead"><h2>Las once áreas</h2></div>
+  <div class="kx-areas-grid">
+    {conDatos.map(({ area, total, vivos, esConceptual, decisiones }) => (
+      <a class="kx-area-card" href={`${base}/kx/atlas/${area.data.id}/`}>
+        <h3>{area.data.titulo}</h3>
+        <p>{area.data.linea}</p>
+        <div class="kx-area-meta">
+          {esConceptual ? (
+            <span class="kx-area-tag kx-area-tag--conceptual">conceptual</span>
+          ) : total > 0 ? (
+            <>
+              <span class="kx-area-tag">{total} {total === 1 ? 'objeto' : 'objetos'}</span>
+              {vivos > 0 && <span class="kx-area-vivos">{vivos} vivos</span>}
+            </>
+          ) : (
+            <span class="kx-area-tag kx-area-tag--vacia">sin cargar</span>
+          )}
+          {decisiones > 0 && <span class="kx-area-dec">{decisiones} {decisiones === 1 ? 'decisión' : 'decisiones'}</span>}
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <div class="kx-shead"><h2>Vistas transversales</h2></div>
+  <p class="kx-snote">Cortes que cruzan varias áreas a la vez.</p>
+  <div class="kx-trans-grid">
+    <a class="kx-trans-card" href={`${base}/kx/atlas/piezas/`}>
+      <h4>Piezas, todas juntas</h4>
+      <p>Matriz tipo × módulo y tabla filtrable sobre los cinco tipos a la vez.</p>
+    </a>
+    <div class="kx-trans-card kx-trans-card--stub">
+      <h4>Mapa del sistema</h4>
+      <p>El grafo de módulos y piezas, con toggle actual y proyectado.</p>
+      <span class="kx-badge">sin construir (KX-T59)</span>
+    </div>
+    <div class="kx-trans-card kx-trans-card--stub">
+      <h4>Estructura</h4>
+      <p>El árbol de carpetas de la bóveda, por snapshot commiteado.</p>
+      <span class="kx-badge">sin construir (KX-T59)</span>
+    </div>
+  </div>
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); max-width: 64ch; margin: 0.9rem 0 0; }
+  .kx-lede code { font-family: var(--kx-font-mono); font-size: 0.86em; color: var(--kx-accent-deep); }
+  .kx-medidor-row { margin-top: 1.8rem; max-width: 380px; }
+  .kx-shead { margin: 3rem 0 1rem; }
+  .kx-shead h2 { font-size: 1.35rem; font-weight: 500; margin: 0; }
+  .kx-snote { font-family: var(--kx-font-sans); font-size: 0.85rem; color: var(--kx-ink-soft); margin: -0.6rem 0 1.2rem; }
+
+  .kx-areas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+  @media (max-width: 860px) { .kx-areas-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .kx-areas-grid { grid-template-columns: 1fr; } }
+  .kx-area-card {
+    display: block; text-decoration: none; color: var(--kx-ink);
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.15rem 1.3rem; position: relative; overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), border-color 0.2s ease, box-shadow 0.25s ease;
+  }
+  .kx-area-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--kx-accent); opacity: 0.7; }
+  .kx-area-card:hover { transform: translateY(-3px); border-color: var(--kx-accent-mid); box-shadow: 0 16px 30px -16px var(--kx-accent-glow); }
+  .kx-area-card h3 { font-size: 1.08rem; font-weight: 600; margin: 0.25rem 0 0.35rem; }
+  .kx-area-card p { font-family: var(--kx-font-sans); font-size: 0.78rem; color: var(--kx-ink-soft); margin: 0 0 0.8rem; line-height: 1.45; min-height: 2.2em; }
+  .kx-area-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .kx-area-tag {
+    font-family: var(--kx-font-mono); font-size: 0.66rem; font-weight: 600;
+    color: var(--kx-accent-deep); background: var(--kx-accent-tint);
+    padding: 0.2rem 0.55rem; border-radius: var(--kx-radius-pill);
+  }
+  .kx-area-tag--conceptual { color: var(--kx-lavender-deep); background: var(--kx-lavender-tint); }
+  .kx-area-tag--vacia { color: var(--kx-ink-faint); background: var(--kx-panel); }
+  .kx-area-vivos { font-family: var(--kx-font-sans); font-size: 0.66rem; font-weight: 700; color: var(--kx-mint-deep); }
+  .kx-area-dec { font-family: var(--kx-font-sans); font-size: 0.66rem; color: var(--kx-ink-faint); margin-left: auto; }
+
+  .kx-trans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+  @media (max-width: 780px) { .kx-trans-grid { grid-template-columns: 1fr; } }
+  .kx-trans-card {
+    display: block; text-decoration: none; color: var(--kx-ink);
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.1rem 1.25rem; transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  a.kx-trans-card:hover { transform: translateY(-3px); border-color: var(--kx-lavender-mid); }
+  .kx-trans-card--stub { opacity: 0.55; }
+  .kx-trans-card h4 { font-size: 0.96rem; font-weight: 600; margin: 0 0 0.3rem; }
+  .kx-trans-card p { font-family: var(--kx-font-sans); font-size: 0.76rem; color: var(--kx-ink-soft); margin: 0; line-height: 1.45; }
+  .kx-badge { display: block; margin-top: 0.5rem; font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--kx-ink-faint); }
+</style>

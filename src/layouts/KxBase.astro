@@ -23,7 +23,7 @@ const wrapMax = maxWidth === 'narrow' ? '780px' : '1040px';
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
     <style define:vars={{ wrapMax }}>
         :root {
-            --bg: #FCFAF5; --ink: #23211d; --ink-soft: #55503f; --ink-faint: #8c8070;
+            --bg: #FDFCF9; --ink: #23211d; --ink-soft: #55503f; --ink-faint: #8c8070;
             --line: #ddd4bf; --teal: #2A4747; --gold: #B08D57; --seal: #8B2626;
             --panel: #F5F1E6; --panel-2: #EFE9D9;
         }
@@ -43,8 +43,14 @@ const wrapMax = maxWidth === 'narrow' ? '780px' : '1040px';
         body {
             margin: 0;
             background-color: var(--bg);
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"), url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            background-position: 0px 0px, 40px 60px;
+            background-image:
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-position:
+                0px 0px,
+                40px 60px,
+                80px 20px;
             background-repeat: repeat;
             color: var(--ink);
             font-family: "EB Garamond", serif;

@@ -1,0 +1,203 @@
+---
+// Driver ontológico de los ciclos: TIEMPO + PROCESO. El timeline los ordena,
+// y la ida y vuelta se renderiza como conversación, que es lo que son.
+//
+// Un ciclo pausado muestra su bloque "para retomar" ARRIBA DE TODO, no al
+// final: es el único dato que importa cuando se vuelve después de unos días.
+import { getCollection } from 'astro:content';
+import KxShell from '../../../layouts/KxShell.astro';
+import Kicker from '../../../components/kx/Kicker.astro';
+import Prosa from '../../../components/kx/Prosa.astro';
+import { fechaCorta } from '../../../lib/kx';
+
+const base = '/astro-project-v2';
+const ciclos = await getCollection('kxCiclos');
+// Más reciente arriba. Desempate por id descendente: varios ciclos pueden
+// arrancar el mismo día, y sin esto el orden queda indefinido y el activo
+// puede terminar debajo de uno ya cerrado.
+const ordenados = [...ciclos].sort((a, b) => {
+  const d = b.data.fecha_inicio.getTime() - a.data.fecha_inicio.getTime();
+  return d !== 0 ? d : b.data.id.localeCompare(a.data.id);
+});
+
+const ESTADO_META: Record<string, { label: string; color: string }> = {
+  activo: { label: 'activo', color: 'var(--kx-mint)' },
+  terminado: { label: 'terminado', color: 'var(--kx-mint-deep)' },
+  pausado: { label: 'pausado', color: 'var(--kx-gold)' },
+  abandonado: { label: 'abandonado', color: 'var(--kx-slate)' },
+};
+
+function hrefDe(id: string): string {
+  if (/^KX-P\d+$/.test(id)) return `${base}/kx/atlas/piezas/`;
+  if (/^KX-F\d+$/.test(id)) return `${base}/kx/atlas/flujos/`;
+  if (/^KX-T\d+$/.test(id)) return `${base}/kx/autopoiesis/tareas/`;
+  return `${base}/kx/atlas/modulos/`;
+}
+---
+
+<KxShell title="Ciclos de implementación" crumbs={[{ label: 'Autopoiesis', href: `${base}/kx/autopoiesis/` }, { label: 'Ciclos' }]}>
+  <Fragment slot="kicker"><Kicker texto="autopoiesis · ciclos" color="lavender" /></Fragment>
+  <h1 slot="title">Ciclos de implementación</h1>
+  <p class="kx-lede">
+    Cada intervalo de hiperfoco donde se implementó de verdad, con su ida y vuelta.
+    No es el patch notes: eso son los hechos del sistema, esto es el proceso — qué se preguntó,
+    qué se respondió, qué quedó a mitad de camino.
+  </p>
+
+  {ordenados.length === 0 ? (
+    <p class="kx-vacio">Ningún ciclo registrado todavía.</p>
+  ) : (
+    <div class="kx-ciclos">
+      {ordenados.map((c) => {
+        const meta = ESTADO_META[c.data.estado_ciclo];
+        return (
+          <article class={`kx-ciclo is-${c.data.estado_ciclo}`} style={`--ecolor: ${meta.color}`}>
+            <header class="kx-ciclo-head">
+              <div class="kx-ciclo-titulo">
+                <span class="kx-ciclo-id">{c.data.id}</span>
+                <span class="kx-ciclo-estado">{meta.label}</span>
+              </div>
+              <span class="kx-ciclo-fechas">
+                {fechaCorta(c.data.fecha_inicio)}
+                {c.data.hora_inicio && ` · ${c.data.hora_inicio}`}
+                {c.data.fecha_fin && ` → ${fechaCorta(c.data.fecha_fin)}`}
+              </span>
+            </header>
+            <p class="kx-ciclo-tema">{c.data.tema}</p>
+
+            {c.data.estado_ciclo === 'pausado' && c.data.cierre && (
+              <div class="kx-retomar">
+                <span class="kx-retomar-label">para retomar</span>
+                <Prosa md={c.data.cierre} />
+              </div>
+            )}
+
+            <div class="kx-ciclo-meta">
+              {c.data.origen.length > 0 && (
+                <div>
+                  <span class="kx-meta-label">sale de</span>
+                  <div class="kx-refs">
+                    {c.data.origen.map((id) => <a class="kx-ref" href={`${base}/kx/autopoiesis/sesiones/`}>{id}</a>)}
+                  </div>
+                </div>
+              )}
+              {c.data.produjo.length > 0 && (
+                <div>
+                  <span class="kx-meta-label">produjo · {c.data.produjo.length}</span>
+                  <div class="kx-refs">
+                    {c.data.produjo.map((id) => <a class="kx-ref" href={hrefDe(id)}>{id}</a>)}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {c.data.idaYVuelta.length > 0 && (
+              <details class="kx-conversacion" open={c.data.estado_ciclo === 'activo'}>
+                <summary>Ida y vuelta · {c.data.idaYVuelta.length} intercambios</summary>
+                <div class="kx-mensajes">
+                  {c.data.idaYVuelta.map((m) => (
+                    <div class={`kx-msg kx-msg--${m.quien}`}>
+                      <span class="kx-msg-quien">{m.quien === 'teo' ? 'Teo' : 'IA'}</span>
+                      <div class="kx-msg-cuerpo">
+                        {m.marca && <span class="kx-msg-marca">{m.marca}</span>}
+                        <Prosa md={m.texto} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+
+            {c.data.estado_ciclo !== 'pausado' && c.data.cierre && (
+              <div class="kx-cierre">
+                <span class="kx-cierre-label">cierre — {meta.label}</span>
+                <Prosa md={c.data.cierre} />
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  )}
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); max-width: 66ch; margin: 0.9rem 0 0; }
+  .kx-ciclos { display: flex; flex-direction: column; gap: 1.3rem; margin-top: 2rem; }
+  .kx-ciclo {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-left: 4px solid var(--ecolor);
+    border-radius: var(--kx-radius-lg); padding: 1.4rem 1.6rem; box-shadow: 0 2px 10px var(--kx-shadow);
+  }
+  .kx-ciclo.is-activo { background: linear-gradient(120deg, var(--kx-mint-tint), transparent 55%); }
+  .kx-ciclo-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .kx-ciclo-titulo { display: flex; align-items: center; gap: 0.6rem; }
+  .kx-ciclo-id { font-family: var(--kx-font-mono); font-size: 0.8rem; font-weight: 600; color: var(--ecolor); }
+  .kx-ciclo-estado {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--ecolor);
+    background: color-mix(in srgb, var(--ecolor) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ecolor) 38%, transparent);
+    padding: 0.16rem 0.5rem; border-radius: var(--kx-radius-pill);
+  }
+  .kx-ciclo-fechas { font-family: var(--kx-font-mono); font-size: 0.68rem; color: var(--kx-ink-faint); }
+  .kx-ciclo-tema { font-size: 1.08rem; line-height: 1.45; margin: 0.7rem 0 1rem; }
+
+  .kx-retomar {
+    background: var(--kx-gold-tint); border: 1px solid var(--kx-gold-mid);
+    border-radius: var(--kx-radius); padding: 1rem 1.2rem; margin-bottom: 1.1rem;
+  }
+  .kx-retomar-label, .kx-cierre-label, .kx-meta-label {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--kx-ink-faint); display: block; margin-bottom: 0.5rem;
+  }
+  .kx-retomar-label { color: var(--kx-gold-deep); }
+
+  .kx-ciclo-meta { display: flex; flex-wrap: wrap; gap: 1rem 2rem; margin-bottom: 1rem; }
+  .kx-refs { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .kx-ref {
+    font-family: var(--kx-font-mono); font-size: 0.62rem; font-weight: 600; text-decoration: none;
+    background: var(--kx-panel); border: 1px solid var(--kx-line); color: var(--kx-accent-deep);
+    padding: 0.1rem 0.38rem; border-radius: 5px;
+  }
+  a.kx-ref:hover { border-color: var(--kx-accent); }
+
+  .kx-conversacion { border-top: 1px solid var(--kx-line-soft); padding-top: 0.9rem; }
+  .kx-conversacion summary {
+    font-family: var(--kx-font-sans); font-size: 0.74rem; font-weight: 700; color: var(--kx-ink-soft);
+    cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.4rem;
+  }
+  .kx-conversacion summary::before { content: '▸'; transition: transform 0.2s ease; display: inline-block; }
+  .kx-conversacion[open] summary::before { transform: rotate(90deg); }
+  .kx-conversacion summary::-webkit-details-marker { display: none; }
+  .kx-mensajes { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 1rem; }
+  .kx-msg { display: flex; gap: 0.8rem; align-items: flex-start; }
+  .kx-msg-quien {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; flex-shrink: 0; width: 2.2rem; padding-top: 0.65rem;
+  }
+  .kx-msg--teo .kx-msg-quien { color: var(--kx-autoria-teo); }
+  .kx-msg--ia .kx-msg-quien { color: var(--kx-autoria-ia); }
+  .kx-msg-cuerpo {
+    flex: 1; padding: 0.6rem 0.95rem; border-radius: var(--kx-radius);
+    font-size: 0.86rem;
+  }
+  .kx-msg--teo .kx-msg-cuerpo {
+    background: color-mix(in srgb, var(--kx-autoria-teo) 9%, var(--kx-panel));
+    border: 1px solid color-mix(in srgb, var(--kx-autoria-teo) 22%, transparent);
+  }
+  .kx-msg--ia .kx-msg-cuerpo {
+    background: color-mix(in srgb, var(--kx-autoria-ia) 9%, var(--kx-panel));
+    border: 1px solid color-mix(in srgb, var(--kx-autoria-ia) 22%, transparent);
+  }
+  .kx-msg-marca { font-family: var(--kx-font-mono); font-size: 0.6rem; color: var(--kx-ink-faint); display: block; margin-bottom: 0.3rem; }
+
+  .kx-cierre {
+    margin-top: 1.1rem; padding: 1rem 1.2rem; background: var(--kx-panel);
+    border-radius: var(--kx-radius); border-left: 3px solid var(--ecolor);
+  }
+  .kx-vacio {
+    font-family: var(--kx-font-sans); font-size: 0.88rem; color: var(--kx-ink-soft);
+    background: var(--kx-panel); border: 1px dashed var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.2rem 1.4rem; margin-top: 2rem;
+  }
+</style>

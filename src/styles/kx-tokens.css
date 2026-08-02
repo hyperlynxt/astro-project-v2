@@ -1,0 +1,293 @@
+/* ────────────────────────────────────────────────────────────────────────
+   kx design system — tokens
+   KX-P22. Fuente única de verdad para color, tipografía y superficie de
+   toda la constelación /kx/. Ningún .astro de /kx/ vuelve a declarar un
+   token de color por su cuenta: importa este archivo y usa las variables.
+
+   Paleta: pergamino (parchment) de base, acento pastel verde/violeta/gold.
+   Cuatro rampas de taxonomía separadas (estado, tipo de pieza, tipo de
+   tarea, autoría) — nunca comparten hue entre sí donde puedan aparecer
+   juntas en la misma tarjeta.
+   ──────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Declarar color-scheme es obligatorio, no cosmético: sin esto Chrome aplica
+     su Auto Dark Theme cuando el sistema está en oscuro y reescribe los colores
+     de la página por su cuenta, ignorando el tema que el usuario eligió acá.
+     También es lo que hace que scrollbars y controles nativos acompañen. */
+  color-scheme: light;
+
+  /* ── tipografía ── */
+  --kx-font-serif: "EB Garamond", serif;
+  --kx-font-sans: "Inter", sans-serif;
+  --kx-font-mono: "JetBrains Mono", monospace;
+  --kx-font-hand: "Reenie Beanie", cursive;
+
+  /* ── superficie: pergamino, modo claro ── */
+  --kx-bg: #FBF8F1;
+  --kx-paper: #FFFFFF;
+  --kx-panel: #FBF7EE;
+  --kx-line: #E6DFCB;
+  --kx-line-soft: #F0EADA;
+  --kx-ink: #26241F;
+  --kx-ink-soft: #6B6459;
+  --kx-ink-faint: #A39985;
+  --kx-nav-bg: rgba(251, 248, 241, 0.82);
+  --kx-shadow: rgba(38, 36, 31, 0.06);
+  --kx-overlay-opacity: 1;
+  --kx-overlay-filter: none;
+  --kx-overlay-blend: normal;
+
+  /* ── acento pastel primario: el trío verde / violeta / gold ── */
+  --kx-mint: #5FA786;
+  --kx-mint-tint: #E4F3EA;
+  --kx-mint-mid: #BEE2CD;
+  --kx-mint-deep: #3F7D60;
+  --kx-mint-glow: rgba(95, 167, 134, 0.32);
+
+  --kx-lavender: #9084C9;
+  --kx-lavender-tint: #EFEBFA;
+  --kx-lavender-mid: #D6CFF0;
+  --kx-lavender-deep: #6B5EA8;
+  --kx-lavender-glow: rgba(144, 132, 201, 0.32);
+
+  --kx-gold: #C39A55;
+  --kx-gold-tint: #FAF1DF;
+  --kx-gold-mid: #EDD6A4;
+  --kx-gold-deep: #96733A;
+  --kx-gold-glow: rgba(195, 154, 85, 0.32);
+
+  /* acento primario de la constelación (usado para focus, links, chrome) */
+  --kx-accent: var(--kx-mint);
+  --kx-accent-tint: var(--kx-mint-tint);
+  --kx-accent-mid: var(--kx-mint-mid);
+  --kx-accent-deep: var(--kx-mint-deep);
+  --kx-accent-glow: var(--kx-mint-glow);
+
+  /* pastels de apoyo, para acentos secundarios y no-taxonómicos */
+  --kx-rose: #C68C9A;
+  --kx-rose-tint: #FAEEF1;
+  --kx-rose-mid: #EBC9D2;
+  --kx-rose-deep: #9C5F70;
+
+  --kx-sky: #7FA3C4;
+  --kx-sky-tint: #EAF1F8;
+  --kx-sky-mid: #C5D9EA;
+  --kx-sky-deep: #4F7396;
+
+  --kx-clay: #C08862;
+  --kx-clay-tint: #F8ECE3;
+  --kx-clay-mid: #E9CBB4;
+  --kx-clay-deep: #91603E;
+
+  --kx-slate: #93938B;
+  --kx-slate-tint: #EFEEE8;
+  --kx-slate-mid: #D3D1C6;
+  --kx-slate-deep: #605F58;
+
+  /* señal de alerta, nunca decorativa */
+  --kx-alert: #B5495A;
+  --kx-alert-tint: #FBEBEC;
+
+  /* ── rampa 1: estado (módulos, piezas, instancias) ──
+     Cada valor se usa como COLOR DE TEXTO en la pastilla, sobre un fondo del
+     mismo hue al 16%. Por eso ninguno puede ser un tono claro: un `-mid` acá
+     es lavanda pálido sobre lavanda pálido. Todos van en tono medio o profundo. */
+  --kx-estado-idea: #5F5978;
+  --kx-estado-disenado: #574A94;
+  --kx-estado-construyendo: #7A5C28;
+  --kx-estado-activo: #2F6B4F;
+  --kx-estado-finalizado: #1F4D3A;
+  --kx-estado-pausado: #7E4757;
+  --kx-estado-deprecado: #4C4B45;
+
+  /* ── rampa 2: tipo de pieza ── */
+  --kx-pieza-skill: #5B4E92;
+  --kx-pieza-flujo: #3E6488;
+  --kx-pieza-template: #7A5C28;
+  --kx-pieza-convencion: #7C4F2F;
+  --kx-pieza-integracion: #26605B;
+
+  /* ── rampa 3: tipo de tarea (quién la desbloquea) ── */
+  --kx-tarea-decidir: #96354A;
+  --kx-tarea-pensar: #574A94;
+  --kx-tarea-construir: #2F6B4F;
+  --kx-tarea-escribir: #7A5C28;
+  --kx-tarea-aclarar: #4C4B45;
+
+  /* ── rampa 4: autoría (espeja el código de color de los diagramas Mermaid) ── */
+  --kx-autoria-teo: #3E6488;
+  --kx-autoria-ia: #574A94;
+  --kx-autoria-mixta: #7A5C28;
+
+  /* ── forma ── */
+  --kx-radius-sm: 10px;
+  --kx-radius: 16px;
+  --kx-radius-lg: 22px;
+  --kx-radius-pill: 999px;
+}
+
+/* ── modo oscuro: se activa por preferencia del sistema... ── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --kx-bg: #15130F;
+    --kx-paper: #1E1B15;
+    --kx-panel: #211E17;
+    --kx-line: #35311F              ;
+    --kx-line-soft: #2A271D;
+    --kx-ink: #EDE8DA;
+    --kx-ink-soft: #B6AF9C;
+    --kx-ink-faint: #8B846F;
+    --kx-nav-bg: rgba(21, 19, 15, 0.85);
+    --kx-shadow: rgba(0, 0, 0, 0.4);
+    --kx-overlay-filter: invert(1) grayscale(1) brightness(1.6);
+    --kx-overlay-blend: screen;
+    --kx-overlay-opacity: 0.4;
+
+    --kx-mint: #6FCC9E; --kx-mint-tint: rgba(111,204,158,0.12); --kx-mint-mid: rgba(111,204,158,0.4); --kx-mint-deep: #9FE2BE; --kx-mint-glow: rgba(111,204,158,0.5);
+    --kx-lavender: #B0A2EE; --kx-lavender-tint: rgba(176,162,238,0.12); --kx-lavender-mid: rgba(176,162,238,0.4); --kx-lavender-deep: #D2C7FA; --kx-lavender-glow: rgba(176,162,238,0.5);
+    --kx-gold: #E3B96C; --kx-gold-tint: rgba(227,185,108,0.12); --kx-gold-mid: rgba(227,185,108,0.4); --kx-gold-deep: #F0D39A; --kx-gold-glow: rgba(227,185,108,0.5);
+    --kx-accent: var(--kx-mint); --kx-accent-tint: var(--kx-mint-tint); --kx-accent-mid: var(--kx-mint-mid); --kx-accent-deep: var(--kx-mint-deep); --kx-accent-glow: var(--kx-mint-glow);
+
+    --kx-rose: #E2A0B0; --kx-rose-tint: rgba(226,160,176,0.12); --kx-rose-mid: rgba(226,160,176,0.4); --kx-rose-deep: #F0C3D0;
+    --kx-sky: #92BBE0; --kx-sky-tint: rgba(146,187,224,0.12); --kx-sky-mid: rgba(146,187,224,0.4); --kx-sky-deep: #BFDBF2;
+    --kx-clay: #E0A578; --kx-clay-tint: rgba(224,165,120,0.12); --kx-clay-mid: rgba(224,165,120,0.4); --kx-clay-deep: #F0C7A4;
+    --kx-slate: #ACAB9F; --kx-slate-tint: rgba(172,171,159,0.12); --kx-slate-mid: rgba(172,171,159,0.4); --kx-slate-deep: #D6D4C4;
+    --kx-alert: #E38A96; --kx-alert-tint: rgba(227,138,150,0.14);
+
+    --kx-estado-idea: #A79CD4;
+    --kx-estado-disenado: var(--kx-lavender);
+    --kx-estado-construyendo: var(--kx-gold);
+    --kx-estado-activo: var(--kx-mint);
+    --kx-estado-finalizado: var(--kx-mint-deep);
+    --kx-estado-pausado: var(--kx-rose);
+    --kx-estado-deprecado: var(--kx-slate);
+
+    --kx-pieza-skill: #B0A2EE; --kx-pieza-flujo: var(--kx-sky); --kx-pieza-template: var(--kx-gold-deep);
+    --kx-pieza-convencion: var(--kx-clay); --kx-pieza-integracion: #6FCFC6;
+
+    --kx-tarea-decidir: var(--kx-alert); --kx-tarea-pensar: var(--kx-lavender); --kx-tarea-construir: var(--kx-mint);
+    --kx-tarea-escribir: var(--kx-gold); --kx-tarea-aclarar: var(--kx-slate);
+
+    --kx-autoria-teo: var(--kx-sky-deep); --kx-autoria-ia: var(--kx-lavender-deep); --kx-autoria-mixta: var(--kx-gold-deep);
+  }
+}
+
+/* ── ...pero el toggle explícito gana siempre, en las dos direcciones ── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kx-bg: #15130F;
+  --kx-paper: #1E1B15;
+  --kx-panel: #211E17;
+  --kx-line: #35311F;
+  --kx-line-soft: #2A271D;
+  --kx-ink: #EDE8DA;
+  --kx-ink-soft: #B6AF9C;
+  --kx-ink-faint: #8B846F;
+  --kx-nav-bg: rgba(21, 19, 15, 0.85);
+  --kx-shadow: rgba(0, 0, 0, 0.4);
+  --kx-overlay-filter: invert(1) grayscale(1) brightness(1.6);
+  --kx-overlay-blend: screen;
+  --kx-overlay-opacity: 0.4;
+
+  --kx-mint: #6FCC9E; --kx-mint-tint: rgba(111,204,158,0.12); --kx-mint-mid: rgba(111,204,158,0.4); --kx-mint-deep: #9FE2BE; --kx-mint-glow: rgba(111,204,158,0.5);
+  --kx-lavender: #B0A2EE; --kx-lavender-tint: rgba(176,162,238,0.12); --kx-lavender-mid: rgba(176,162,238,0.4); --kx-lavender-deep: #D2C7FA; --kx-lavender-glow: rgba(176,162,238,0.5);
+  --kx-gold: #E3B96C; --kx-gold-tint: rgba(227,185,108,0.12); --kx-gold-mid: rgba(227,185,108,0.4); --kx-gold-deep: #F0D39A; --kx-gold-glow: rgba(227,185,108,0.5);
+  --kx-accent: var(--kx-mint); --kx-accent-tint: var(--kx-mint-tint); --kx-accent-mid: var(--kx-mint-mid); --kx-accent-deep: var(--kx-mint-deep); --kx-accent-glow: var(--kx-mint-glow);
+
+  --kx-rose: #E2A0B0; --kx-rose-tint: rgba(226,160,176,0.12); --kx-rose-mid: rgba(226,160,176,0.4); --kx-rose-deep: #F0C3D0;
+  --kx-sky: #92BBE0; --kx-sky-tint: rgba(146,187,224,0.12); --kx-sky-mid: rgba(146,187,224,0.4); --kx-sky-deep: #BFDBF2;
+  --kx-clay: #E0A578; --kx-clay-tint: rgba(224,165,120,0.12); --kx-clay-mid: rgba(224,165,120,0.4); --kx-clay-deep: #F0C7A4;
+  --kx-slate: #ACAB9F; --kx-slate-tint: rgba(172,171,159,0.12); --kx-slate-mid: rgba(172,171,159,0.4); --kx-slate-deep: #D6D4C4;
+  --kx-alert: #E38A96; --kx-alert-tint: rgba(227,138,150,0.14);
+
+  --kx-estado-idea: #A79CD4;
+  --kx-estado-disenado: var(--kx-lavender);
+  --kx-estado-construyendo: var(--kx-gold);
+  --kx-estado-activo: var(--kx-mint);
+  --kx-estado-finalizado: var(--kx-mint-deep);
+  --kx-estado-pausado: var(--kx-rose);
+  --kx-estado-deprecado: var(--kx-slate);
+
+  --kx-pieza-skill: #B0A2EE; --kx-pieza-flujo: var(--kx-sky); --kx-pieza-template: var(--kx-gold-deep);
+  --kx-pieza-convencion: var(--kx-clay); --kx-pieza-integracion: #6FCFC6;
+
+  --kx-tarea-decidir: var(--kx-alert); --kx-tarea-pensar: var(--kx-lavender); --kx-tarea-construir: var(--kx-mint);
+  --kx-tarea-escribir: var(--kx-gold); --kx-tarea-aclarar: var(--kx-slate);
+
+  --kx-autoria-teo: var(--kx-sky-deep); --kx-autoria-ia: var(--kx-lavender-deep); --kx-autoria-mixta: var(--kx-gold-deep);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --kx-bg: #FBF8F1;
+  --kx-paper: #FFFFFF;
+  --kx-panel: #FBF7EE;
+  --kx-line: #E6DFCB;
+  --kx-line-soft: #F0EADA;
+  --kx-ink: #26241F;
+  --kx-ink-soft: #6B6459;
+  --kx-ink-faint: #A39985;
+  --kx-nav-bg: rgba(251, 248, 241, 0.82);
+  --kx-shadow: rgba(38, 36, 31, 0.06);
+  --kx-overlay-filter: none;
+  --kx-overlay-blend: normal;
+  --kx-overlay-opacity: 1;
+
+  --kx-mint: #5FA786; --kx-mint-tint: #E4F3EA; --kx-mint-mid: #BEE2CD; --kx-mint-deep: #3F7D60; --kx-mint-glow: rgba(95,167,134,0.32);
+  --kx-lavender: #9084C9; --kx-lavender-tint: #EFEBFA; --kx-lavender-mid: #D6CFF0; --kx-lavender-deep: #6B5EA8; --kx-lavender-glow: rgba(144,132,201,0.32);
+  --kx-gold: #C39A55; --kx-gold-tint: #FAF1DF; --kx-gold-mid: #EDD6A4; --kx-gold-deep: #96733A; --kx-gold-glow: rgba(195,154,85,0.32);
+  --kx-accent: var(--kx-mint); --kx-accent-tint: var(--kx-mint-tint); --kx-accent-mid: var(--kx-mint-mid); --kx-accent-deep: var(--kx-mint-deep); --kx-accent-glow: var(--kx-mint-glow);
+
+  --kx-rose: #C68C9A; --kx-rose-tint: #FAEEF1; --kx-rose-mid: #EBC9D2; --kx-rose-deep: #9C5F70;
+  --kx-sky: #7FA3C4; --kx-sky-tint: #EAF1F8; --kx-sky-mid: #C5D9EA; --kx-sky-deep: #4F7396;
+  --kx-clay: #C08862; --kx-clay-tint: #F8ECE3; --kx-clay-mid: #E9CBB4; --kx-clay-deep: #91603E;
+  --kx-slate: #93938B; --kx-slate-tint: #EFEEE8; --kx-slate-mid: #D3D1C6; --kx-slate-deep: #605F58;
+  --kx-alert: #B5495A; --kx-alert-tint: #FBEBEC;
+
+  --kx-estado-idea: #5F5978;
+  --kx-estado-disenado: #574A94;
+  --kx-estado-construyendo: #7A5C28;
+  --kx-estado-activo: #2F6B4F;
+  --kx-estado-finalizado: #1F4D3A;
+  --kx-estado-pausado: #7E4757;
+  --kx-estado-deprecado: #4C4B45;
+
+  --kx-pieza-skill: #5B4E92; --kx-pieza-flujo: #3E6488; --kx-pieza-template: #7A5C28;
+  --kx-pieza-convencion: #7C4F2F; --kx-pieza-integracion: #26605B;
+
+  --kx-tarea-decidir: #96354A; --kx-tarea-pensar: #574A94; --kx-tarea-construir: #2F6B4F;
+  --kx-tarea-escribir: #7A5C28; --kx-tarea-aclarar: #4C4B45;
+
+  --kx-autoria-teo: #3E6488; --kx-autoria-ia: #574A94; --kx-autoria-mixta: #7A5C28;
+}
+
+/* ── reset mínimo + fondo pergamino compartido ── */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body.kx-body {
+  margin: 0;
+  background-color: var(--kx-bg);
+  color: var(--kx-ink);
+  font-family: var(--kx-font-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.kx-paper-overlay {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+    url("https://www.transparenttextures.com/patterns/natural-paper.png"),
+    url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  background-position: 0px 0px, 40px 60px, 80px 20px;
+  background-repeat: repeat;
+  filter: var(--kx-overlay-filter);
+  mix-blend-mode: var(--kx-overlay-blend);
+  opacity: var(--kx-overlay-opacity);
+}
+.kx-body a { color: inherit; }
+.kx-body ::-webkit-scrollbar { width: 8px; }
+.kx-body ::-webkit-scrollbar-track { background: transparent; }
+.kx-body ::-webkit-scrollbar-thumb { background: rgba(38,36,31,0.14); border-radius: 10px; }

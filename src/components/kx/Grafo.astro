@@ -1,0 +1,87 @@
+---
+// Grafo: nodos y aristas en SVG, layout radial simple (módulos en el anillo
+// externo, piezas colgando de su módulo). Para /kx/atlas/mapa/, KX-T59.
+// No es una librería de física de grafos: es deliberadamente simple, porque
+// con 7 módulos y ~20 piezas un layout calculado a mano alcanza y es legible.
+interface Nodo { id: string; label: string; grupo: string; href?: string; colorVar: string; radio?: number }
+interface Arista { de: string; a: string }
+interface Props {
+  nodosCentro: Nodo[]; // van en el anillo interno (módulos)
+  nodosHoja: Nodo[];   // van alrededor de su nodo centro (piezas)
+  aristas: Arista[];
+  ancho?: number;
+  alto?: number;
+}
+const { nodosCentro, nodosHoja, aristas, ancho = 760, alto = 560 } = Astro.props;
+const cx = ancho / 2, cy = alto / 2;
+const rCentro = Math.min(ancho, alto) * 0.22;
+
+function posicionesEnCirculo(items: any[], radio: number, cx: number, cy: number) {
+  return items.map((item, i) => {
+    const angulo = (i / items.length) * 2 * Math.PI - Math.PI / 2;
+    return { ...item, x: cx + radio * Math.cos(angulo), y: cy + radio * Math.sin(angulo) };
+  });
+}
+
+const centros = posicionesEnCirculo(nodosCentro, rCentro, cx, cy);
+const centroPorId = Object.fromEntries(centros.map((c) => [c.id, c]));
+
+// las hojas se agrupan alrededor de su nodo centro (por `grupo`)
+const hojasPorGrupo: Record<string, any[]> = {};
+nodosHoja.forEach((h) => { (hojasPorGrupo[h.grupo] ??= []).push(h); });
+
+const hojasPosicionadas = Object.entries(hojasPorGrupo).flatMap(([grupo, items]) => {
+  const centro = centroPorId[grupo];
+  if (!centro) return [];
+  const rHoja = 78;
+  return items.map((item, i) => {
+    const angulo = (i / Math.max(items.length, 1)) * 2 * Math.PI;
+    return { ...item, x: centro.x + rHoja * Math.cos(angulo), y: centro.y + rHoja * Math.sin(angulo) };
+  });
+});
+
+const todosLosNodos = [...centros, ...hojasPosicionadas];
+const nodoPorId = Object.fromEntries(todosLosNodos.map((n) => [n.id, n]));
+---
+
+<div class="kx-grafo-wrap">
+  <svg viewBox={`0 0 ${ancho} ${alto}`} class="kx-grafo">
+    <g class="kx-grafo-aristas">
+      {aristas.map((a) => {
+        const de = nodoPorId[a.de]; const to = nodoPorId[a.a];
+        if (!de || !to) return null;
+        return <line x1={de.x} y1={de.y} x2={to.x} y2={to.y} class="kx-arista" />;
+      })}
+    </g>
+    <g class="kx-grafo-hojas">
+      {hojasPosicionadas.map((n) => (
+        <g class="kx-nodo-hoja">
+          <circle cx={n.x} cy={n.y} r={n.radio ?? 5} style={`fill: var(${n.colorVar})`} />
+        </g>
+      ))}
+    </g>
+    <g class="kx-grafo-centros">
+      {centros.map((n) => (
+        <a href={n.href}>
+          <circle cx={n.x} cy={n.y} r={n.radio ?? 22} style={`fill: var(${n.colorVar})`} class="kx-nodo-centro" />
+          <text x={n.x} y={n.y + 38} text-anchor="middle" class="kx-nodo-label">{n.label}</text>
+        </a>
+      ))}
+    </g>
+  </svg>
+</div>
+
+<style>
+  .kx-grafo-wrap {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius-lg);
+    padding: 1rem; box-shadow: 0 2px 10px var(--kx-shadow);
+  }
+  .kx-grafo { width: 100%; height: auto; }
+  .kx-arista { stroke: var(--kx-line); stroke-width: 1.2; }
+  .kx-nodo-centro { stroke: var(--kx-paper); stroke-width: 3; transition: transform 0.15s ease; transform-origin: center; }
+  a:hover .kx-nodo-centro { transform: scale(1.08); }
+  .kx-nodo-label {
+    font-family: var(--kx-font-sans); font-size: 12px; font-weight: 700; fill: var(--kx-ink);
+  }
+  .kx-nodo-hoja circle { opacity: 0.85; }
+</style>

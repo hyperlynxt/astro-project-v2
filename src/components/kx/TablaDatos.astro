@@ -1,0 +1,106 @@
+---
+// TablaDatos: tabla densa, ordenable por columna, filtrable vía el evento
+// que dispara BarraFiltros. Las filas se pasan por slot como <tr> normales;
+// cada <tr> lleva data-sort-{key} para ordenar y opcionalmente
+// data-kx-filter='{"grupo":"valor",...}' para integrarse con los filtros.
+interface Columna { key: string; label: string; sortable?: boolean; numeric?: boolean }
+interface Props {
+  columnas: Columna[];
+  vacio?: string;
+  tieneFilas: boolean;
+}
+const { columnas, vacio = 'Nada acá todavía.', tieneFilas } = Astro.props;
+const tableId = `kx-tabla-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{tieneFilas ? (
+  <div class="kx-tabla-wrap">
+    <table class="kx-tabla" id={tableId}>
+      <thead>
+        <tr>
+          {columnas.map((c) => (
+            <th class={c.sortable ? 'is-sortable' : ''} data-key={c.key} data-numeric={c.numeric ? '1' : '0'}>
+              {c.label}
+              {c.sortable && <span class="kx-sort-ic">↕</span>}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        <slot />
+      </tbody>
+    </table>
+    <p class="kx-tabla-empty-filtro" data-empty-msg style="display:none">Ningún resultado con estos filtros.</p>
+  </div>
+) : (
+  <p class="kx-vacio">{vacio}</p>
+)}
+
+<style>
+  .kx-tabla-wrap {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius-lg);
+    overflow: hidden; box-shadow: 0 2px 10px var(--kx-shadow);
+  }
+  .kx-tabla { width: 100%; border-collapse: collapse; font-family: var(--kx-font-sans); font-size: 0.84rem; }
+  .kx-tabla thead th {
+    text-align: left; padding: 0.8rem 1.1rem; font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--kx-ink-faint);
+    background: var(--kx-panel); border-bottom: 1px solid var(--kx-line); white-space: nowrap;
+  }
+  .kx-tabla thead th.is-sortable { cursor: pointer; user-select: none; }
+  .kx-tabla thead th.is-sortable:hover { color: var(--kx-accent-deep); }
+  .kx-sort-ic { margin-left: 0.3rem; opacity: 0.5; font-size: 0.7em; }
+  .kx-tabla :global(tbody tr) { border-top: 1px solid var(--kx-line-soft); transition: background 0.15s ease; }
+  .kx-tabla :global(tbody tr:hover) { background: var(--kx-panel); }
+  .kx-tabla :global(tbody td) { padding: 0.7rem 1.1rem; vertical-align: middle; }
+  .kx-vacio {
+    font-family: var(--kx-font-sans); font-size: 0.85rem; color: var(--kx-ink-soft); line-height: 1.55;
+    background: var(--kx-panel); border: 1px dashed var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.1rem 1.3rem; margin: 0;
+  }
+  .kx-tabla-empty-filtro {
+    font-family: var(--kx-font-sans); font-size: 0.82rem; color: var(--kx-ink-faint);
+    text-align: center; padding: 1.4rem;
+  }
+</style>
+
+<script>
+  function initTablas() {
+    document.querySelectorAll<HTMLTableElement>('.kx-tabla').forEach((table) => {
+      const tbody = table.querySelector('tbody');
+      if (!tbody) return;
+      let sortDir: Record<string, 1 | -1> = {};
+
+      table.querySelectorAll<HTMLTableCellElement>('th.is-sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key!;
+          const numeric = th.dataset.numeric === '1';
+          const dir = sortDir[key] === 1 ? -1 : 1;
+          sortDir = { [key]: dir };
+          const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr'));
+          rows.sort((a, b) => {
+            const av = a.dataset[`sort${key[0].toUpperCase()}${key.slice(1)}`] ?? '';
+            const bv = b.dataset[`sort${key[0].toUpperCase()}${key.slice(1)}`] ?? '';
+            if (numeric) return (parseFloat(av) - parseFloat(bv)) * dir;
+            return av.localeCompare(bv) * dir;
+          });
+          rows.forEach((r) => tbody.appendChild(r));
+        });
+      });
+    });
+  }
+  initTablas();
+
+  // El ocultamiento de filas lo hace BarraFiltros (sirve a filas y tarjetas por
+  // igual). Acá solo queda mostrar el mensaje de "ningún resultado", que es
+  // propio de la tabla y necesita contar lo que quedó visible.
+  function sincronizarMensajeVacio() {
+    document.querySelectorAll<HTMLTableElement>('.kx-tabla').forEach((table) => {
+      const visibles = Array.from(table.querySelectorAll<HTMLTableRowElement>('tbody tr'))
+        .filter((r) => r.style.display !== 'none').length;
+      const emptyMsg = table.closest('.kx-tabla-wrap')?.querySelector<HTMLElement>('[data-empty-msg]');
+      if (emptyMsg) emptyMsg.style.display = visibles === 0 ? 'block' : 'none';
+    });
+  }
+  window.addEventListener('kx:filtros', sincronizarMensajeVacio);
+</script>

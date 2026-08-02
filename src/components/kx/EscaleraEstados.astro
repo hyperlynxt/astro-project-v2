@@ -1,0 +1,99 @@
+---
+// EscaleraEstados: los objetos de un área agrupados por estado, en el orden de
+// la escalera (idea -> finalizado), con pausado y deprecado al final.
+//
+// Es el molde común de toda página de área: contesta "qué hay vivo, qué está en
+// obra, qué está solo imaginado" de un vistazo. Funciona igual con 2 objetos que
+// con 40 — con pocos se ve el hueco, que también es información.
+import Pastilla from './Pastilla.astro';
+import { ESTADO_PASTILLA, fechaCorta } from '../../lib/kx';
+
+interface Objeto {
+  id?: string;
+  titulo: string;
+  estado: string;
+  descripcion?: string;
+  fechaInicio?: Date;
+  fechaFin?: Date;
+  actualizado?: Date;
+  extra?: string;
+}
+interface Props {
+  objetos: Objeto[];
+  vacio?: string;
+}
+const { objetos, vacio = 'Esta área todavía no tiene objetos cargados.' } = Astro.props;
+
+const ORDEN = ['idea', 'disenado', 'construyendo', 'activo', 'finalizado', 'pausado', 'deprecado'];
+const grupos = ORDEN
+  .map((estado) => ({ estado, items: objetos.filter((o) => o.estado === estado) }))
+  .filter((g) => g.items.length > 0);
+---
+
+{objetos.length === 0 ? (
+  <p class="kx-vacio">{vacio}</p>
+) : (
+  <div class="kx-escalera">
+    {grupos.map((g) => (
+      <section class="kx-escalon" style={`--ecolor: var(${ESTADO_PASTILLA[g.estado]?.var ?? '--kx-slate'})`}>
+        <header class="kx-escalon-head">
+          <Pastilla rampa="estado" valor={g.estado} />
+          <span class="kx-escalon-count">{g.items.length}</span>
+        </header>
+        <div class="kx-escalon-items">
+          {g.items.map((o) => (
+            <article class="kx-obj">
+              <div class="kx-obj-head">
+                {o.id && <span class="kx-obj-id">{o.id}</span>}
+                <h3 class="kx-obj-titulo">{o.titulo}</h3>
+              </div>
+              {o.descripcion && <p class="kx-obj-desc">{o.descripcion}</p>}
+              <div class="kx-obj-meta">
+                {o.extra && <span class="kx-obj-extra">{o.extra}</span>}
+                {o.fechaInicio && <span class="kx-obj-fecha">inicio {fechaCorta(o.fechaInicio)}</span>}
+                {o.fechaFin && <span class="kx-obj-fecha kx-obj-fecha--fin">fin {fechaCorta(o.fechaFin)}</span>}
+                {o.actualizado && <span class="kx-obj-fecha">tocado {fechaCorta(o.actualizado)}</span>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+)}
+
+<style>
+  .kx-escalera { display: flex; flex-direction: column; gap: 1.6rem; }
+  .kx-escalon { border-left: 3px solid var(--ecolor); padding-left: 1.1rem; }
+  .kx-escalon-head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.8rem; }
+  .kx-escalon-count {
+    font-family: var(--kx-font-mono); font-size: 0.72rem; color: var(--kx-ink-faint);
+  }
+  .kx-escalon-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.8rem; }
+  .kx-obj {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1rem 1.15rem; box-shadow: 0 2px 8px var(--kx-shadow);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .kx-obj:hover { border-color: var(--ecolor); transform: translateY(-2px); }
+  .kx-obj-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
+  .kx-obj-id { font-family: var(--kx-font-mono); font-size: 0.66rem; color: var(--ecolor); font-weight: 600; }
+  .kx-obj-titulo { font-size: 1rem; font-weight: 600; margin: 0; line-height: 1.3; }
+  .kx-obj-desc {
+    font-family: var(--kx-font-sans); font-size: 0.8rem; line-height: 1.55; color: var(--kx-ink-soft);
+    margin: 0 0 0.6rem;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .kx-obj-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; align-items: center; }
+  .kx-obj-fecha { font-family: var(--kx-font-mono); font-size: 0.62rem; color: var(--kx-ink-faint); }
+  .kx-obj-fecha--fin { color: var(--kx-mint-deep); font-weight: 600; }
+  .kx-obj-extra {
+    font-family: var(--kx-font-sans); font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--kx-ink-faint);
+  }
+  .kx-vacio {
+    font-family: var(--kx-font-sans); font-size: 0.88rem; color: var(--kx-ink-soft); line-height: 1.6;
+    background: var(--kx-panel); border: 1px dashed var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.2rem 1.4rem; margin: 0;
+  }
+</style>

@@ -1,4 +1,4 @@
-// Espejo en código de la taxonomía autoritativa: `00 - Kx Core Module/CLAUDE.md` (en la bóveda).
+// Espejo en código de la taxonomía autoritativa: `00 - Kx Atlas System/CLAUDE.md` (en la bóveda).
 // Si divergen, gana el CLAUDE.md: este archivo se actualiza para seguirlo, nunca al revés.
 
 export const ESTADOS = ['idea', 'disenado', 'construyendo', 'activo', 'finalizado', 'pausado', 'deprecado'] as const;
@@ -24,7 +24,7 @@ export const TIPO_PIEZA_LABEL: Record<string, string> = {
   integracion: 'integración',
 };
 
-// Las once áreas de 01 - Estructura. El orden es el de presentación.
+// Las once áreas de 01 - Matriz. El orden es el de presentación.
 export const AREAS = [
   { slug: 'modulos',       label: 'Módulos',       linea: 'Los módulos del sistema y su relación.' },
   { slug: 'capas',         label: 'Capas',         linea: 'La escalera: sistema, módulo, pieza, artefacto.' },
@@ -87,3 +87,129 @@ export function ultimoMovimiento(...colecciones: Array<Array<{ data: { actualiza
   if (!fechas.length) return null;
   return new Date(Math.max(...fechas.map((f) => f.getTime())));
 }
+
+// ── design system: metadata de las cuatro rampas de taxonomía (KX-P22) ──
+// Cada rampa tiene su propia variable CSS (kx-tokens.css), nunca comparte hue
+// con otra rampa donde puedan aparecer juntas en la misma tarjeta.
+export type Rampa = 'estado' | 'tipoPieza' | 'tipoTarea' | 'autoria' | 'estadoTarea';
+
+export const ESTADO_PASTILLA: Record<string, { label: string; var: string }> = {
+  idea:         { label: 'idea',         var: '--kx-estado-idea' },
+  disenado:     { label: 'diseñado',     var: '--kx-estado-disenado' },
+  construyendo: { label: 'construyendo', var: '--kx-estado-construyendo' },
+  activo:       { label: 'activo',       var: '--kx-estado-activo' },
+  finalizado:   { label: 'finalizado',   var: '--kx-estado-finalizado' },
+  pausado:      { label: 'pausado',      var: '--kx-estado-pausado' },
+  deprecado:    { label: 'deprecado',    var: '--kx-estado-deprecado' },
+};
+
+export const TIPO_PIEZA_PASTILLA: Record<string, { label: string; var: string }> = {
+  skill:       { label: 'skill',       var: '--kx-pieza-skill' },
+  flujo:       { label: 'flujo',       var: '--kx-pieza-flujo' },
+  template:    { label: 'template',    var: '--kx-pieza-template' },
+  convencion:  { label: 'convención',  var: '--kx-pieza-convencion' },
+  integracion: { label: 'integración', var: '--kx-pieza-integracion' },
+};
+
+export const TIPO_TAREA_PASTILLA: Record<string, { label: string; var: string }> = {
+  decidir:   { label: 'decidir',   var: '--kx-tarea-decidir' },
+  pensar:    { label: 'pensar',    var: '--kx-tarea-pensar' },
+  construir: { label: 'construir', var: '--kx-tarea-construir' },
+  escribir:  { label: 'escribir',  var: '--kx-tarea-escribir' },
+  aclarar:   { label: 'aclarar',   var: '--kx-tarea-aclarar' },
+};
+
+export const AUTORIA_PASTILLA: Record<string, { label: string; var: string }> = {
+  teo:   { label: 'Teo', var: '--kx-autoria-teo' },
+  ia:    { label: 'IA',  var: '--kx-autoria-ia' },
+  mixta: { label: 'mixta', var: '--kx-autoria-mixta' },
+};
+
+export const ESTADO_TAREA_PASTILLA: Record<string, { label: string; var: string }> = {
+  abierta:   { label: 'abierta',   var: '--kx-gold' },
+  bloqueada: { label: 'bloqueada', var: '--kx-alert' },
+  cerrada:   { label: 'cerrada',   var: '--kx-mint-deep' },
+};
+
+// ── prosa de la Matriz: markdown mínimo a HTML ──
+// La colección kx-areas trae el texto crudo de los `Mapa de {área}.md`. Es un
+// subconjunto acotado y conocido de markdown (negrita, código inline, itálica,
+// listas, encabezados de nivel 5 y 6), así que no vale traer una librería.
+// Si algún día la prosa de la Matriz necesita tablas o mermaid, esto se cambia
+// por un renderer real — hoy esos viven solo en las entradas de ítem, que esta
+// colección deliberadamente no extrae.
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function inline(s: string): string {
+  return escapeHtml(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+}
+
+export function prosaAHtml(md: string): string {
+  if (!md?.trim()) return '';
+  const bloques = md.split(/\n\s*\n/);
+  const out: string[] = [];
+  for (const bloque of bloques) {
+    const lineas = bloque.split('\n').filter((l) => l.trim());
+    if (!lineas.length) continue;
+
+    const h6 = lineas[0].match(/^###### (.+)$/);
+    const h5 = lineas[0].match(/^##### (.+)$/);
+    if (h5 || h6) {
+      out.push(`<h4>${inline((h5 ?? h6)![1])}</h4>`);
+      const resto = lineas.slice(1);
+      if (resto.length) out.push(prosaAHtml(resto.join('\n')));
+      continue;
+    }
+
+    if (lineas.every((l) => /^\s*[-*] /.test(l))) {
+      const items = lineas.map((l) => `<li>${inline(l.replace(/^\s*[-*] /, ''))}</li>`).join('');
+      out.push(`<ul>${items}</ul>`);
+      continue;
+    }
+
+    if (lineas[0].startsWith('> ')) {
+      out.push(`<blockquote>${inline(lineas.map((l) => l.replace(/^> ?/, '')).join(' '))}</blockquote>`);
+      continue;
+    }
+
+    // Tablas y otros bloques que este renderer no cubre: se muestran monoespaciados,
+    // sin intentar interpretarlos, para no perder información en silencio.
+    if (lineas[0].trim().startsWith('|')) {
+      out.push(`<pre class="kx-prosa-raw">${escapeHtml(lineas.join('\n'))}</pre>`);
+      continue;
+    }
+
+    out.push(`<p>${inline(lineas.join(' '))}</p>`);
+  }
+  return out.join('\n');
+}
+
+// Qué colección alimenta las tarjetas de cada área de la Matriz.
+// `null` = área conceptual: no cataloga objetos, solo prosa (Capas, Convenciones,
+// Taxonomía, Mapas). Que no tengan tarjetas no es un hueco, es lo que son.
+export const AREA_FUENTE: Record<string, { coleccion: string; filtroTipo?: string }[]> = {
+  modulos: [{ coleccion: 'kxModulos' }],
+  skills: [{ coleccion: 'kxPiezas', filtroTipo: 'skill' }],
+  flujos: [{ coleccion: 'kxWorkflows' }, { coleccion: 'kxPiezas', filtroTipo: 'flujo' }],
+  instancias: [{ coleccion: 'kxInstancias' }, { coleccion: 'kxPiezas', filtroTipo: 'template' }],
+  cuadrantes: [{ coleccion: 'kxCuadrantes' }],
+  integraciones: [{ coleccion: 'kxIntegraciones' }, { coleccion: 'kxPiezas', filtroTipo: 'integracion' }],
+  convenciones: [{ coleccion: 'kxPiezas', filtroTipo: 'convencion' }],
+  pagina: [{ coleccion: 'kxDocumentos' }],
+  taxonomia: [],
+  capas: [],
+  mapas: [],
+};
+
+export const RAMPAS: Record<Rampa, Record<string, { label: string; var: string }>> = {
+  estado: ESTADO_PASTILLA,
+  tipoPieza: TIPO_PIEZA_PASTILLA,
+  tipoTarea: TIPO_TAREA_PASTILLA,
+  autoria: AUTORIA_PASTILLA,
+  estadoTarea: ESTADO_TAREA_PASTILLA,
+};

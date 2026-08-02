@@ -1,0 +1,41 @@
+---
+// Pastilla: la etiqueta chica con color de taxonomía. Nunca el único portador
+// de significado — el texto siempre viaja con el color.
+import { RAMPAS, type Rampa } from '../../lib/kx';
+
+interface Props {
+  rampa: Rampa;
+  valor: string;
+  label?: string;
+  size?: 'sm' | 'md';
+}
+
+const { rampa, valor, label, size = 'md' } = Astro.props;
+const meta = RAMPAS[rampa]?.[valor];
+const texto = label ?? meta?.label ?? valor;
+const colorVar = meta?.var ?? '--kx-slate';
+---
+
+<span class={`kx-pastilla kx-pastilla--${size}`} style={`--pcolor: var(${colorVar})`}>
+  <span class="kx-pastilla-dot"></span>{texto}
+</span>
+
+<style>
+  .kx-pastilla {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--kx-font-sans); font-weight: 700;
+    letter-spacing: 0.03em; text-transform: uppercase;
+    color: var(--pcolor);
+    background: color-mix(in srgb, var(--pcolor) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--pcolor) 38%, transparent);
+    border-radius: var(--kx-radius-pill);
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .kx-pastilla--md { font-size: 0.66rem; padding: 0.32rem 0.65rem; }
+  .kx-pastilla--sm { font-size: 0.6rem; padding: 0.24rem 0.5rem; }
+  .kx-pastilla-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pcolor); flex-shrink: 0;
+  }
+</style>

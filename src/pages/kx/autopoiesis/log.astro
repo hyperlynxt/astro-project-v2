@@ -1,0 +1,127 @@
+---
+// El patch notes navegable. Driver ontológico: TIEMPO, agrupado por día.
+//
+// Los dos propósitos que la vista tiene que sostener, del CLAUDE.md del módulo:
+// el linaje (qué cambió y cuándo) y, sobre todo, EN QUÉ ESTABAS TRABAJANDO
+// cuando volvés después de unos días. Por eso el día más reciente va expandido
+// y con más aire que los demás.
+import { getCollection } from 'astro:content';
+import KxShell from '../../../layouts/KxShell.astro';
+import Kicker from '../../../components/kx/Kicker.astro';
+import BarraFiltros from '../../../components/kx/BarraFiltros.astro';
+import { fechaCorta, prosaAHtml } from '../../../lib/kx';
+
+const base = '/astro-project-v2';
+const eventos = await getCollection('kxEventos');
+
+const VERBO_COLOR: Record<string, string> = {
+  creado: '--kx-mint', implementado: '--kx-mint-deep', decidido: '--kx-lavender',
+  cambiado: '--kx-sky-deep', calibrado: '--kx-gold-deep', deprecado: '--kx-slate-deep',
+  abierto: '--kx-clay', cerrado: '--kx-mint-deep',
+};
+
+const ordenados = [...eventos].sort((a, b) => {
+  const d = b.data.fecha.getTime() - a.data.fecha.getTime();
+  return d !== 0 ? d : a.data.id.localeCompare(b.data.id);
+});
+
+// Agrupar por día, más reciente arriba.
+const porDia: { fecha: Date; clave: string; items: typeof ordenados }[] = [];
+for (const e of ordenados) {
+  const clave = e.data.fecha.toISOString().slice(0, 10);
+  let g = porDia.find((x) => x.clave === clave);
+  if (!g) { g = { fecha: e.data.fecha, clave, items: [] }; porDia.push(g); }
+  g.items.push(e);
+}
+
+const areas = [...new Set(eventos.map((e) => e.data.area))].sort();
+const verbos = ['creado', 'implementado', 'decidido', 'cambiado', 'calibrado', 'deprecado', 'abierto', 'cerrado']
+  .filter((v) => eventos.some((e) => e.data.verbo === v));
+
+const grupos = [
+  { key: 'area', label: 'Área', opciones: areas.map((a) => ({ value: a, label: a })) },
+  { key: 'verbo', label: 'Verbo', opciones: verbos.map((v) => ({ value: v, label: v })) },
+];
+---
+
+<KxShell title="Log" crumbs={[{ label: 'Autopoiesis', href: `${base}/kx/autopoiesis/` }, { label: 'Log' }]}>
+  <Fragment slot="kicker"><Kicker texto="autopoiesis · log" color="lavender" /></Fragment>
+  <h1 slot="title">Log de eventos</h1>
+  <p class="kx-lede">
+    El patch notes completo, {eventos.length} eventos. Contesta dos cosas: qué cambió y cuándo,
+    y sobre todo <strong>en qué estabas trabajando</strong> cuando volvés después de unos días.
+    Por eso el día más reciente va primero y expandido.
+  </p>
+
+  <BarraFiltros grupos={grupos} />
+
+  <div class="kx-dias">
+    {porDia.map((dia, i) => (
+      <section class={`kx-dia ${i === 0 ? 'is-reciente' : ''}`}>
+        <header class="kx-dia-head">
+          <h2>{fechaCorta(dia.fecha)}</h2>
+          <span class="kx-dia-count">{dia.items.length} eventos</span>
+          {i === 0 && <span class="kx-dia-tag">lo último</span>}
+        </header>
+        <div class="kx-eventos">
+          {dia.items.map((e) => (
+            <div
+              class="kx-evento"
+              style={`--vcolor: var(${VERBO_COLOR[e.data.verbo] ?? '--kx-slate-deep'})`}
+              data-kx-filter={JSON.stringify({ area: e.data.area, verbo: e.data.verbo })}
+            >
+              <span class="kx-ev-area">{e.data.area}</span>
+              <span class="kx-ev-verbo">{e.data.verbo}</span>
+              <span class="kx-ev-texto" set:html={prosaAHtml(e.data.texto)} />
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); max-width: 66ch; margin: 0.9rem 0 1.6rem; }
+  .kx-lede strong { color: var(--kx-ink); font-weight: 600; }
+
+  .kx-dias { display: flex; flex-direction: column; gap: 1.8rem; }
+  .kx-dia-head { display: flex; align-items: baseline; gap: 0.8rem; margin-bottom: 0.8rem; }
+  .kx-dia-head h2 { font-size: 1.15rem; font-weight: 600; margin: 0; }
+  .kx-dia-count { font-family: var(--kx-font-mono); font-size: 0.68rem; color: var(--kx-ink-faint); }
+  .kx-dia-tag {
+    font-family: var(--kx-font-sans); font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--kx-mint-deep); background: var(--kx-mint-tint);
+    padding: 0.15rem 0.5rem; border-radius: var(--kx-radius-pill);
+  }
+  .kx-dia.is-reciente .kx-dia-head h2 { font-size: 1.45rem; }
+  .kx-dia.is-reciente .kx-eventos { gap: 0.5rem; }
+  .kx-dia.is-reciente .kx-evento { padding: 0.7rem 1rem; }
+
+  .kx-eventos { display: flex; flex-direction: column; gap: 0.3rem; }
+  .kx-evento {
+    display: grid; grid-template-columns: 6.5rem 6.5rem 1fr; gap: 0.8rem; align-items: baseline;
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-left: 3px solid var(--vcolor);
+    border-radius: var(--kx-radius-sm); padding: 0.55rem 0.9rem;
+    font-family: var(--kx-font-sans); font-size: 0.82rem;
+  }
+  @media (max-width: 720px) {
+    .kx-evento { grid-template-columns: 1fr; gap: 0.3rem; }
+  }
+  .kx-ev-area {
+    font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--kx-ink-faint); white-space: nowrap;
+  }
+  .kx-ev-verbo {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--vcolor); white-space: nowrap;
+  }
+  .kx-ev-texto { color: var(--kx-ink-soft); line-height: 1.55; }
+  .kx-ev-texto :global(p) { margin: 0; }
+  .kx-ev-texto :global(code) {
+    font-family: var(--kx-font-mono); font-size: 0.84em; background: var(--kx-panel);
+    border: 1px solid var(--kx-line-soft); padding: 0.05rem 0.28rem; border-radius: 4px;
+    color: var(--kx-accent-deep);
+  }
+  .kx-ev-texto :global(strong) { color: var(--kx-ink); font-weight: 600; }
+</style>

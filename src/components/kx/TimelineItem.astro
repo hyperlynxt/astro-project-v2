@@ -1,0 +1,29 @@
+---
+// Una marca del Timeline: punto en el eje + fecha + contenido libre por slot.
+import { fechaCorta } from '../../lib/kx';
+interface Props {
+  fecha: Date;
+  color?: string;
+}
+const { fecha, color = 'var(--kx-accent)' } = Astro.props;
+---
+
+<div class="kx-titem">
+  <span class="kx-titem-dot" style={`background: ${color}`}></span>
+  <span class="kx-titem-fecha">{fechaCorta(fecha)}</span>
+  <div class="kx-titem-body"><slot /></div>
+</div>
+
+<style>
+  .kx-titem { position: relative; padding: 0 0 1.5rem 1.4rem; }
+  .kx-titem:last-child { padding-bottom: 0; }
+  .kx-titem-dot {
+    position: absolute; left: -1.6rem; top: 0.35rem; width: 12px; height: 12px;
+    border-radius: 50%; border: 2px solid var(--kx-paper);
+    box-shadow: 0 0 0 1px var(--kx-line);
+  }
+  .kx-titem-fecha {
+    display: block; font-family: var(--kx-font-mono); font-size: 0.68rem;
+    color: var(--kx-ink-faint); margin-bottom: 0.3rem;
+  }
+</style>

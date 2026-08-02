@@ -1,0 +1,157 @@
+---
+// KxShell: el chrome único de /kx/. Topbar, breadcrumb, footer y el toggle
+// de tema persistente. Ninguna página de /kx/ vuelve a declarar tokens de
+// color propios: importa este layout y src/styles/kx-tokens.css.
+import '../styles/kx-tokens.css';
+
+interface Crumb { label: string; href?: string }
+interface Props {
+  title: string;
+  kicker?: string;
+  crumbs?: Crumb[];
+  ancho?: 'normal' | 'angosto';
+}
+const { title, kicker, crumbs = [], ancho = 'normal' } = Astro.props;
+const base = '/astro-project-v2';
+---
+
+<html lang="es">
+<head>
+  <script is:inline>
+    try {
+      const saved = localStorage.getItem('kx-theme');
+      if (saved === 'dark' || saved === 'light') document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) {}
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>{title} · kx system</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Reenie+Beanie&display=swap" rel="stylesheet" />
+  <style>
+    .kx-nav {
+      position: sticky; top: 0; z-index: 40;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 74px; padding: 0 2.2rem;
+      background: var(--kx-nav-bg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--kx-line);
+    }
+    .kx-nav-left { display: flex; align-items: center; gap: 1.1rem; min-width: 0; }
+    .kx-nav-brand {
+      font-family: var(--kx-font-sans); font-weight: 800; font-size: 0.95rem;
+      letter-spacing: -0.01em; text-decoration: none; color: var(--kx-ink);
+      display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;
+    }
+    .kx-nav-brand .kx-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--kx-mint), var(--kx-lavender) 55%, var(--kx-gold));
+      box-shadow: 0 0 10px var(--kx-accent-glow);
+    }
+    .kx-crumbs {
+      font-family: var(--kx-font-sans); font-size: 0.82rem; color: var(--kx-ink-faint);
+      display: flex; align-items: center; gap: 0.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .kx-crumbs a { text-decoration: none; color: var(--kx-ink-faint); transition: color 0.2s ease; }
+    .kx-crumbs a:hover { color: var(--kx-accent-deep); }
+    .kx-nav-right-group { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .kx-theme-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid var(--kx-line); background: var(--kx-paper); color: var(--kx-ink);
+      cursor: pointer; padding: 0; transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .kx-theme-toggle:hover { border-color: var(--kx-accent-mid); transform: translateY(-1px); }
+    .kx-nav-sign {
+      font-family: var(--kx-font-hand); font-size: 1.55rem; color: var(--kx-accent-deep); text-decoration: none;
+    }
+
+    .kx-wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.6rem; position: relative; z-index: 1; }
+    .kx-wrap.kx-wrap--angosto { max-width: 860px; }
+
+    .kx-hero { padding: 2.6rem 0 1.2rem; }
+    .kx-hero h1 {
+      font-size: clamp(2rem, 4.6vw, 2.9rem); font-weight: 500; line-height: 1.08;
+      letter-spacing: -0.01em; margin: 0.6rem 0 0; color: var(--kx-ink);
+    }
+
+    .kx-footer {
+      margin: 5rem 0 3rem; padding-top: 1.5rem; border-top: 1px solid var(--kx-line);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
+      font-family: var(--kx-font-sans); font-size: 0.8rem; color: var(--kx-ink-faint);
+    }
+    .kx-footer a { text-decoration: none; color: var(--kx-ink-soft); font-weight: 600; }
+    .kx-footer a:hover { color: var(--kx-accent-deep); }
+
+    @media (max-width: 640px) { .kx-crumbs { display: none; } }
+  </style>
+  <slot name="head" />
+</head>
+<body class="kx-body">
+  <div class="kx-paper-overlay" aria-hidden="true"></div>
+  <div class="kx-nav">
+    <div class="kx-nav-left">
+      <a href={`${base}/kx/`} class="kx-nav-brand"><span class="kx-dot"></span>kx system</a>
+      {crumbs.length > 0 && (
+        <nav class="kx-crumbs" aria-label="breadcrumb">
+          <span>/</span>
+          {crumbs.map((c, i) => (
+            <>
+              {c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}
+              {i < crumbs.length - 1 && <span>/</span>}
+            </>
+          ))}
+        </nav>
+      )}
+    </div>
+    <div class="kx-nav-right-group">
+      <button id="kx-theme-toggle" class="kx-theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+      <a href={`${base}/`} class="kx-nav-sign">hyperlynxt | teo</a>
+    </div>
+  </div>
+
+  <div class={`kx-wrap kx-wrap--${ancho}`}>
+    {(kicker || title) && (
+      <div class="kx-hero">
+        <slot name="kicker" />
+        <slot name="title" />
+      </div>
+    )}
+    <slot />
+    <div class="kx-footer">
+      <a href={`${base}/kx/`}>&larr; volver al hub</a>
+      <slot name="footer-extra" />
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const toggle = document.getElementById('kx-theme-toggle');
+      function systemPrefersDark() { return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+      function isDark() {
+        const explicit = document.documentElement.getAttribute('data-theme');
+        if (explicit === 'dark') return true;
+        if (explicit === 'light') return false;
+        return systemPrefersDark();
+      }
+      function syncIcon() {
+        toggle.innerHTML = isDark()
+          ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+          : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      }
+      syncIcon();
+      toggle.addEventListener('click', () => {
+        const next = isDark() ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('kx-theme', next); } catch (e) {}
+        syncIcon();
+      });
+    })();
+  </script>
+  <slot name="scripts" />
+</body>
+</html>

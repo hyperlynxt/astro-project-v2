@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import KxShell from '../../../../layouts/KxShell.astro';
+import Kicker from '../../../../components/kx/Kicker.astro';
+import Matriz from '../../../../components/kx/Matriz.astro';
+import BarraFiltros from '../../../../components/kx/BarraFiltros.astro';
+import TablaDatos from '../../../../components/kx/TablaDatos.astro';
+import Pastilla from '../../../../components/kx/Pastilla.astro';
+import { TIPO_PIEZA_PASTILLA, ESTADO_PASTILLA, fechaCorta } from '../../../../lib/kx';
+
+const base = '/astro-project-v2';
+const piezas = await getCollection('kxPiezas');
+const modulos = await getCollection('kxModulos');
+
+const moduloTitulo = (id: string) => modulos.find((m) => m.id === id)?.data.titulo ?? id;
+
+// ── matriz: tipo × módulo ──
+const tipos = Object.keys(TIPO_PIEZA_PASTILLA);
+const modulosConPiezas = modulos.filter((m) => piezas.some((p) => p.data.modulo === m.id));
+const datosMatriz = tipos.map((tipo) =>
+  modulosConPiezas.map((m) => {
+    const count = piezas.filter((p) => p.data.tipo === tipo && p.data.modulo === m.id).length;
+    return { count, href: count > 0 ? `${base}/kx/atlas/piezas/?tipo=${tipo}&modulo=${m.id}` : undefined };
+  })
+);
+
+const piezasOrdenadas = [...piezas].sort((a, b) => b.data.actualizado.getTime() - a.data.actualizado.getTime());
+
+const grupos = [
+  { key: 'tipo', label: 'Tipo', opciones: tipos.map((t) => ({ value: t, label: TIPO_PIEZA_PASTILLA[t].label })) },
+  { key: 'modulo', label: 'Módulo', opciones: modulosConPiezas.map((m) => ({ value: m.id, label: m.data.titulo.replace(/^kx |module$/g, '').trim() })) },
+  { key: 'estado', label: 'Estado', opciones: Object.keys(ESTADO_PASTILLA).map((e) => ({ value: e, label: ESTADO_PASTILLA[e].label })) },
+];
+---
+
+<KxShell title="Piezas" crumbs={[{ label: 'Atlas', href: `${base}/kx/atlas/` }, { label: 'Piezas' }]}>
+  <Fragment slot="kicker"><Kicker texto="atlas · piezas" color="mint" /></Fragment>
+  <h1 slot="title">Piezas</h1>
+  <p class="kx-lede">Skills, flujos, templates, convenciones e integraciones. {piezas.length} hoy.</p>
+
+  <div class="kx-shead"><h2>Por tipo y módulo</h2></div>
+  <Matriz filas={tipos.map((t) => TIPO_PIEZA_PASTILLA[t].label)} columnas={modulosConPiezas.map((m) => m.data.titulo.replace(/^kx |module$/g, '').trim())} datos={datosMatriz} colorVar="--kx-accent" />
+
+  <div class="kx-shead"><h2>Todas</h2></div>
+  <BarraFiltros grupos={grupos} />
+  <TablaDatos
+    tieneFilas={piezasOrdenadas.length > 0}
+    columnas={[
+      { key: 'titulo', label: 'Título', sortable: true },
+      { key: 'tipo', label: 'Tipo', sortable: true },
+      { key: 'modulo', label: 'Módulo', sortable: true },
+      { key: 'estado', label: 'Estado', sortable: true },
+      { key: 'actualizado', label: 'Actualizado', sortable: true, numeric: true },
+    ]}
+  >
+    {piezasOrdenadas.map((p) => (
+      <tr
+        data-sort-titulo={p.data.titulo}
+        data-sort-tipo={p.data.tipo}
+        data-sort-modulo={moduloTitulo(p.data.modulo)}
+        data-sort-estado={p.data.estado}
+        data-sort-actualizado={p.data.actualizado.getTime()}
+        data-kx-filter={JSON.stringify({ tipo: p.data.tipo, modulo: p.data.modulo, estado: p.data.estado })}
+      >
+        <td>
+          <span class="kx-fila-id">{p.data.id}</span>
+          <span class="kx-fila-titulo">{p.data.titulo}</span>
+        </td>
+        <td><Pastilla rampa="tipoPieza" valor={p.data.tipo} size="sm" /></td>
+        <td class="kx-fila-modulo">{moduloTitulo(p.data.modulo)}</td>
+        <td><Pastilla rampa="estado" valor={p.data.estado} size="sm" /></td>
+        <td class="kx-fila-fecha">{fechaCorta(p.data.actualizado)}</td>
+      </tr>
+    ))}
+  </TablaDatos>
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); margin: 0.9rem 0 0; }
+  .kx-shead { margin: 2.6rem 0 1rem; }
+  .kx-shead h2 { font-size: 1.3rem; font-weight: 500; margin: 0; }
+  .kx-fila-id { display: block; font-family: var(--kx-font-mono); font-size: 0.66rem; color: var(--kx-ink-faint); }
+  .kx-fila-titulo { font-weight: 600; }
+  .kx-fila-modulo { color: var(--kx-ink-soft); font-size: 0.8rem; }
+  .kx-fila-fecha { font-family: var(--kx-font-mono); font-size: 0.72rem; color: var(--kx-ink-faint); white-space: nowrap; }
+</style>

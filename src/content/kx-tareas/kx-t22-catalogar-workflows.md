@@ -1,10 +1,11 @@
 ---
 id: "KX-T22"
-titulo: "Catalogar kx-workflows: instancias de flujo por materia prima"
+titulo: "Catalogar kx-workflows: hecho, los cinco flujos cargados"
 tipo: pensar
-estado: abierta
+estado: cerrada
 modulo: modulo-base
-descripcion: "Definir el catalogo de instancias de workflow concretas -- por ejemplo class a a limpieza-innie a estructura-innie, o sesion sistemica a destilar-sesion-kx -- distinto de una pieza tipo flujo suelta. Falta decidir el nivel de granularidad (un workflow por materia prima de entrada, o por combinacion exacta de pasos) y el schema de pasos antes de cargar contenido real en kx-workflows."
+area: flujos
+descripcion: "Cerrada el 26.08.02. La granularidad se había decidido el 26.07.26 (un flujo por materia prima de entrada, no por combinación exacta de pasos); lo que faltaba era la carga real, y se hizo transcribiendo los cinco flujos ya escritos en Mapa de Flujos.md: KX-F01 treats y quotes, KX-F02 stream session clase a/c, KX-F03 stream session clase b, KX-F04 sesión de sistema, KX-F05 ensayo académico. El schema de kx-workflows sumó materiaPrima, destino y cuelloDeBotella, más fechaInicio/fechaFin. Los pasos se guardan como 'Actor · texto', que /kx/atlas/flujos/ colorea por actor. Con esto la colección deja de estar vacía y desaparece su warning de build."
 origen: "sesion 26.07.26, pagina de anatomia del sistema"
-actualizado: 2026-07-26
+actualizado: 2026-08-02
 ---

@@ -2,7 +2,7 @@
 title: "Understanding Cultural Resonance"
 creator_author: "Teo"
 platform: "Sophia Atlas Collective"
-link: "https://hyperlynxt.com/resonance"
+link: "https://hyperlynkx.com/resonance"
 date_published: 2026-03-27
 content_type: "Research Synthesis"
 discipline: "Anthropology"

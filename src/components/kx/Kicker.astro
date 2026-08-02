@@ -1,0 +1,19 @@
+---
+interface Props {
+  texto: string;
+  color?: 'gold' | 'mint' | 'lavender';
+}
+const { texto, color = 'gold' } = Astro.props;
+---
+
+<div class={`kx-kicker kx-kicker--${color}`}>{texto}</div>
+
+<style>
+  .kx-kicker {
+    font-family: var(--kx-font-sans); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .kx-kicker--gold { color: var(--kx-gold-deep); }
+  .kx-kicker--mint { color: var(--kx-mint-deep); }
+  .kx-kicker--lavender { color: var(--kx-lavender-deep); }
+</style>

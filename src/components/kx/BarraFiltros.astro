@@ -1,0 +1,122 @@
+---
+// BarraFiltros: filtros por taxonomía, acumulables, reflejados en la query string.
+// No conoce la forma de las filas que filtra: renderiza los chips, mantiene el
+// estado activo en la URL, y dispara `kx:filtros` en window con el estado
+// { [grupoKey]: Set<string> } cada vez que algo cambia. Quien la usa escucha
+// ese evento y decide cómo mostrar/ocultar sus propias filas.
+interface Opcion { value: string; label: string }
+interface Grupo { key: string; label: string; opciones: Opcion[] }
+interface Props {
+  grupos: Grupo[];
+}
+const { grupos } = Astro.props;
+---
+
+<div class="kx-filtros" id="kx-filtros">
+  {grupos.map((g) => (
+    <div class="kx-filtro-grupo" data-grupo={g.key}>
+      <span class="kx-filtro-label">{g.label}</span>
+      <div class="kx-filtro-chips">
+        {g.opciones.map((o) => (
+          <button type="button" class="kx-chip" data-grupo={g.key} data-valor={o.value}>{o.label}</button>
+        ))}
+      </div>
+    </div>
+  ))}
+  <button type="button" class="kx-chip kx-chip-clear" id="kx-filtros-clear">Limpiar filtros</button>
+</div>
+
+<style>
+  .kx-filtros {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 1.1rem 1.6rem;
+    background: var(--kx-panel); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1rem 1.3rem; margin-bottom: 1.4rem;
+  }
+  .kx-filtro-grupo { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .kx-filtro-label {
+    font-family: var(--kx-font-sans); font-size: 0.64rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--kx-ink-faint);
+  }
+  .kx-filtro-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .kx-chip {
+    font-family: var(--kx-font-sans); font-size: 0.72rem; font-weight: 600;
+    padding: 0.35rem 0.75rem; border-radius: var(--kx-radius-pill);
+    background: var(--kx-paper); border: 1px solid var(--kx-line); color: var(--kx-ink-soft);
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .kx-chip:hover { border-color: var(--kx-accent-mid); color: var(--kx-ink); }
+  .kx-chip.is-active {
+    background: var(--kx-accent); border-color: var(--kx-accent); color: #fff;
+  }
+  .kx-chip-clear {
+    margin-left: auto; background: transparent; border-style: dashed; color: var(--kx-ink-faint);
+  }
+  .kx-chip-clear:hover { color: var(--kx-alert); border-color: var(--kx-alert); }
+</style>
+
+<script>
+  function initFiltros() {
+    const root = document.getElementById('kx-filtros');
+    if (!root) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const state: Record<string, Set<string>> = {};
+
+    root.querySelectorAll<HTMLButtonElement>('.kx-chip[data-grupo]').forEach((chip) => {
+      const grupo = chip.dataset.grupo!;
+      const valor = chip.dataset.valor!;
+      if (!state[grupo]) state[grupo] = new Set();
+      const activos = params.get(grupo)?.split(',').filter(Boolean) ?? [];
+      if (activos.includes(valor)) {
+        state[grupo].add(valor);
+        chip.classList.add('is-active');
+      }
+    });
+
+    // Aplica el estado a CUALQUIER elemento con data-kx-filter, sea una fila de
+    // tabla o una tarjeta. Los consumidores no implementan filtrado propio:
+    // solo declaran qué valores tiene cada elemento.
+    function aplicar() {
+      document.querySelectorAll<HTMLElement>('[data-kx-filter]').forEach((el) => {
+        const filtros = JSON.parse(el.dataset.kxFilter!) as Record<string, string>;
+        const visible = Object.entries(state).every(([grupo, valores]) =>
+          !valores.size || valores.has(filtros[grupo])
+        );
+        el.style.display = visible ? '' : 'none';
+      });
+      window.dispatchEvent(new CustomEvent('kx:filtros', { detail: state }));
+    }
+
+    function emit() {
+      aplicar();
+      const url = new URL(window.location.href);
+      Object.entries(state).forEach(([grupo, set]) => {
+        if (set.size) url.searchParams.set(grupo, [...set].join(','));
+        else url.searchParams.delete(grupo);
+      });
+      window.history.replaceState({}, '', url);
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('.kx-chip[data-grupo]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const grupo = chip.dataset.grupo!;
+        const valor = chip.dataset.valor!;
+        if (state[grupo].has(valor)) { state[grupo].delete(valor); chip.classList.remove('is-active'); }
+        else { state[grupo].add(valor); chip.classList.add('is-active'); }
+        emit();
+      });
+    });
+
+    document.getElementById('kx-filtros-clear')?.addEventListener('click', () => {
+      Object.values(state).forEach((s) => s.clear());
+      root.querySelectorAll('.kx-chip').forEach((c) => c.classList.remove('is-active'));
+      emit();
+    });
+
+    // corrida inicial: aplica lo que vino de la query string
+    emit();
+  }
+  // Sitio sin View Transitions: los <script type="module"> ya corren en defer,
+  // así que el DOM está listo. No se usa astro:page-load porque nunca dispara acá.
+  initFiltros();
+</script>

@@ -1,0 +1,136 @@
+---
+// Driver ontológico de las sesiones: EL TIEMPO. Son eventos; cualquier otra
+// forma les saca lo único que las ordena.
+import { getCollection } from 'astro:content';
+import KxShell from '../../../layouts/KxShell.astro';
+import Kicker from '../../../components/kx/Kicker.astro';
+import Timeline from '../../../components/kx/Timeline.astro';
+import TimelineItem from '../../../components/kx/TimelineItem.astro';
+import { fechaCorta } from '../../../lib/kx';
+
+const base = '/astro-project-v2';
+const sesiones = await getCollection('kxSesiones');
+// Más reciente arriba. Desempate por id descendente: hay hasta tres sesiones
+// dictadas el mismo día, y sin esto salen en orden ascendente dentro del día.
+const ordenadas = [...sesiones].sort((a, b) => {
+  const d = b.data.fecha.getTime() - a.data.fecha.getTime();
+  return d !== 0 ? d : b.data.id.localeCompare(a.data.id);
+});
+
+const sinProcesar = sesiones.filter((s) => s.data.estado_autopoiesis === 'sin-procesar').length;
+const totalProducido = sesiones.reduce((n, s) => n + s.data.produjo.length, 0);
+
+// Un id de produjo linkea al Atlas: es la dirección autopoiesis -> Atlas.
+function hrefDe(id: string): string | undefined {
+  if (/^KX-P\d+$/.test(id)) return `${base}/kx/atlas/piezas/`;
+  if (/^KX-F\d+$/.test(id)) return `${base}/kx/atlas/flujos/`;
+  if (/^KX-T\d+$/.test(id)) return `${base}/kx/autopoiesis/tareas/`;
+  return `${base}/kx/atlas/modulos/`;
+}
+---
+
+<KxShell title="Sesiones" crumbs={[{ label: 'Autopoiesis', href: `${base}/kx/autopoiesis/` }, { label: 'Sesiones' }]}>
+  <Fragment slot="kicker"><Kicker texto="autopoiesis · sesiones" color="lavender" /></Fragment>
+  <h1 slot="title">Sesiones</h1>
+  <p class="kx-lede">
+    Cada dictado sobre la bóveda misma, de la más reciente a la más vieja, con lo que produjo.
+    Esta página cierra un pendiente que estaba anotado desde el 26.08.01: <code>/kx/sesiones/</code> nunca existió.
+  </p>
+
+  <div class="kx-resumen">
+    <div><b>{sesiones.length}</b><span>dictadas</span></div>
+    <div><b>{sesiones.length - sinProcesar}</b><span>procesadas</span></div>
+    <div class={sinProcesar > 0 ? 'is-pendiente' : ''}><b>{sinProcesar}</b><span>sin procesar</span></div>
+    <div><b>{totalProducido}</b><span>objetos producidos</span></div>
+  </div>
+
+  <Timeline tieneItems={ordenadas.length > 0} vacio="Ninguna sesión cargada en la colección todavía.">
+    {ordenadas.map((s) => (
+      <TimelineItem
+        fecha={s.data.fecha}
+        color={s.data.estado_autopoiesis === 'procesada' ? 'var(--kx-mint)' : 'var(--kx-gold)'}
+      >
+        <article class={`kx-sesion ${s.data.estado_autopoiesis === 'sin-procesar' ? 'is-pendiente' : ''}`}>
+          <div class="kx-sesion-head">
+            <span class="kx-sesion-id">{s.data.id}</span>
+            <span class={`kx-estado kx-estado--${s.data.estado_autopoiesis}`}>
+              {s.data.estado_autopoiesis === 'procesada' ? 'procesada' : 'sin procesar'}
+            </span>
+            {s.data.conclusiva && <span class="kx-conclusiva">conclusiva</span>}
+          </div>
+          <h3>{s.data.titulo || <em class="kx-sin-titulo">sin título todavía</em>}</h3>
+          {s.data.resumen && <p class="kx-sesion-resumen">{s.data.resumen}</p>}
+          {s.data.produjo.length > 0 && (
+            <div class="kx-produjo">
+              <span class="kx-produjo-label">produjo</span>
+              <div class="kx-produjo-ids">
+                {s.data.produjo.map((id) => <a class="kx-ref" href={hrefDe(id)}>{id}</a>)}
+              </div>
+            </div>
+          )}
+          {(s.data.hrefTextual || s.data.hrefMapa) && (
+            <div class="kx-sesion-links">
+              {s.data.hrefTextual && <a href={s.data.hrefTextual}>versión textual</a>}
+              {s.data.hrefMapa && <a href={s.data.hrefMapa}>mapa visual</a>}
+            </div>
+          )}
+        </article>
+      </TimelineItem>
+    ))}
+  </Timeline>
+</KxShell>
+
+<style>
+  .kx-lede { font-family: var(--kx-font-sans); font-size: 1rem; line-height: 1.6; color: var(--kx-ink-soft); max-width: 66ch; margin: 0.9rem 0 0; }
+  .kx-lede code { font-family: var(--kx-font-mono); font-size: 0.86em; color: var(--kx-accent-deep); }
+
+  .kx-resumen { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1.8rem 0 2.2rem; }
+  @media (max-width: 680px) { .kx-resumen { grid-template-columns: repeat(2, 1fr); } }
+  .kx-resumen div {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1rem; text-align: center;
+  }
+  .kx-resumen div.is-pendiente { border-color: var(--kx-gold); background: var(--kx-gold-tint); }
+  .kx-resumen b { display: block; font-size: 1.9rem; font-weight: 600; color: var(--kx-accent-deep); line-height: 1; margin-bottom: 0.35rem; }
+  .kx-resumen div.is-pendiente b { color: var(--kx-gold-deep); }
+  .kx-resumen span { font-family: var(--kx-font-sans); font-size: 0.68rem; font-weight: 600; color: var(--kx-ink-soft); }
+
+  .kx-sesion {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius);
+    padding: 1.1rem 1.3rem; box-shadow: 0 2px 8px var(--kx-shadow);
+  }
+  .kx-sesion.is-pendiente { border-left: 3px solid var(--kx-gold); }
+  .kx-sesion-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .kx-sesion-id { font-family: var(--kx-font-mono); font-size: 0.72rem; font-weight: 600; color: var(--kx-lavender-deep); }
+  .kx-estado {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 0.15rem 0.45rem; border-radius: var(--kx-radius-pill);
+  }
+  .kx-estado--procesada { color: var(--kx-mint-deep); background: var(--kx-mint-tint); }
+  .kx-estado--sin-procesar { color: var(--kx-gold-deep); background: var(--kx-gold-tint); }
+  .kx-conclusiva {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+    color: var(--kx-ink-faint);
+  }
+  .kx-sesion h3 { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.5rem; line-height: 1.35; }
+  .kx-sin-titulo { color: var(--kx-ink-faint); font-weight: 400; }
+  .kx-sesion-resumen { font-family: var(--kx-font-sans); font-size: 0.82rem; line-height: 1.6; color: var(--kx-ink-soft); margin: 0 0 0.8rem; }
+  .kx-produjo { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.7rem; border-top: 1px solid var(--kx-line-soft); }
+  .kx-produjo-label {
+    font-family: var(--kx-font-sans); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--kx-ink-faint); flex-shrink: 0;
+  }
+  .kx-produjo-ids { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .kx-ref {
+    font-family: var(--kx-font-mono); font-size: 0.64rem; font-weight: 600; text-decoration: none;
+    background: var(--kx-panel); border: 1px solid var(--kx-line); color: var(--kx-accent-deep);
+    padding: 0.12rem 0.4rem; border-radius: 5px; transition: border-color 0.15s ease;
+  }
+  a.kx-ref:hover { border-color: var(--kx-accent); }
+  .kx-sesion-links { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+  .kx-sesion-links a {
+    font-family: var(--kx-font-sans); font-size: 0.72rem; font-weight: 700; text-decoration: none;
+    background: var(--kx-accent-tint); color: var(--kx-accent-deep);
+    padding: 0.35rem 0.75rem; border-radius: var(--kx-radius-pill);
+  }
+</style>

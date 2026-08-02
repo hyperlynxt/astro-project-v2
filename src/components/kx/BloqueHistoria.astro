@@ -1,0 +1,66 @@
+---
+// BloqueHistoria: al pie de una ficha del Atlas, los eventos del log que
+// nombran ese id, más su sesión de origen y el ciclo que lo produjo.
+// Es la pieza que hace real la integración Atlas <-> autopoiesis: sin esto
+// las dos áreas son solo dos sitios pegados.
+import { fechaCorta } from '../../lib/kx';
+
+interface EventoItem { fecha: Date; area: string; verbo: string; texto: string }
+interface Props {
+  id: string;
+  origen?: string;
+  eventos?: EventoItem[];
+  hrefOrigen?: string;
+}
+const { id, origen, eventos = [], hrefOrigen } = Astro.props;
+const hayAlgo = origen || eventos.length > 0;
+---
+
+{hayAlgo && (
+  <div class="kx-historia">
+    <span class="kx-historia-kicker">de dónde salió esto</span>
+    {origen && (
+      <p class="kx-historia-origen">
+        Creado desde {hrefOrigen ? <a href={hrefOrigen}>{origen}</a> : <b>{origen}</b>}
+      </p>
+    )}
+    {eventos.length > 0 && (
+      <ul class="kx-historia-lista">
+        {eventos.map((e) => (
+          <li>
+            <span class="kx-historia-fecha">{fechaCorta(e.fecha)}</span>
+            <span class="kx-historia-verbo">{e.verbo}</span>
+            <span class="kx-historia-texto">{e.texto}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
+
+<style>
+  .kx-historia {
+    margin-top: 2.2rem; padding-top: 1.3rem; border-top: 1px solid var(--kx-line);
+  }
+  .kx-historia-kicker {
+    font-family: var(--kx-font-sans); font-size: 0.64rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--kx-ink-faint);
+    display: block; margin-bottom: 0.7rem;
+  }
+  .kx-historia-origen { font-family: var(--kx-font-sans); font-size: 0.85rem; color: var(--kx-ink-soft); margin: 0 0 0.6rem; }
+  .kx-historia-origen a, .kx-historia-origen b { color: var(--kx-accent-deep); font-weight: 700; }
+  .kx-historia-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .kx-historia-lista li {
+    display: flex; align-items: baseline; gap: 0.6rem; font-family: var(--kx-font-sans); font-size: 0.8rem;
+  }
+  .kx-historia-fecha { font-family: var(--kx-font-mono); font-size: 0.66rem; color: var(--kx-ink-faint); flex-shrink: 0; }
+  .kx-historia-verbo {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--kx-accent-deep); flex-shrink: 0;
+  }
+  .kx-historia-texto { color: var(--kx-ink-soft); line-height: 1.5; }
+  .kx-historia-texto :global(code) {
+    font-family: var(--kx-font-mono); font-size: 0.85em; background: var(--kx-panel);
+    padding: 0.1rem 0.3rem; border-radius: 4px; color: var(--kx-accent-deep);
+  }
+</style>

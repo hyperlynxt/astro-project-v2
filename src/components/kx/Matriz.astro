@@ -1,0 +1,75 @@
+---
+// Matriz: grilla de dos ejes con celdas ocupadas o vacías. Cada celda enlaza
+// al listado filtrado por esa combinación cuando tiene datos.
+interface Celda { count: number; href?: string }
+interface Props {
+  filas: string[];
+  columnas: string[];
+  datos: Celda[][]; // datos[i][j] = celda de filas[i] x columnas[j]
+  colorVar?: string;
+}
+const { filas, columnas, datos, colorVar = '--kx-accent' } = Astro.props;
+const max = Math.max(1, ...datos.flat().map((c) => c.count));
+---
+
+<div class="kx-matriz-wrap">
+  <table class="kx-matriz">
+    <thead>
+      <tr>
+        <th class="kx-matriz-corner"></th>
+        {columnas.map((c) => <th>{c}</th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {filas.map((f, i) => (
+        <tr>
+          <th class="kx-matriz-rowhead">{f}</th>
+          {columnas.map((_, j) => {
+            const celda = datos[i]?.[j] ?? { count: 0 };
+            const intensidad = celda.count / max;
+            const Tag = celda.href && celda.count > 0 ? 'a' : 'div';
+            return (
+              <td>
+                <Tag
+                  class="kx-matriz-celda"
+                  href={celda.href}
+                  style={`--intensidad: ${intensidad}; --ccolor: var(${colorVar})`}
+                >
+                  {celda.count > 0 ? celda.count : ''}
+                </Tag>
+              </td>
+            );
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .kx-matriz-wrap {
+    background: var(--kx-paper); border: 1px solid var(--kx-line); border-radius: var(--kx-radius-lg);
+    padding: 1.2rem; overflow-x: auto; box-shadow: 0 2px 10px var(--kx-shadow);
+  }
+  .kx-matriz { border-collapse: collapse; width: 100%; font-family: var(--kx-font-sans); }
+  .kx-matriz th, .kx-matriz td { text-align: center; padding: 0.3rem; }
+  .kx-matriz thead th {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--kx-ink-faint); padding-bottom: 0.6rem; white-space: nowrap;
+  }
+  .kx-matriz-corner { background: transparent; }
+  .kx-matriz-rowhead {
+    text-align: right; padding-right: 0.9rem; font-size: 0.76rem; font-weight: 600;
+    color: var(--kx-ink-soft); white-space: nowrap;
+  }
+  .kx-matriz-celda {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 40px; margin: 0 auto; border-radius: 10px;
+    font-family: var(--kx-font-mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--kx-ink); text-decoration: none;
+    background: color-mix(in srgb, var(--ccolor) calc(var(--intensidad) * 65%), var(--kx-panel));
+    border: 1px solid var(--kx-line-soft);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  a.kx-matriz-celda:hover { transform: scale(1.08); box-shadow: 0 4px 12px var(--kx-shadow); }
+</style>
